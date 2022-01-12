@@ -139,7 +139,6 @@ export default {
           hideIcon: true,
           inputAttrs: {
             label: "New Name",
-            // placeholder: "",
             counter: true,
             maxlength: 60,
             trim: true,

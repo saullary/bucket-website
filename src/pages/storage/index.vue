@@ -371,7 +371,6 @@ export default {
           hideIcon: true,
           inputAttrs: {
             label: "Folder Name",
-            // placeholder: "",
             counter: true,
             maxlength: 60,
             trim: true,
