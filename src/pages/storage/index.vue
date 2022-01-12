@@ -46,6 +46,9 @@
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
           <v-list dense>
+            <!-- <v-list-item link @click="onRename(fileName)">
+              <span>Rename</span>
+            </v-list-item> -->
             <v-list-item link @click="onDelFile">
               <span class="red-1">Delete</span>
             </v-list-item>
@@ -372,14 +375,14 @@ export default {
             counter: true,
             maxlength: 60,
             trim: true,
-            rules: [(v) => !!v.trim() || "Invalid"],
+            rules: [(v) => !!(v || "").trim() || "Invalid"],
             required: true,
           },
         });
         // this.$router.push(this.path + name + "/");
         const { Prefix } = this.pathInfo;
         this.tableLoading = true;
-        await this.putObject(Prefix + name.trim() + "/");
+        await this.putObject(Prefix + name + "/");
         await this.getList();
         await this.$sleep(200);
         this.$toast(`${name} created successfully`);
@@ -417,7 +420,7 @@ export default {
             maxlength: 48,
             trim: true,
             rules: [
-              (v) => !!v.trim() || msg1,
+              (v) => !!(v || "").trim() || msg1,
               (v) =>
                 /^[a-z\d-.]+$/.test(v) ||
                 "Bucket names can consist only of lowercase letters, numbers, dots (.), and hyphens (-).",

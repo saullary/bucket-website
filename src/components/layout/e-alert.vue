@@ -162,7 +162,7 @@ export default {
             this.$refs.form.reset();
           }, 5);
           setTimeout(() => {
-            let val = config.defaultValue.trim();
+            let val = config.defaultValue;
             if (val) this.inputVal = val;
           }, 10);
         }

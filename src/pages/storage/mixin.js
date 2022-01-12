@@ -131,6 +131,69 @@ export default {
         this.getObjects();
       }
     },
+    async onRename(srcName) {
+      try {
+        const { Prefix, Key } = this.pathInfo;
+        let srcKey = this.inFile ? Key : Prefix + srcName;
+        const { value: name } = await this.$prompt("", "Rename " + srcName, {
+          hideIcon: true,
+          inputAttrs: {
+            label: "New Name",
+            // placeholder: "",
+            counter: true,
+            maxlength: 60,
+            trim: true,
+            rules: [
+              (v) => !!(v || "").trim() || "Invalid",
+              (v) => !/\//.test(v) || "/ is not allowed.",
+            ],
+            required: true,
+          },
+        });
+        this.$loading();
+        const reg = /\/[^/]+$/;
+        const newKey = this.inFile
+          ? Key.replace(reg, "/" + name)
+          : Prefix + name;
+        await this.renameObject(srcKey, newKey);
+        if (this.inFile) {
+          this.$router.replace(this.path.replace(reg, name));
+        } else {
+          this.getList();
+        }
+        await this.$sleep(500);
+        this.$toast("Renamed successfully");
+      } catch (error) {
+        console.log(error);
+        if (error) this.onErr(error);
+      }
+      this.$loading.close();
+    },
+    renameObject(CopySource, Key) {
+      const { Bucket } = this.pathInfo;
+      console.log(CopySource, Key);
+      return new Promise((resolve, reject) => {
+        this.s3.copyObject(
+          {
+            Bucket,
+            CopySource,
+            Key,
+          },
+          (err) => {
+            if (err) return reject(err);
+            this.s3.deleteObject(
+              {
+                Bucket,
+                Key: CopySource,
+              },
+              () => {
+                resolve();
+              }
+            );
+          }
+        );
+      });
+    },
     headObject() {
       this.fileLoading = true;
       this.fileInfo = null;
