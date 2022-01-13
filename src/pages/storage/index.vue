@@ -46,9 +46,9 @@
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
           <v-list dense>
-            <!-- <v-list-item link @click="onRename(fileName)">
+            <v-list-item link @click="onRename(fileName)">
               <span>Rename</span>
-            </v-list-item> -->
+            </v-list-item>
             <v-list-item link @click="onDelFile">
               <span class="red-1">Delete</span>
             </v-list-item>

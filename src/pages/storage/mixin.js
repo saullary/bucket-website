@@ -135,6 +135,7 @@ export default {
       try {
         const { Prefix, Key } = this.pathInfo;
         let srcKey = this.inFile ? Key : Prefix + srcName;
+        console.log(this.pathInfo);
         const { value: name } = await this.$prompt("", "Rename " + srcName, {
           hideIcon: true,
           inputAttrs: {
@@ -150,13 +151,13 @@ export default {
           },
         });
         this.$loading();
-        const reg = /\/[^/]+$/;
-        const newKey = this.inFile
-          ? Key.replace(reg, "/" + name)
-          : Prefix + name;
+        const reg = /[^/]+$/;
+        const newKey = this.inFile ? Key.replace(reg, name) : Prefix + name;
         await this.renameObject(srcKey, newKey);
         if (this.inFile) {
-          this.$router.replace(this.path.replace(reg, name));
+          this.$router.replace(
+            encodeURIComponent(this.path).replace(reg, name)
+          );
         } else {
           this.getList();
         }
@@ -168,14 +169,14 @@ export default {
       }
       this.$loading.close();
     },
-    renameObject(CopySource, Key) {
+    renameObject(srcKey, Key) {
       const { Bucket } = this.pathInfo;
-      console.log(CopySource, Key);
+      console.log(srcKey, Key);
       return new Promise((resolve, reject) => {
         this.s3.copyObject(
           {
             Bucket,
-            CopySource,
+            CopySource: Bucket + "/" + srcKey,
             Key,
           },
           (err) => {
@@ -183,7 +184,7 @@ export default {
             this.s3.deleteObject(
               {
                 Bucket,
-                Key: CopySource,
+                Key: srcKey,
               },
               () => {
                 resolve();
