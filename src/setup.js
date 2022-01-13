@@ -61,8 +61,9 @@ Vue.prototype.$utils = {
   },
   getCidV1(cid) {
     if (!cid) return "";
+    cid = cid.replace(/"/g, "");
     if (/^Qm/i.test(cid)) {
-      return CID.parse(cid.replace(/"/g, "")).toV1().toString();
+      return CID.parse(cid).toV1().toString();
     }
     return cid;
   },
