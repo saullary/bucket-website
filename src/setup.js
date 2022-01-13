@@ -61,7 +61,10 @@ Vue.prototype.$utils = {
   },
   getCidV1(cid) {
     if (!cid) return "";
-    return CID.parse(cid.replace(/"/g, "")).toV1().toString();
+    if (/^Qm/i.test(cid)) {
+      return CID.parse(cid.replace(/"/g, "")).toV1().toString();
+    }
+    return cid;
   },
   getCidLink(cid) {
     return `https://${this.getCidV1(cid)}.ipfs.dweb.link`;
