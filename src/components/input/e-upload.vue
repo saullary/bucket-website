@@ -48,7 +48,7 @@ export default {
     },
     limit: {
       type: Number,
-      default: 10,
+      default: 0,
     },
     value: Array,
     disabled: Boolean,

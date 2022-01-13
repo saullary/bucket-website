@@ -33,7 +33,7 @@
           :target="it.href ? '_blank' : ''"
         >
           <v-icon size="16">mdi-{{ it.icon }}</v-icon>
-          <span class="ml-1" style="min-width: 65px">{{ it.label }}</span>
+          <span class="ml-3" style="min-width: 65px">{{ it.label }}</span>
         </v-btn>
       </div>
     </div>
@@ -41,11 +41,13 @@
     <div class="pos-btm" v-if="token">
       <e-menu offset-x>
         <v-btn slot="ref" text block x-large>
-          <v-avatar color="indigo" size="30">
+          <v-avatar color="indigo" size="26">
             <v-img :src="userInfo.avatar" v-if="userInfo.avatar"></v-img>
             <v-icon dark v-else> mdi-account </v-icon>
           </v-avatar>
-          <span class="ml-3 gray-3">{{ userInfo.username || "Unknown" }}</span>
+          <span class="ml-3 gray-3 fz-14">{{
+            userInfo.username || "Unknown"
+          }}</span>
           <v-icon class="ml-auto" color="#aaa">mdi-chevron-right</v-icon>
         </v-btn>
         <v-list dense>
