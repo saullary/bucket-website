@@ -177,7 +177,7 @@
           <div v-if="item.domainInfo">
             <span>{{ item.domainInfo.domain }}</span>
 
-            <e-menu
+            <!-- <e-menu
               :open-on-hover="!asMobile"
               offset-y
               @input="onDomain(item.name, $event)"
@@ -211,7 +211,7 @@
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
-            </e-menu>
+            </e-menu> -->
           </div>
         </template>
         <template v-slot:item.hash="{ item }">
