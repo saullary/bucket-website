@@ -32,8 +32,10 @@
           :href="it.href"
           :target="it.href ? '_blank' : ''"
         >
-          <v-icon size="16">mdi-{{ it.icon }}</v-icon>
-          <span class="ml-3" style="min-width: 65px">{{ it.label }}</span>
+          <div class="d-flex al-c" style="min-width: 100px">
+            <v-icon size="16">{{ it.icon }}</v-icon>
+            <span class="ml-3" style="min-width: 65px">{{ it.label }}</span>
+          </div>
         </v-btn>
       </div>
     </div>
@@ -91,19 +93,19 @@ export default {
         {
           label: "Files",
           to: this.path.includes(initFilePath) ? initFilePath : this.filesPath,
-          icon: "file-multiple",
+          icon: "mdi-file-multiple",
         },
         {
           label: "Domains",
           to: this.path.includes(initDomainPath)
             ? initDomainPath
             : this.domainPath,
-          icon: "wan",
+          icon: "mdi-wan",
         },
         {
           label: "Billing",
           to: "/billing",
-          icon: "credit-card-outline",
+          icon: "mdi-credit-card-outline",
         },
         // {
         //   label: "Settings",
@@ -113,7 +115,7 @@ export default {
         // {
         //   label: "Docs",
         //   href: "https://bucket-docs.4everland.org",
-        //   icon: "file-document-outline",
+        //   icon: "mdi-file-document-outline",
         // },
       ];
     },
