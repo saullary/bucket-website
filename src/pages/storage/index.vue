@@ -60,7 +60,12 @@
           <v-icon size="15">mdi-cloud-upload</v-icon>
           <span class="ml-1">Upload</span>
         </v-btn>
-        <v-btn class="ml-5" outlined @click="addFolder">
+        <v-btn
+          class="ml-5"
+          outlined
+          :disabled="folderLen >= 20"
+          @click="addFolder"
+        >
           <v-icon size="15">mdi-folder-plus-outline</v-icon>
           <span class="ml-1">New Folder</span>
         </v-btn>

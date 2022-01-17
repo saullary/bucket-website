@@ -38,6 +38,10 @@ export default {
       const arr = this.path.split("/");
       return arr[arr.length - 1];
     },
+    folderLen() {
+      if (this.inFolder) return this.pathInfo.Prefix.split("/").length - 1;
+      return 0;
+    },
     navItems() {
       let to = BasePath;
       const items = [
