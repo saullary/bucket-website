@@ -87,8 +87,15 @@ body {
     color: rgba(0, 0, 0, 0.6)!important;
   }
 }
-.hide-msg .v-messages {
-  display: none;
+.hide-msg {
+  .v-messages {
+    display: none;
+  }
+  .v-input__slot {
+    box-shadow: none!important;
+    margin-bottom: 0!important;
+    background: none!important;
+  }
 }
 
 .shadow-1 {

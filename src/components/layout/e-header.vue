@@ -10,7 +10,7 @@
         :class="asMobile ? 'y-center' : 'pos-a top-0 mt-4'"
       >
         <v-text-field
-          class="hide-msg"
+          class="hide-msg bd-1"
           dense
           solo
           clearable
