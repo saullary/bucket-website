@@ -32,6 +32,8 @@
         v-model="selected"
         :show-select="list.length > 0"
         item-key="domain"
+        no-data-text=""
+        loading-text=""
         hide-default-footer
       >
         <template v-slot:item.domain="{ item }">
@@ -58,6 +60,13 @@
           >
         </template>
       </v-data-table>
+
+      <div class="ta-c mt-8" v-if="!list.length">
+        <img src="img/empty1.svg" width="80" />
+        <div class="mt-3 gray fz-14">
+          {{ loading ? "Loading domains..." : "No Domains" }}
+        </div>
+      </div>
     </div>
 
     <v-dialog v-model="showPop" max-width="520">

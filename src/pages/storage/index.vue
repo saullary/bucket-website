@@ -153,6 +153,8 @@
         v-model="selected"
         :show-select="list.length > 0"
         item-key="name"
+        no-data-text=""
+        loading-text=""
         hide-default-footer
         disable-pagination
       >
@@ -237,8 +239,15 @@
         </template>
       </v-data-table>
 
-      <div class="ta-c mt-6" v-if="!list.length">
+      <div class="ta-c mt-8" v-if="!list.length">
         <img src="img/empty1.svg" width="80" />
+        <div class="mt-3 gray fz-14">
+          {{
+            tableLoading
+              ? `${inBucket ? "Loading Buckets" : "Loading Files"}...`
+              : `${inBucket ? "No Buckets" : "No folders or files found"}`
+          }}
+        </div>
       </div>
     </div>
   </div>
