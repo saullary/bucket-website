@@ -183,6 +183,7 @@
         item-key="name"
         no-data-text=""
         loading-text=""
+        checkbox-color="#0F8DFF"
         hide-default-footer
         disable-pagination
       >
