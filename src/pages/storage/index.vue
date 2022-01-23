@@ -244,8 +244,8 @@
         <div class="mt-3 gray fz-14">
           {{
             tableLoading
-              ? `${inBucket ? "Loading Buckets" : "Loading Files"}...`
-              : `${inBucket ? "No Buckets" : "No folders or files found"}`
+              ? `${inBucket ? "Loading buckets" : "Loading files"}...`
+              : `${inBucket ? "No buckets" : "No folders or files found"}`
           }}
         </div>
       </div>

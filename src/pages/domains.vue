@@ -64,7 +64,7 @@
       <div class="ta-c mt-8" v-if="!list.length">
         <img src="img/empty1.svg" width="80" />
         <div class="mt-3 gray fz-14">
-          {{ loading ? "Loading domains..." : "No Domains" }}
+          {{ loading ? "Loading domains..." : "No domains" }}
         </div>
       </div>
     </div>
