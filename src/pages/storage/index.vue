@@ -72,8 +72,15 @@
       </div>
 
       <e-menu offset-y open-on-hover>
-        <v-btn slot="ref" class="ml-5" icon v-show="!inFile && selected.length">
-          <v-icon>mdi-dots-vertical</v-icon>
+        <v-btn
+          slot="ref"
+          class="ml-5"
+          outlined
+          v-show="!inFile && selected.length"
+        >
+          <!-- <v-icon>mdi-dots-vertical</v-icon> -->
+          <span>Actions</span>
+          <v-icon size="18">mdi-chevron-down</v-icon>
         </v-btn>
         <v-list dense>
           <template v-if="selected.length == 1">
