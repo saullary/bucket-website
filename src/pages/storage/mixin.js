@@ -309,9 +309,9 @@ export default {
         });
       });
     },
-    async onDelete() {
+    async onDelete(item) {
       try {
-        const arr = await this.getSelectedObjects();
+        const arr = await this.getSelectedObjects(item);
         const suffix = arr.length > 1 ? "s" : "";
         const target = this.inBucket ? "bucket" : "file";
         let html = `The following ${target}${suffix} will be permanently deleted. Are you sure you want to continue?<ul class='mt-4 ov-a' style="max-height: 40vh">`;
@@ -349,11 +349,20 @@ export default {
         },
       });
     },
-    async getSelectedObjects() {
-      if (this.inBucket) return this.selected;
+    getPath(item) {
+      return this.path + item.name + (item.isFile ? "" : "/");
+    },
+    getViewUrl(item) {
+      const { Prefix } = this.pathInfo;
+      let url = this.originList[0] + "/" + Prefix + item.name;
+      return url;
+    },
+    async getSelectedObjects(item) {
+      const items = item ? [item] : this.selected;
+      if (this.inBucket) return items;
       let arr = [];
       const { Prefix } = this.pathInfo;
-      for (const it of this.selected) {
+      for (const it of items) {
         if (it.isFile) arr.push(it);
         else {
           const objArr = await this.getSubObjects(it.name);

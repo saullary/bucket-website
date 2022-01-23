@@ -72,7 +72,7 @@
       </div>
 
       <v-btn
-        @click="onDelete"
+        @click="onDelete()"
         :loading="deleting"
         color="error"
         class="ml-5"
@@ -167,13 +167,23 @@
             rounded
             text
             small
-            :to="path + item.name + (item.isFile ? '' : '/')"
+            :to="getPath(item)"
           >
             <v-icon v-if="inFolder && !item.isFile" size="18" class="mr-2"
               >mdi-{{ inBucket ? "folder-multiple" : "folder" }}</v-icon
             >
             <b>{{ item.name.cutStr(10, 10) }}</b></v-btn
           >
+          <v-btn
+            icon
+            small
+            color="primary"
+            v-if="item.isFile && originList.length"
+            target="_blank"
+            :href="getViewUrl(item)"
+          >
+            <v-icon size="14">mdi-eye-outline</v-icon>
+          </v-btn>
         </template>
         <template v-slot:item.domain="{ item }">
           <div v-if="item.domainInfo">
@@ -237,6 +247,11 @@
             <v-icon size="14" color="primary">mdi-content-copy</v-icon>
           </v-btn>
         </template>
+        <template v-slot:item.act="{ item }">
+          <v-btn icon small color="error" @click="onDelete(item)">
+            <v-icon size="16">mdi-trash-can-outline</v-icon>
+          </v-btn>
+        </template>
       </v-data-table>
 
       <div class="ta-c mt-8" v-if="!list.length">
@@ -276,12 +291,14 @@ export default {
           { text: "Bucket Name", value: "name" },
           { text: "Domain", value: "domain" },
           { text: "CreateAt", value: "createAt" },
+          // { text: "Actions", value: "act" },
         ];
       return [
         { text: "Name", value: "name" },
         { text: "Size", value: "size" },
         { text: "IPFS Hash", value: "hash" },
         { text: "Last Modified", value: "updateAt" },
+        // { text: "Actions", value: "act" },
       ];
     },
     fileInfoList() {
@@ -312,17 +329,22 @@ export default {
         },
       ];
     },
-    fileUrls() {
-      if (!this.fileInfo || !this.inFile) return [];
+    originList() {
       const { Bucket } = this.pathInfo;
       let list = (this.domainsMap[Bucket] || [])
         .filter((it) => it.valid)
         .map((it) => it.name);
       const item = this.domainList.filter((it) => it.bucketName == Bucket)[0];
       if (item && !list.includes(item.domain)) list.push(item.domain);
+      return list.map((domain) => {
+        return (this.$inDev ? "http:" : "https:") + "//" + domain;
+      });
+    },
+    fileUrls() {
+      if (!this.fileInfo || !this.inFile) return [];
       const { Key } = this.pathInfo;
-      list = list.map((domain) => {
-        return (this.$inDev ? "http:" : "https:") + "//" + domain + "/" + Key;
+      const list = this.originList.map((origin) => {
+        return origin + "/" + Key;
       });
       if (!list.length) list.push(this.fileInfo.url);
       return list;
