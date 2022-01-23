@@ -71,7 +71,35 @@
         </v-btn>
       </div>
 
-      <v-btn
+      <e-menu offset-y open-on-hover>
+        <v-btn slot="ref" class="ml-5" icon v-show="!inFile && selected.length">
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+        <v-list dense>
+          <template v-if="selected.length == 1">
+            <v-list-item :to="getPath(selected[0])"> Open </v-list-item>
+            <template v-if="selected[0].isFile">
+              <v-list-item :href="getViewUrl(selected[0])" target="_blank">
+                View
+              </v-list-item>
+              <v-list-item
+                link
+                v-clipboard="getViewUrl(selected[0])"
+                @success="onCopied"
+              >
+                Copy Path
+              </v-list-item>
+              <v-list-item link @click="onRename(selected[0].name)">
+                <span>Rename</span>
+              </v-list-item>
+            </template>
+          </template>
+          <v-list-item link @click="onDelete()">
+            <span class="red-1">Delete</span>
+          </v-list-item>
+        </v-list>
+      </e-menu>
+      <!-- <v-btn
         @click="onDelete()"
         :loading="deleting"
         color="error"
@@ -80,7 +108,7 @@
         v-show="!inFile && selected.length"
       >
         <v-icon size="18">mdi-trash-can-outline</v-icon>
-      </v-btn>
+      </v-btn> -->
     </div>
 
     <v-breadcrumbs :items="navItems" class="pl-0 mt-3"></v-breadcrumbs>
