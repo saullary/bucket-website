@@ -225,6 +225,15 @@
           >
             {{ item.hash.cutStr(10, 10) }}
           </v-btn>
+          <v-btn
+            v-if="item.hash"
+            icon
+            small
+            v-clipboard="item.hash"
+            @success="$toast('Copied to clipboard !')"
+          >
+            <v-icon size="14" color="primary">mdi-content-copy</v-icon>
+          </v-btn>
         </template>
       </v-data-table>
 
