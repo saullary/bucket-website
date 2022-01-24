@@ -84,7 +84,7 @@
         </v-btn>
         <v-list dense>
           <template v-if="selected.length == 1">
-            <v-list-item :to="getPath(selected[0])"> Open </v-list-item>
+            <!-- <v-list-item :to="getPath(selected[0])"> Open </v-list-item> -->
             <template v-if="selected[0].isFile">
               <v-list-item :href="getViewUrl(selected[0])" target="_blank">
                 Download
@@ -222,8 +222,7 @@
             small
             color="primary"
             v-if="item.isFile && originList.length"
-            target="_blank"
-            :href="getViewUrl(item)"
+            @click.stop="onView(item)"
           >
             <v-icon size="14">mdi-eye-outline</v-icon>
           </v-btn>
@@ -284,6 +283,7 @@
             v-if="item.hash"
             icon
             small
+            @click.stop="onRow(item, false)"
             v-clipboard="item.hash"
             @success="$toast('Copied to clipboard !')"
           >

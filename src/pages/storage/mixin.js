@@ -357,8 +357,12 @@ export default {
       let url = this.originList[0] + "/" + Prefix + item.name;
       return url;
     },
+    onView(it) {
+      window.open(this.getViewUrl(it));
+    },
     onRow(it, byBtn) {
-      if (!it.isFile || byBtn == true) {
+      // == true
+      if (byBtn) {
         const url = this.getPath(it);
         this.$router.push(url);
       }
