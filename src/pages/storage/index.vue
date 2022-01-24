@@ -87,7 +87,7 @@
             <v-list-item :to="getPath(selected[0])"> Open </v-list-item>
             <template v-if="selected[0].isFile">
               <v-list-item :href="getViewUrl(selected[0])" target="_blank">
-                View
+                Download
               </v-list-item>
               <v-list-item
                 link
@@ -98,6 +98,11 @@
               </v-list-item>
               <v-list-item link @click="onRename(selected[0].name)">
                 <span>Rename</span>
+              </v-list-item>
+            </template>
+            <template v-else-if="inBucket">
+              <v-list-item :to="`/domain?bucket=${selected[0].name}`">
+                Add Domain
               </v-list-item>
             </template>
           </template>
@@ -204,8 +209,9 @@
             rounded
             text
             small
-            :to="getPath(item)"
+            @click.stop="onRow(item, true)"
           >
+            <!-- :to="getPath(item)" -->
             <v-icon v-if="inFolder && !item.isFile" size="18" class="mr-2"
               >mdi-{{ inBucket ? "folder-multiple" : "folder" }}</v-icon
             >

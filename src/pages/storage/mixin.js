@@ -357,12 +357,11 @@ export default {
       let url = this.originList[0] + "/" + Prefix + item.name;
       return url;
     },
-    onRow(it) {
-      // if (!it.isFile) {
-      //   const url = this.getPath(it);
-      //   this.$router.push(url);
-      // }
-      console.log(it);
+    onRow(it, byBtn) {
+      if (!it.isFile || byBtn == true) {
+        const url = this.getPath(it);
+        this.$router.push(url);
+      }
     },
     async getSelectedObjects(item) {
       const items = item ? [item] : this.selected;
