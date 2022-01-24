@@ -193,6 +193,7 @@
         checkbox-color="#0F8DFF"
         hide-default-footer
         disable-pagination
+        @click:row="onRow"
       >
         <!-- <template v-slot:item.data-table-select="row">
           <v-checkbox v-model="row.isSelected" @input="row.select"></v-checkbox>
