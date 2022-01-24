@@ -360,12 +360,10 @@ export default {
     onView(it) {
       window.open(this.getViewUrl(it));
     },
-    onRow(it, byBtn) {
-      // == true
-      if (byBtn) {
-        const url = this.getPath(it);
-        this.$router.push(url);
-      }
+    onStop() {},
+    onRow(it) {
+      const url = this.getPath(it);
+      this.$router.push(url);
     },
     async getSelectedObjects(item) {
       const items = item ? [item] : this.selected;

@@ -209,9 +209,8 @@
             rounded
             text
             small
-            @click.stop="onRow(item, true)"
+            @click.stop="onRow(item)"
           >
-            <!-- :to="getPath(item)" -->
             <v-icon v-if="inFolder && !item.isFile" size="18" class="mr-2"
               >mdi-{{ inBucket ? "folder-multiple" : "folder" }}</v-icon
             >
@@ -222,7 +221,9 @@
             small
             color="primary"
             v-if="item.isFile && originList.length"
-            @click.stop="onView(item)"
+            @click.stop="onStop"
+            :href="getViewUrl(item)"
+            target="_blank"
           >
             <v-icon size="14">mdi-eye-outline</v-icon>
           </v-btn>
@@ -275,6 +276,7 @@
             text
             target="_blank"
             v-if="item.hash"
+            @click.stop="onStop"
             :href="`https://${item.hash}.ipfs.dweb.link`"
           >
             {{ item.hash.cutStr(10, 10) }}
@@ -283,7 +285,7 @@
             v-if="item.hash"
             icon
             small
-            @click.stop="onRow(item, false)"
+            @click.stop="onStop"
             v-clipboard="item.hash"
             @success="$toast('Copied to clipboard !')"
           >
