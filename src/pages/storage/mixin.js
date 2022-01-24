@@ -358,10 +358,11 @@ export default {
       return url;
     },
     onRow(it) {
-      if (!it.isFile) {
-        const url = this.getPath(it);
-        this.$router.push(url);
-      }
+      // if (!it.isFile) {
+      //   const url = this.getPath(it);
+      //   this.$router.push(url);
+      // }
+      console.log(it);
     },
     async getSelectedObjects(item) {
       const items = item ? [item] : this.selected;

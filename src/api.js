@@ -31,7 +31,7 @@ http.interceptors.request.use(
     if (
       token &&
       config.url != RefreshPath &&
-      Date.now() + 3600 * 5e3 >= accessTokenExpireAt
+      Date.now() + 3600 * 1e3 >= accessTokenExpireAt
     ) {
       const { data } = await http.post(
         RefreshPath,
@@ -49,6 +49,7 @@ http.interceptors.request.use(
       );
       localStorage.authData = JSON.stringify(data);
       token = data.accessToken;
+      localStorage.token = token;
       setState({
         token,
       });
