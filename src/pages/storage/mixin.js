@@ -320,7 +320,7 @@ export default {
         }
         html += "</ul>";
         await this.$confirm(html, `Remove ${target}${suffix}`);
-        this.deleting = true;
+        this.$loading();
         if (this.inBucket) {
           for (const row of arr) {
             await this.delBucket(row.name);
@@ -337,7 +337,7 @@ export default {
         else return;
       }
       this.selected = [];
-      this.deleting = false;
+      this.$loading.close();
       this.getList();
       this.onUpdate();
     },
