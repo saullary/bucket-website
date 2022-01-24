@@ -230,7 +230,7 @@
         </template>
         <template v-slot:item.domain="{ item }">
           <div v-if="item.domainInfo">
-            <span>{{ item.domainInfo.domain }}</span>
+            <span>{{ item.domainInfo.domain.cutStr(10, 20) }}</span>
 
             <!-- <e-menu
               :open-on-hover="!asMobile"
