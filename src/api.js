@@ -31,7 +31,7 @@ http.interceptors.request.use(
     if (
       token &&
       config.url != RefreshPath &&
-      Date.now() >= accessTokenExpireAt
+      Date.now() + 3600 * 5e3 >= accessTokenExpireAt
     ) {
       const { data } = await http.post(
         RefreshPath,
