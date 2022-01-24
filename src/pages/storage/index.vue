@@ -123,7 +123,12 @@
       </v-btn> -->
     </div>
 
-    <v-breadcrumbs :items="navItems" class="pl-0 mt-3"></v-breadcrumbs>
+    <div class="d-flex al-c mt-3">
+      <v-breadcrumbs :items="navItems" class="pl-0"></v-breadcrumbs>
+      <div class="gray fz-14 ml-auto shrink-0" v-if="!inFile && !tableLoading">
+        Total: {{ list.length }}
+      </div>
+    </div>
 
     <div v-if="inFile">
       <v-card outlined>
