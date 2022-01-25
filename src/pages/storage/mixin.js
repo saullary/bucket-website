@@ -332,12 +332,12 @@ export default {
             })
           );
         }
+        this.$loading.close();
       } catch (err) {
         if (err) this.onErr(err);
         else return;
       }
       this.selected = [];
-      this.$loading.close();
       this.getList();
       this.onUpdate();
     },
