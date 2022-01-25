@@ -12,6 +12,7 @@
       ref="upload"
       :info="pathInfo"
       @uploaded="getList"
+      :tableList="list"
     ></storage-upload>
 
     <div class="d-flex nowrap ov-a btn-wrap">
