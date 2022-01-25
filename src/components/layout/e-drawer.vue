@@ -35,7 +35,9 @@
           <div class="d-flex al-c" style="min-width: 110px">
             <!-- <v-icon size="16">{{ it.icon }}</v-icon> -->
             <img
-              :src="`img/icon/${it.img}${it.to == path ? '' : '-0'}.svg`"
+              :src="`img/icon/${it.img}${
+                path.indexOf(it.to) == 0 ? '' : '-0'
+              }.svg`"
               width="18"
             />
             <span class="ml-4" style="min-width: 65px">{{ it.label }}</span>
