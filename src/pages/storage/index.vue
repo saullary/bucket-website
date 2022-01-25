@@ -30,9 +30,9 @@
           :loading="!fileInfo"
           :download="fileName"
         >
-          <v-icon size="15">mdi-cloud-download</v-icon>
-          <!-- <img src="img/icon/add0.svg" width="12" /> -->
-          <span class="ml-1">Download</span>
+          <!-- <v-icon size="15">mdi-cloud-download</v-icon> -->
+          <img src="img/icon/download.svg" width="16" />
+          <span class="ml-2">Download</span>
         </v-btn>
         <v-btn
           class="ml-5"
@@ -40,8 +40,9 @@
           v-clipboard="fileUrl"
           @success="$toast('Copied to clipboard !')"
         >
-          <v-icon size="15">mdi-content-copy</v-icon>
-          <span class="ml-1">Copy Path</span>
+          <!-- <v-icon size="15">mdi-content-copy</v-icon> -->
+          <img src="img/icon/copy.svg" width="16" />
+          <span class="ml-2">Copy Path</span>
         </v-btn>
         <e-menu offset-y open-on-hover>
           <v-btn slot="ref" class="ml-5" icon>
