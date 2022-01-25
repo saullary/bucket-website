@@ -322,10 +322,20 @@ export default {
         await this.$confirm(html, `Remove ${target}${suffix}`);
         this.$loading();
         if (this.inBucket) {
+          let errArr = [];
           for (const row of arr) {
-            await this.delBucket(row.name);
+            try {
+              await this.delBucket(row.name);
+            } catch (error) {
+              errArr.push(`${row.name}: ${error.message}`);
+            }
           }
-        } else {
+          if (errArr.length)
+            setTimeout(() => {
+              this.$alert(errArr.join("<br>"));
+            }, 10);
+        }
+        if (!this.inBucket) {
           await this.delObjects(
             arr.map((it) => {
               return { Key: it.Key };
