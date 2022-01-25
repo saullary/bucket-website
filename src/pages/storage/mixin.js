@@ -167,11 +167,11 @@ export default {
         }
         await this.$sleep(500);
         this.$toast("Renamed successfully");
+        this.$loading.close();
       } catch (error) {
         console.log(error);
         if (error) this.onErr(error);
       }
-      this.$loading.close();
     },
     renameObject(srcKey, Key) {
       const { Bucket } = this.pathInfo;
@@ -180,7 +180,7 @@ export default {
         this.s3.copyObject(
           {
             Bucket,
-            CopySource: Bucket + "/" + srcKey,
+            CopySource: encodeURIComponent(Bucket + "/" + srcKey),
             Key,
           },
           (err) => {
