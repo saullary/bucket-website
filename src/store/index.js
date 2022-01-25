@@ -15,7 +15,7 @@ const store = new Vuex.Store({
     appInfo: {
       title: "",
     },
-    token: localStorage.token,
+    token: ()=>{ return localStorage.token },
     loginSta: 0,
     userInfo: JSON.parse(localStorage.userInfo || "{}"),
     noticeMsg: {},

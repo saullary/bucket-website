@@ -30,7 +30,7 @@ new Vue({
   render: (h) => h(App),
   computed: {
     ...mapState({
-      token: (s) => s.token,
+      token: (s) => s.token(),
       noticeMsg: (s) => s.noticeMsg,
     }),
   },

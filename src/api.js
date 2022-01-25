@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Axios from "axios";
-import { setState } from "./store";
+import AsyncLock from "async-lock";
+
 
 const inDev = /xyz/.test(process.env.VUE_APP_BASE_URL);
 Vue.prototype.$inDev = inDev;
@@ -21,39 +22,48 @@ const http = Axios.create({
 });
 
 const RefreshPath = "/refresh";
-
+const RefreshLockKey = "refresh"
+const lock = new AsyncLock({timeout: 5000})
 http.interceptors.request.use(
   async (config) => {
-    let token = localStorage.token;
-    let { accessTokenExpireAt, refreshToken } = JSON.parse(
-      localStorage.authData || "{}"
-    );
-    if (
-      token &&
-      config.url != RefreshPath &&
-      Date.now() + 3600 * 1e3 >= accessTokenExpireAt
-    ) {
-      const { data } = await http.post(
-        RefreshPath,
-        {
-          refreshToken,
-        },
-        {
-          params: {
-            _auth: 1,
-          },
-          headers: {
-            Authorization: "Bearer " + token,
-          },
+    let token = ""
+    console.log(config)
+    if (config.url != RefreshPath) {
+      await lock.acquire(RefreshLockKey, async ()=>{
+        token = localStorage.token;
+        let { accessTokenExpireAt, refreshToken } = JSON.parse(
+          localStorage.authData || "{}"
+        );
+        if (
+          token &&
+          Date.now() + 3600 * 1e3 >= accessTokenExpireAt
+        ) {
+          const { data } = await http.post(
+            RefreshPath,
+            {
+              refreshToken,
+            },
+            {
+              params: {
+                _auth: 1,
+              },
+              headers: {
+                Authorization: "Bearer " + token,
+              },
+            }
+          );
+          localStorage.authData = JSON.stringify(data);
+          token = data.accessToken;
+          localStorage.token = token;
+
         }
-      );
-      localStorage.authData = JSON.stringify(data);
-      token = data.accessToken;
-      localStorage.token = token;
-      setState({
-        token,
-      });
+      }).then(()=>{
+      })
+    }else{
+      token = localStorage.token;
     }
+    
+    
     const params = (config.params = config.params || {});
     if (params._auth && !/^http/.test(config.url)) {
       config.url = authApi + config.url;

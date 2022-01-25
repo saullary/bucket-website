@@ -25,7 +25,7 @@ export default {
     ...mapState({
       info: (s) => s.usageInfo,
       noticeMsg: (s) => s.noticeMsg,
-      token: (s) => s.token,
+      token: (s) => s.token(),
     }),
     usagePerc() {
       const { usedStorage, totalStorage } = this.info;
