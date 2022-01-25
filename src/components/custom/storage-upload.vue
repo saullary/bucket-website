@@ -25,6 +25,9 @@
                 fixed-header
                 :height="files.length > (asMobile ? 2 : 5) ? '50vh' : null"
               >
+                <template v-slot:item.name="{ item }">
+                  <span :class="{ 'red-1': item.exist }">{{ item.name }}</span>
+                </template>
                 <template v-slot:item.action="{ item }">
                   <template v-if="uploading">
                     <v-progress-circular
@@ -49,13 +52,22 @@
                 </template>
               </v-data-table>
             </div>
+
+            <template #hint>
+              <div class="mt-5 red-1 fz-14" v-if="overLen">
+                The highlight file{{ overLen > 1 ? "s" : "" }} already exist{{
+                  overLen > 1 ? "" : "s"
+                }}, continuing to upload will overwrite it.
+              </div>
+            </template>
           </e-upload>
         </div>
 
         <div class="mt-5 ta-c">
-          <div class="mb-3 gray fz-14" v-if="uploading">
+          <div class="mb-5 gray fz-14" v-if="uploading">
             {{ sucNum }}/ {{ files.length }} uploaded
           </div>
+
           <v-btn v-if="!uploading" outlined @click="onClear">{{
             files.length ? "Clear" : "Cancel"
           }}</v-btn>
@@ -75,6 +87,7 @@ export default {
   props: {
     value: Boolean,
     info: Object,
+    tableList: Array,
   },
   data() {
     return {
@@ -105,12 +118,18 @@ export default {
     asMobile() {
       return this.$vuetify.breakpoint.smAndDown;
     },
+    overLen() {
+      return this.list.filter((it) => {
+        return this.tableList.filter((row) => row.name == it.name).length > 0;
+      }).length;
+    },
     list() {
       return this.files.map((it, index) => {
         return {
           name: (it.name || "").cutStr(10, 10),
           size: this.$utils.getFileSize(it.size),
           index,
+          exist: this.tableList.filter((row) => row.name == it.name).length > 0,
         };
       });
     },

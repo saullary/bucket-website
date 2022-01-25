@@ -28,6 +28,7 @@
           @input="onInput"
         />
       </div>
+      <slot name="hint"></slot>
       <p class="ta-c mt-5" v-if="!disabled">
         <v-btn text @click="onClick">
           <span class="gray">
