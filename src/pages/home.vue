@@ -30,7 +30,7 @@ export default {
     ...mapState({
       isTouch: (s) => s.isTouch,
       isFocus: (s) => s.isFocus,
-      token: (s) => s.token,
+      token: (s) => s.token(),
       noticeMsg: (s) => s.noticeMsg,
     }),
   },

@@ -89,7 +89,7 @@ export default {
     ...mapState({
       noticeMsg: (s) => s.noticeMsg,
       userInfo: (s) => s.userInfo,
-      token: (s) => s.token,
+      token: (s) => s.token(),
     }),
     path() {
       return this.$route.path;
