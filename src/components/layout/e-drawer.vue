@@ -32,9 +32,13 @@
           :href="it.href"
           :target="it.href ? '_blank' : ''"
         >
-          <div class="d-flex al-c" style="min-width: 100px">
-            <v-icon size="16">{{ it.icon }}</v-icon>
-            <span class="ml-3" style="min-width: 65px">{{ it.label }}</span>
+          <div class="d-flex al-c" style="min-width: 110px">
+            <!-- <v-icon size="16">{{ it.icon }}</v-icon> -->
+            <img
+              :src="`img/icon/${it.img}${it.to == path ? '' : '-0'}.svg`"
+              width="18"
+            />
+            <span class="ml-4" style="min-width: 65px">{{ it.label }}</span>
           </div>
         </v-btn>
       </div>
@@ -94,6 +98,7 @@ export default {
           label: "Files",
           to: this.path.includes(initFilePath) ? initFilePath : this.filesPath,
           icon: "mdi-file-multiple",
+          img: "m-files",
         },
         {
           label: "Domains",
@@ -101,11 +106,13 @@ export default {
             ? initDomainPath
             : this.domainPath,
           icon: "mdi-wan",
+          img: "m-domains",
         },
         {
           label: "Billing",
           to: "/billing",
           icon: "mdi-credit-card-outline",
+          img: "m-billing",
         },
         // {
         //   label: "Settings",
