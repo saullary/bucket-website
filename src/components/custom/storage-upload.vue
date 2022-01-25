@@ -26,7 +26,7 @@
                 :height="files.length > (asMobile ? 2 : 5) ? '50vh' : null"
               >
                 <template v-slot:item.name="{ item }">
-                  <span :class="{ 'red-1': item.exist }">{{ item.name }}</span>
+                  <span :class="{ 'warn-1': item.exist }">{{ item.name }}</span>
                 </template>
                 <template v-slot:item.action="{ item }">
                   <template v-if="uploading">
@@ -54,7 +54,7 @@
             </div>
 
             <template #hint>
-              <div class="mt-5 red-1 fz-14" v-if="overLen">
+              <div class="mt-5 warn-1 fz-14" v-if="overLen">
                 The highlight file{{ overLen > 1 ? "s" : "" }} already exist{{
                   overLen > 1 ? "" : "s"
                 }}, continuing to upload will overwrite it.
