@@ -198,3 +198,12 @@ ul.ls-none {
     display: none;
   }
 }
+
+.btn-wrap {
+  overflow-y: visible;
+  overflow-x: auto;
+  .v-btn {
+    border-radius: 10px;
+    box-shadow: none;
+  }
+}

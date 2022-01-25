@@ -14,11 +14,12 @@
       @uploaded="getList"
     ></storage-upload>
 
-    <div class="d-flex nowrap ov-a">
+    <div class="d-flex nowrap ov-a btn-wrap">
       <div v-show="inBucket">
         <v-btn color="primary" @click="addBucket">
-          <v-icon size="15">mdi-folder-multiple-plus</v-icon>
-          <span class="ml-1">New Bucket</span>
+          <!-- <v-icon size="15">mdi-folder-multiple-plus</v-icon> -->
+          <img src="img/icon/add1.svg" width="12" />
+          <span class="ml-2">New Bucket</span>
         </v-btn>
       </div>
       <div v-show="inFile">
@@ -30,6 +31,7 @@
           :download="fileName"
         >
           <v-icon size="15">mdi-cloud-download</v-icon>
+          <!-- <img src="img/icon/add0.svg" width="12" /> -->
           <span class="ml-1">Download</span>
         </v-btn>
         <v-btn
@@ -57,8 +59,9 @@
       </div>
       <div v-show="inFolder">
         <v-btn color="primary" @click="$refs.upload.showPop = true">
-          <v-icon size="15">mdi-cloud-upload</v-icon>
-          <span class="ml-1">Upload</span>
+          <!-- <v-icon size="15">mdi-cloud-upload</v-icon> -->
+          <img src="img/icon/upload.svg" width="16" />
+          <span class="ml-2">Upload</span>
         </v-btn>
         <v-btn
           class="ml-5"
@@ -66,8 +69,9 @@
           :disabled="folderLen >= 20"
           @click="addFolder"
         >
-          <v-icon size="15">mdi-folder-plus-outline</v-icon>
-          <span class="ml-1">New Folder</span>
+          <!-- <v-icon size="15">mdi-folder-plus-outline</v-icon> -->
+          <img src="img/icon/add0.svg" width="12" />
+          <span class="ml-2">New Folder</span>
         </v-btn>
       </div>
 

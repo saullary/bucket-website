@@ -8,10 +8,11 @@
   </div>
   <div v-else>
     <!-- <e-page-title desc="">Domain</e-page-title> -->
-    <div>
+    <div class="btn-wrap">
       <v-btn color="primary" @click="showPop = true">
-        <v-icon size="16">mdi-plus-circle-outline</v-icon>
-        <span class="ml-1">Add Domain</span>
+        <!-- <v-icon size="16">mdi-plus-circle-outline</v-icon> -->
+        <img src="img/icon/add1.svg" width="12" />
+        <span class="ml-2">Add Domain</span>
       </v-btn>
       <v-btn
         @click="onDelete"
@@ -55,7 +56,7 @@
             small
             :to="`/storage/${item.bucketName}/`"
           >
-            <v-icon size="18" class="mr-2">mdi-folder-multiple</v-icon>
+            <!-- <v-icon size="18" class="mr-2">mdi-folder-multiple</v-icon> -->
             <b>{{ item.bucketName }}</b></v-btn
           >
         </template>
@@ -101,8 +102,8 @@
                     v-for="(it, i) in bucketList"
                     :key="i"
                   >
-                    <v-icon>mdi-folder-outline</v-icon>
-                    <span class="ml-2">{{ it.name }}</span>
+                    <v-icon size="14">mdi-folder-multiple</v-icon>
+                    <span class="ml-2 fz-15">{{ it.name }}</span>
                     <v-btn
                       small
                       color="primary"
