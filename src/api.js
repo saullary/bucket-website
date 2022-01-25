@@ -27,8 +27,7 @@ const lock = new AsyncLock({timeout: 5000})
 http.interceptors.request.use(
   async (config) => {
     let token = ""
-    console.log(config)
-    if (config.url != RefreshPath) {
+d    if (config.url != RefreshPath) {
       await lock.acquire(RefreshLockKey, async ()=>{
         token = localStorage.token;
         let { accessTokenExpireAt, refreshToken } = JSON.parse(
