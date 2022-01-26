@@ -1,4 +1,5 @@
 import Home from "./home";
+import Login from "./login";
 import Storage from "./storage";
 import Domains from "./domains";
 import Domain from "./domain";
@@ -10,8 +11,12 @@ export default [
   {
     path: "/",
     component: Home,
+  },
+  {
+    path: "/login",
+    component: Login,
     meta: {
-      // noLogin: true,
+      noLogin: true,
     },
   },
   {

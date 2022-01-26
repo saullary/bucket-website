@@ -77,9 +77,11 @@ http.interceptors.request.use(
 function goLogin() {
   localStorage.token = "";
   delete localStorage.userInfo;
-  localStorage.loginTo = location.hash;
-  location.href = "index.html";
-  // console.log("logout");
+  if (location.hash != "#/login") {
+    localStorage.loginTo = location.hash;
+    location.href = "index.html/#/login";
+    // console.log("logout");
+  }
 }
 
 http.interceptors.response.use(

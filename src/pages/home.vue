@@ -1,5 +1,12 @@
 <template>
-  <div class="ta-c mt-15">
+  <div>
+    <v-skeleton-loader
+      class="mt-2"
+      type="article"
+      max-width="500"
+    ></v-skeleton-loader>
+  </div>
+  <!-- <div class="ta-c mt-15">
     <div class="mb-8 pos-r">
       <img
         src="img/bg/login1.png"
@@ -13,7 +20,7 @@
         </v-btn>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -50,9 +57,6 @@ export default {
   },
   mounted() {
     this.onInit();
-    if (/installation_id/.test(location.href) && !this.isTouch) {
-      window.close();
-    }
   },
   methods: {
     async onInit() {
@@ -95,6 +99,8 @@ export default {
           this.$setState(data);
         }
         this.$router.replace("/storage/");
+      } else {
+        location.href = "https://www.4everland.org/bucketlogin";
       }
     },
     async onLogin() {
