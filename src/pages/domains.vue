@@ -48,7 +48,7 @@
             <b>{{ item.domain }}</b></v-btn
           >
         </template>
-        <template v-slot:item.bucketName="{ item }">
+        <!-- <template v-slot:item.bucketName="{ item }">
           <v-btn
             color="primary"
             rounded
@@ -56,10 +56,9 @@
             small
             :to="`/storage/${item.bucketName}/`"
           >
-            <!-- <v-icon size="18" class="mr-2">mdi-folder-multiple</v-icon> -->
             <b>{{ item.bucketName }}</b></v-btn
           >
-        </template>
+        </template> -->
       </v-data-table>
 
       <div class="ta-c mt-8" v-if="!list.length">

@@ -219,7 +219,7 @@
             :color="inBucket ? 'primary' : '#000'"
             rounded
             text
-            small
+            x-small
             @click.stop="onRow(item)"
           >
             <v-icon v-if="inFolder && !item.isFile" size="18" class="mr-2"
@@ -236,7 +236,8 @@
             :href="getViewUrl(item)"
             target="_blank"
           >
-            <v-icon size="14">mdi-eye-outline</v-icon>
+            <!-- <v-icon size="14">mdi-eye-outline</v-icon> -->
+            <img src="img/icon/eye.svg" width="13" />
           </v-btn>
         </template>
         <template v-slot:item.domain="{ item }">
@@ -283,7 +284,7 @@
         <template v-slot:item.hash="{ item }">
           <v-btn
             rounded
-            small
+            x-small
             text
             target="_blank"
             v-if="item.hash"
@@ -300,7 +301,8 @@
             v-clipboard="item.hash"
             @success="$toast('Copied to clipboard !')"
           >
-            <v-icon size="14" color="primary">mdi-content-copy</v-icon>
+            <!-- <v-icon size="14" color="primary">mdi-content-copy</v-icon> -->
+            <img src="img/icon/copy1.svg" width="11" />
           </v-btn>
         </template>
         <template v-slot:item.act="{ item }">
