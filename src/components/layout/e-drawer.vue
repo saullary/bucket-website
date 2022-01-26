@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <div class="pos-btm" v-if="token">
+    <div class="pos-btm" style="bottom: 20px" v-if="token">
       <e-menu offset-x>
         <v-btn slot="ref" text block x-large>
           <v-avatar color="indigo" size="26">
