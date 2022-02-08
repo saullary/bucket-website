@@ -23,6 +23,7 @@
                 :items="list"
                 hide-default-footer
                 fixed-header
+                disable-pagination
                 :height="files.length > (asMobile ? 2 : 5) ? '50vh' : null"
               >
                 <template v-slot:item.name="{ item }">
