@@ -7,7 +7,11 @@
 <script>
 export default {
   mounted() {
-    this.onLogin();
+    if (localStorage.token) {
+      location.href = "index.html";
+    } else {
+      this.onLogin();
+    }
   },
   methods: {
     async onLogin() {
