@@ -130,7 +130,12 @@
     </div>
 
     <div class="d-flex al-c mt-3">
-      <v-breadcrumbs :items="navItems" class="pl-0"></v-breadcrumbs>
+      <img src="img/icon/nav-folder.svg" height="14" class="mr-2" />
+      <v-breadcrumbs :items="navItems" class="pl-0">
+        <template v-slot:divider>
+          <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
+        </template>
+      </v-breadcrumbs>
       <div class="gray fz-14 ml-auto shrink-0" v-if="!inFile && !tableLoading">
         Total: {{ list.length }}
       </div>

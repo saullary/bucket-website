@@ -54,7 +54,7 @@ export default {
       const arr = this.path.replace(to, "").split("/");
       for (const i in arr) {
         const text = arr[i];
-        // if (!text) break;
+        if (!text) break;
         to += text + (arr[i + 1] == "" ? "" : "/");
         items.push({
           text,
