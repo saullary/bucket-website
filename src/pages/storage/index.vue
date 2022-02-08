@@ -484,7 +484,12 @@ export default {
             counter: true,
             maxlength: 60,
             trim: true,
-            rules: [(v) => !!(v || "").trim() || "Invalid"],
+            rules: [
+              (v) => !!(v || "").trim() || "Invalid",
+              (v) =>
+                /^[a-z\d-_]+$/.test(v) ||
+                "Folder names can consist only of lowercase letters, numbers, underscode (_), and hyphens (-).",
+            ],
             required: true,
           },
         });
@@ -531,13 +536,13 @@ export default {
             rules: [
               (v) => !!(v || "").trim() || msg1,
               (v) =>
-                /^[a-z\d-.]+$/.test(v) ||
-                "Bucket names can consist only of lowercase letters, numbers, dots (.), and hyphens (-).",
+                /^[a-z\d-]+$/.test(v) ||
+                "Bucket names can consist only of lowercase letters, numbers, and hyphens (-).",
               (v) =>
                 (/^[a-z\d]/.test(v) && /[a-z\d]$/.test(v)) ||
                 "Bucket names must begin and end with a letter or number.",
               (v) =>
-                !/--/.test(v) || "Continuous use of dash(-) is not allowed",
+                !/--/.test(v) || "Continuous use of hyphens(-) is not allowed",
             ],
             required: true,
           },
