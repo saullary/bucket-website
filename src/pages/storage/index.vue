@@ -296,7 +296,9 @@
             @click.stop="onStop"
             :href="`https://${item.hash}.ipfs.dweb.link`"
           >
-            {{ item.hash.cutStr(10, 10) }}
+            <span class="d-ib line-1" style="width: 160px">
+              {{ item.hash }}
+            </span>
           </v-btn>
           <v-btn
             v-if="item.hash"
