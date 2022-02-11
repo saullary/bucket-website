@@ -100,6 +100,8 @@ export default {
   },
   methods: {
     async onAdd() {
+      if (this.list.length >= 10)
+        return this.$alert("You can add 10 keys at maximum.");
       try {
         this.adding = true;
         const { data } = await this.$http.post("/user/service-accounts");
