@@ -1,7 +1,11 @@
 <template>
   <div>
     <e-page-title desc="">Domain</e-page-title>
-    <v-breadcrumbs :items="navItems" class="pl-0 mt-2"></v-breadcrumbs>
+    <v-breadcrumbs :items="navItems" class="pl-0 mt-2">
+      <template v-slot:divider>
+        <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
+      </template>
+    </v-breadcrumbs>
 
     <div v-if="!info">
       <v-skeleton-loader type="article" max-width="600" />
