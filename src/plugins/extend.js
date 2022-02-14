@@ -107,6 +107,10 @@ String.prototype.cutStr = function (pre = 100, trail = 0) {
   return txt;
 };
 
+String.prototype.encode = function () {
+  return this.replaceAll(" ", "%20");
+};
+
 if (!String.prototype.replaceAll) {
   String.prototype.replaceAll = function (word, tar) {
     const reg = new RegExp(word, "mg");

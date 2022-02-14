@@ -142,6 +142,7 @@ export default {
         console.log(this.pathInfo);
         const { value: name } = await this.$prompt("", "Rename " + srcName, {
           hideIcon: true,
+          defaultValue: srcName,
           inputAttrs: {
             label: "New Name",
             counter: true,
@@ -365,7 +366,7 @@ export default {
     getViewUrl(item) {
       const { Prefix } = this.pathInfo;
       let url = this.originList[0] + "/" + Prefix + item.name;
-      return url;
+      return url.encode();
     },
     onView(it) {
       window.open(this.getViewUrl(it));

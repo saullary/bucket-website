@@ -38,7 +38,7 @@
         <v-btn
           class="ml-5"
           outlined
-          v-clipboard="fileUrl"
+          v-clipboard="fileUrl.encode()"
           @success="$toast('Copied to clipboard !')"
         >
           <!-- <v-icon size="15">mdi-content-copy</v-icon> -->
@@ -190,7 +190,12 @@
                   >
                     {{ link }}
                   </v-btn>
-                  <v-btn icon small v-clipboard="link" @success="onCopied">
+                  <v-btn
+                    icon
+                    small
+                    v-clipboard="link.encode()"
+                    @success="onCopied"
+                  >
                     <v-icon size="15" class="ml-auto">mdi-content-copy</v-icon>
                   </v-btn>
                 </p>
