@@ -54,7 +54,7 @@
             <v-icon dark v-else> mdi-account </v-icon>
           </v-avatar>
           <span class="ml-3 gray-3 fz-14">{{
-            userInfo.username || "Unknown"
+            userInfo.username ? userInfo.username.cutStr(6, 6) : "Unknown"
           }}</span>
           <v-icon class="ml-auto" color="#aaa">mdi-chevron-right</v-icon>
         </v-btn>
@@ -63,7 +63,7 @@
             <span>Settings</span>
           </v-list-item>
           <v-list-item link @click="onLogout">
-            <span>Logout</span>
+            <span>Disconnect</span>
           </v-list-item>
         </v-list>
       </e-menu>
