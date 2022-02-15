@@ -73,18 +73,7 @@ export default {
               _auth: 1,
             },
           });
-          console.log(data);
-          localStorage.authData = JSON.stringify(data);
-          const token = data.accessToken;
-          localStorage.token = token;
-          localStorage.refreshAt = Date.now();
-          let hash = "";
-          if (localStorage.loginTo) {
-            const storKey = "got_storage_" + token.substr(-5);
-            if (localStorage[storKey]) hash = localStorage.loginTo;
-            localStorage.loginTo = "";
-          }
-          location.href = "index.html" + hash;
+          this.$onLoginData(data);
         } catch (error) {
           console.log(error);
         }
@@ -100,7 +89,7 @@ export default {
         }
         this.$router.replace("/storage/");
       } else {
-        location.href = "https://www.4everland.org/bucketlogin";
+        location.href = this.$loginUrl;
       }
     },
     async onLogin() {

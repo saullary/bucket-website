@@ -9,6 +9,21 @@ Vue.use(VueClipboards);
 
 Vue.prototype.$color1 = "#0F8DFF";
 
+Vue.prototype.$onLoginData = (data) => {
+  console.log(data);
+  localStorage.authData = JSON.stringify(data);
+  const token = data.accessToken;
+  localStorage.token = token;
+  localStorage.refreshAt = Date.now();
+  let hash = "";
+  if (localStorage.loginTo) {
+    const storKey = "got_storage_" + token.substr(-5);
+    if (localStorage[storKey]) hash = localStorage.loginTo;
+    localStorage.loginTo = "";
+  }
+  location.href = "index.html" + hash;
+};
+
 Vue.prototype.$sleep = (msec = 300) => {
   return new Promise((resolve) => {
     setTimeout(() => {

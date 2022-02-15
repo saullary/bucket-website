@@ -7,13 +7,28 @@
 <script>
 export default {
   mounted() {
+    const { stoken } = this.$route.query;
     if (localStorage.token) {
       location.href = "index.html";
+    } else if (stoken) {
+      this.ssoLogin(stoken);
     } else {
       this.onLogin();
     }
   },
   methods: {
+    async ssoLogin(stoken) {
+      try {
+        const { data } = await this.$http.post(`/st/${stoken}`, null, {
+          params: {
+            _auth: 1,
+          },
+        });
+        this.$onLoginData(data);
+      } catch (error) {
+        this.onErr(error);
+      }
+    },
     async onLogin() {
       try {
         const params = {
@@ -29,11 +44,14 @@ export default {
         });
         location.href = data.login_url;
       } catch (error) {
-        console.log(error);
-        this.$alert(error.message).then(() => {
-          location.href = "https://www.4everland.org/bucketlogin";
-        });
+        this.onErr(error);
       }
+    },
+    onErr(error) {
+      console.log(error);
+      this.$alert(error.message).then(() => {
+        location.href = this.$loginUrl;
+      });
     },
   },
 };
