@@ -50,7 +50,7 @@
       <e-menu offset-x>
         <v-btn slot="ref" text block x-large>
           <v-avatar size="26" v-if="userInfo.avatar">
-            <v-img :src="userInfo.avatar || 'img/icon/u-wallet.svg'"></v-img>
+            <v-img :src="userInfo.avatar"></v-img>
             <!-- <v-icon dark v-else> mdi-wallet </v-icon> -->
           </v-avatar>
           <img v-else src="img/icon/u-wallet.svg" height="20" />

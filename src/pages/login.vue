@@ -14,7 +14,7 @@ export default {
       this.ssoLogin(stoken);
     } else if (test) {
       this.$prompt("", "Test Token").then(({ value }) => {
-        console.log(value);
+        localStorage.clear();
         localStorage.token = value;
         location.href = "index.html";
       });
