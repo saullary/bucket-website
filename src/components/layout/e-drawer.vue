@@ -49,10 +49,11 @@
     <div class="pos-btm" style="bottom: 20px" v-if="token">
       <e-menu offset-x>
         <v-btn slot="ref" text block x-large>
-          <v-avatar color="indigo" size="26">
-            <v-img :src="userInfo.avatar" v-if="userInfo.avatar"></v-img>
-            <v-icon dark v-else> mdi-account </v-icon>
+          <v-avatar size="26" v-if="userInfo.avatar">
+            <v-img :src="userInfo.avatar || 'img/icon/u-wallet.svg'"></v-img>
+            <!-- <v-icon dark v-else> mdi-wallet </v-icon> -->
           </v-avatar>
+          <img v-else src="img/icon/u-wallet.svg" height="20" />
           <span class="ml-3 gray-3 fz-14">{{
             userInfo.username ? userInfo.username.cutStr(6, 6) : "Unknown"
           }}</span>

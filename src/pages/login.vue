@@ -7,11 +7,17 @@
 <script>
 export default {
   mounted() {
-    const { stoken } = this.$route.query;
+    const { stoken, test } = this.$route.query;
     if (localStorage.token) {
       location.href = "index.html";
     } else if (stoken) {
       this.ssoLogin(stoken);
+    } else if (test) {
+      this.$prompt("", "Test Token").then(({ value }) => {
+        console.log(value);
+        localStorage.token = value;
+        location.href = "index.html";
+      });
     } else {
       this.onLogin();
     }
