@@ -49,11 +49,19 @@
     <div class="pos-btm" style="bottom: 20px" v-if="token">
       <e-menu offset-x>
         <v-btn slot="ref" text block x-large>
-          <v-avatar size="26" v-if="userInfo.avatar">
-            <v-img :src="userInfo.avatar"></v-img>
-            <!-- <v-icon dark v-else> mdi-wallet </v-icon> -->
+          <v-avatar size="26" v-if="userInfo.username">
+            <v-img :src="userInfo.avatar" v-if="userInfo.avatar"></v-img>
+            <canvas
+              width="30"
+              height="30"
+              :data-jdenticon-value="userInfo.username"
+              v-else
+            >
+              <img src="img/icon/u-wallet.svg" height="20" />
+            </canvas>
           </v-avatar>
           <img v-else src="img/icon/u-wallet.svg" height="20" />
+
           <span class="ml-3 gray-3 fz-14">{{
             userInfo.username ? userInfo.username.cutStr(6, 6) : "Unknown"
           }}</span>
