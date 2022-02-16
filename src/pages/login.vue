@@ -15,7 +15,7 @@ export default {
     } else if (test) {
       this.$prompt("", "Test Token").then(({ value }) => {
         localStorage.clear();
-        localStorage.token = value;
+        localStorage.token = value.replace(/'/g, "");
         location.href = "index.html";
       });
     } else {

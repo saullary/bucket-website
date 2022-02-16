@@ -15,9 +15,11 @@ const authApi = inDev
   : "https://oauth.4everland.org";
 
 Vue.prototype.$endpoint = endpoint;
-Vue.prototype.$loginUrl = inDev
+
+const loginUrl = inDev
   ? "https://official-website-test.4everland.app/bucketlogin"
   : "https://www.4everland.org/bucketlogin";
+Vue.prototype.$loginUrl = loginUrl;
 
 const http = Axios.create({
   baseURL,
@@ -82,8 +84,8 @@ function goLogin() {
   delete localStorage.userInfo;
   if (location.hash != "#/login") {
     localStorage.loginTo = location.hash;
-    location.href = "index.html/#/login";
-    // console.log("logout");
+    location.href = loginUrl;
+    console.log("logout", loginUrl);
   }
 }
 
@@ -98,6 +100,7 @@ http.interceptors.response.use(
         if (data.code < 1e4) {
           goLogin();
         }
+        // console.log(data, res.config);
         const error = new Error(msg);
         error.code = data.code;
         throw error;
