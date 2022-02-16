@@ -8,10 +8,10 @@
 export default {
   mounted() {
     const { stoken, test } = this.$route.query;
-    if (localStorage.token) {
-      location.href = "index.html";
-    } else if (stoken) {
+    if (stoken) {
       this.ssoLogin(stoken);
+    } else if (localStorage.token) {
+      location.href = "index.html";
     } else if (test) {
       this.$prompt("", "Test Token").then(({ value }) => {
         localStorage.clear();
