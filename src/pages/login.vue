@@ -10,14 +10,14 @@ export default {
     const { stoken, test } = this.$route.query;
     if (stoken) {
       this.ssoLogin(stoken);
-    } else if (localStorage.token) {
-      location.href = "index.html";
     } else if (test) {
       this.$prompt("", "Test Token").then(({ value }) => {
         localStorage.clear();
         localStorage.token = value.replace(/'/g, "");
         location.href = "index.html";
       });
+    } else if (localStorage.token) {
+      location.href = "index.html";
     } else {
       this.onLogin();
     }

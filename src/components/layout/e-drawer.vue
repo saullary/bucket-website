@@ -51,14 +51,7 @@
         <v-btn slot="ref" text block x-large>
           <v-avatar size="26" v-if="userInfo.avatar">
             <v-img :src="userInfo.avatar" v-if="userInfo.avatar"></v-img>
-            <canvas
-              width="30"
-              height="30"
-              :data-jdenticon-value="userInfo.username"
-              v-else
-            >
-              <img src="img/icon/u-wallet.svg" height="20" />
-            </canvas>
+            <!-- <avatar :text="userInfo.username"></avatar> -->
           </v-avatar>
           <img v-else src="img/icon/u-wallet.svg" height="20" />
 
