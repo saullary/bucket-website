@@ -11,6 +11,7 @@ Vue.prototype.$color1 = "#0F8DFF";
 
 Vue.prototype.$onLoginData = (data) => {
   console.log(data);
+  localStorage.clear();
   localStorage.authData = JSON.stringify(data);
   const token = data.accessToken;
   localStorage.token = token;

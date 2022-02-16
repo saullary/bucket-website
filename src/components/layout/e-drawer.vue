@@ -49,7 +49,7 @@
     <div class="pos-btm" style="bottom: 20px" v-if="token">
       <e-menu offset-x>
         <v-btn slot="ref" text block x-large>
-          <v-avatar size="26" v-if="userInfo.username">
+          <v-avatar size="26" v-if="userInfo.avatar">
             <v-img :src="userInfo.avatar" v-if="userInfo.avatar"></v-img>
             <canvas
               width="30"
