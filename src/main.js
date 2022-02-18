@@ -62,6 +62,8 @@ new Vue({
             name: "onInit",
           },
         });
+      } else if (this.$route.path != "/") {
+        this.$router.replace("/");
       }
     },
     async getUesrInfo() {
