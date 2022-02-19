@@ -62,7 +62,7 @@ new Vue({
             name: "onInit",
           },
         });
-      } else if (this.$route.path != "/") {
+      } else if (["/", "/login"].indexOf(this.$route.path) == -1) {
         this.$router.replace("/");
       }
     },
