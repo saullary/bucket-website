@@ -27,6 +27,7 @@
     </div>
     <div class="mt-4">
       <v-data-table
+        class="hide-bdb"
         :headers="headers"
         :items="list"
         :loading="loading"

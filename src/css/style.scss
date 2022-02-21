@@ -96,6 +96,15 @@ body {
     margin-bottom: 0!important;
     background: none!important;
   }
+  .v-input--selection-controls {
+    margin-top: 0;
+    padding-top: 0;
+  }
+}
+.hide-bdb {
+  tbody td {
+    border-bottom: none!important;
+  }
 }
 .v-input--selection-controls__input .v-icon {
   font-size: 20px;
