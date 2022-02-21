@@ -155,6 +155,9 @@ export default {
             required: true,
           },
         });
+        if (srcName == name) {
+          return;
+        }
         this.$loading();
         const reg = /[^/]+$/;
         const newKey = this.inFile ? Key.replace(reg, name) : Prefix + name;
