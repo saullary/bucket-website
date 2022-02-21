@@ -1,6 +1,7 @@
 import Home from "./home";
 import Login from "./login";
 import Storage from "./storage";
+import ARHistory from "./ar-history";
 import Domains from "./domains";
 import Domain from "./domain";
 import Billing from "./billing";
@@ -22,6 +23,13 @@ export default [
   {
     path: "/storage/*",
     component: Storage,
+  },
+  {
+    path: "/ar-history",
+    component: ARHistory,
+    meta: {
+      title: "AR History",
+    },
   },
   {
     path: "/domain",

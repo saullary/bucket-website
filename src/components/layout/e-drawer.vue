@@ -104,6 +104,11 @@ export default {
           icon: "mdi-file-multiple",
           img: "m-files",
         },
+        // {
+        //   label: "AR History",
+        //   to: "/ar-history",
+        //   img: "m-ar",
+        // },
         {
           label: "Domains",
           to: this.path.includes(initDomainPath)

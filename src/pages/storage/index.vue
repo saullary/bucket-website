@@ -215,6 +215,7 @@
     </div>
     <div v-else>
       <v-data-table
+        class="hide-bdb"
         :headers="headers"
         :items="list"
         :loading="tableLoading"
@@ -260,42 +261,6 @@
         <template v-slot:item.domain="{ item }">
           <div v-if="item.domainInfo">
             <span>{{ item.domainInfo.domain.cutStr(10, 20) }}</span>
-
-            <!-- <e-menu
-              :open-on-hover="!asMobile"
-              offset-y
-              @input="onDomain(item.name, $event)"
-            >
-              <v-btn
-                slot="ref"
-                color="primary"
-                text
-                small
-                :to="asMobile ? null : `/domain?bucket=${item.name}`"
-              >
-                <v-icon size="14">mdi-plus</v-icon>
-                <span v-if="item.domainInfo.count > 1">
-                  {{ item.domainInfo.count - 1 }}
-                </span>
-              </v-btn>
-              <v-list dense>
-                <v-list-item
-                  link
-                  :to="row.to"
-                  v-for="(row, j) in item.domains"
-                  :key="j"
-                >
-                  <v-list-item-title>
-                    <v-icon v-if="row.icon" class="mr-1" size="16">{{
-                      row.icon
-                    }}</v-icon>
-                    <span :class="row.valid ? 'color-suc' : ''">{{
-                      row.name
-                    }}</span>
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </e-menu> -->
           </div>
         </template>
         <template v-slot:item.hash="{ item }">
@@ -324,10 +289,10 @@
             <img src="img/icon/copy1.svg" width="11" />
           </v-btn>
         </template>
-        <template v-slot:item.act="{ item }">
-          <v-btn icon small color="error" @click="onDelete(item)">
-            <v-icon size="16">mdi-trash-can-outline</v-icon>
-          </v-btn>
+        <template v-slot:item.arAct="{ item }">
+          <div class="hide-msg">
+            <v-switch v-model="item.isAr" dense @click.stop="onStop"></v-switch>
+          </div>
         </template>
       </v-data-table>
 
@@ -368,7 +333,7 @@ export default {
           { text: "Bucket Name", value: "name" },
           { text: "Domain", value: "domain" },
           { text: "CreateAt", value: "createAt" },
-          // { text: "Actions", value: "act" },
+          // { text: "Sync to AR", value: "arAct" },
         ];
       return [
         { text: "Name", value: "name" },
