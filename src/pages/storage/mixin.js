@@ -32,7 +32,7 @@ export default {
       return this.inStorage && !/\/$/.test(this.path);
     },
     inFolder() {
-      return !this.inBucket && !this.inFile;
+      return this.inStorage && !this.inBucket && !this.inFile;
     },
     fileName() {
       const arr = this.path.split("/");

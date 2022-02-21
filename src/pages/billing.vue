@@ -13,7 +13,8 @@
           href="https://forms.gle/hrhH1WArrvv8V4298"
           target="_blank"
         >
-          Apply
+          <span>Apply</span>
+          <!-- <v-icon size="16" class="ml-2 op-9">mdi-open-in-new</v-icon> -->
         </v-btn>
       </div>
     </div>

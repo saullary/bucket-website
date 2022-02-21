@@ -51,10 +51,12 @@
           </v-btn>
           <v-list dense>
             <v-list-item link @click="onRename(fileName)">
-              <span>Rename</span>
+              <img src="img/icon/ic-rename.svg" width="14" class="mr-2" />
+              <span class="gray-7">Rename</span>
             </v-list-item>
             <v-list-item link @click="onDelFile">
-              <span class="red-1">Delete</span>
+              <img src="img/icon/ic-delete.svg" width="14" class="mr-2" />
+              <span class="red-2">Delete</span>
             </v-list-item>
           </v-list>
         </e-menu>
@@ -93,27 +95,32 @@
             <!-- <v-list-item :to="getPath(selected[0])"> Open </v-list-item> -->
             <template v-if="selected[0].isFile">
               <v-list-item :href="getViewUrl(selected[0])" target="_blank">
-                Download
+                <img src="img/icon/ic-download.svg" width="15" class="mr-2" />
+                <span class="gray-7">Download</span>
               </v-list-item>
               <v-list-item
                 link
                 v-clipboard="getViewUrl(selected[0])"
                 @success="onCopied"
               >
-                Copy Path
+                <img src="img/icon/ic-copy.svg" width="14" class="mr-2" />
+                <span class="gray-7">Copy Path</span>
               </v-list-item>
               <v-list-item link @click="onRename(selected[0].name)">
-                <span>Rename</span>
+                <img src="img/icon/ic-rename.svg" width="14" class="mr-2" />
+                <span class="gray-7">Rename</span>
               </v-list-item>
             </template>
             <template v-else-if="inBucket">
               <v-list-item :to="`/domain?bucket=${selected[0].name}`">
-                Add Domain
+                <img src="img/icon/ic-domain.svg" width="14" class="mr-2" />
+                <span class="gray-7">Add Domain</span>
               </v-list-item>
             </template>
           </template>
           <v-list-item link @click="onDelete()">
-            <span class="red-1">Delete</span>
+            <img src="img/icon/ic-delete.svg" width="14" class="mr-2" />
+            <span class="red-2">Delete</span>
           </v-list-item>
         </v-list>
       </e-menu>
