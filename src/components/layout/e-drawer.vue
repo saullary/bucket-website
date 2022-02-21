@@ -125,7 +125,7 @@ export default {
         // },
         {
           label: "Docs",
-          href: "https://bucket.docs.4everland.org",
+          href: "https://docs.bucket.4everland.org/",
           icon: "mdi-file-document-outline",
           img: "m-docs",
         },
