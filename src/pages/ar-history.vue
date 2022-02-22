@@ -7,6 +7,11 @@
           <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
         </template>
       </v-breadcrumbs>
+      <div class="d-flex ml-auto shrink-0">
+        <nav-item icon="ic-sync" unit="MB">0</nav-item>
+        <nav-item icon="ic-synced" unit="MB" class="ml-7">0</nav-item>
+        <nav-item unit="Objects" class="ml-7">{{ total }}</nav-item>
+      </div>
     </div>
 
     <v-data-table
@@ -67,6 +72,7 @@ export default {
         { text: "AR Status", value: "arweaveStatus" },
       ],
       list: [],
+      total: 0,
       tableLoading: false,
       selected: [],
     };
@@ -93,6 +99,7 @@ export default {
           "https://yapi.foreverland.xyz/mock/81/arweave/history"
         );
         this.list = data.list;
+        this.total = data.page.total;
         console.log(this.list);
       } catch (error) {
         console.log(error);

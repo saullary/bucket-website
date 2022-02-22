@@ -143,8 +143,10 @@
           <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
         </template>
       </v-breadcrumbs>
-      <div class="gray fz-14 ml-auto shrink-0" v-if="!inFile && !tableLoading">
-        Total: {{ list.length }}
+      <div class="ml-auto shrink-0" v-if="!inFile && !tableLoading">
+        <nav-item :unit="inBucket ? 'Buckets' : 'Objects'">{{
+          list.length
+        }}</nav-item>
       </div>
     </div>
 
