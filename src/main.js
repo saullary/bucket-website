@@ -9,6 +9,7 @@ import { endpoint } from "./api";
 // import AWS from "aws-sdk";
 import { S3 } from "@aws-sdk/client-s3";
 Vue.config.productionTip = false;
+var Minio = require("minio");
 
 router.beforeEach((to, _, next) => {
   let { title } = to.meta || {};
@@ -97,6 +98,14 @@ new Vue({
         },
         region: "eu-west-2",
       });
+      const s3m = new Minio.Client({
+        endPoint: endpoint.replace("https://", ""),
+        port: 443,
+        useSSL: true,
+        accessKey,
+        secretKey,
+        sessionToken,
+      });
       window.s3 = Vue.prototype.$s3 = s3;
       console.log("s3", s3);
       // window.ss3 = Vue.prototype.$ss3 = new AWS.S3({
@@ -106,8 +115,10 @@ new Vue({
       //   accessKeyId: accessKey,
       //   secretAccessKey: secretKey,
       // });
+      console.log(s3m);
       this.$setState({
         s3,
+        s3m,
       });
     },
   },

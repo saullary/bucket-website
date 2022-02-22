@@ -17,6 +17,7 @@ export default {
   computed: {
     ...mapState({
       s3: (s) => s.s3,
+      s3m: (s) => s.s3m,
       searchKey: (s) => s.searchKey,
     }),
     path() {
@@ -221,33 +222,46 @@ export default {
     },
     getObjects() {
       this.tableLoading = true;
-      const { Prefix } = this.pathInfo;
-      const filterFn = (it) => {
-        return (it.Prefix || it.Key).indexOf(this.pathInfo.Prefix) == 0;
-      };
-      this.s3.listObjectsV2(this.pathInfo, (err, data) => {
+      const { Bucket, Prefix, Delimiter } = this.pathInfo;
+      // const filterFn = (it) => {
+      //   return (it.Prefix || it.Key).indexOf(this.pathInfo.Prefix) == 0;
+      // };
+      const stream = this.s3m.extensions.listObjectsV2WithMetadataQuery(
+        Bucket,
+        Prefix,
+        "",
+        Delimiter,
+        1000,
+        ""
+      );
+      stream.on("data", (data) => {
         this.tableLoading = false;
-        if (err) return this.onErr(err);
-        // console.log(data, Prefix);
-        this.folderList = [
-          ...(data.CommonPrefixes || []).filter(filterFn).map((it) => {
+        data.objects.sort((a, b) => {
+          return (b.prefix ? 1 : 0) - (a.prefix ? 1 : 0);
+        });
+        this.folderList = data.objects.map((it) => {
+          if (it.prefix)
             return {
-              name: it.Prefix.replace(Prefix, "").replace("/", ""),
+              name: it.prefix.replace(Prefix, "").replace("/", ""),
             };
-          }),
-          ...(data.Contents || []).filter(filterFn).map((it) => {
-            return {
-              Key: it.Key,
-              name: it.Key.replace(Prefix, ""),
-              updateAt: it.LastModified.format(),
-              size: this.$utils.getFileSize(it.Size),
-              hash: this.$utils.getCidV1(it.ETag),
-              isFile: true,
-            };
-          }),
-        ];
+          return {
+            Key: it.name,
+            name: it.name.replace(Prefix, ""),
+            updateAt: it.lastModified.format(),
+            size: this.$utils.getFileSize(it.size),
+            hash: this.$utils.getCidV1(it.etag),
+            isFile: true,
+          };
+        });
         // console.log(this.folderList);
       });
+      stream.on("error", (err) => {
+        this.tableLoading = false;
+        if (err) return this.onErr(err);
+      });
+      // this.s3.listObjectsV2(this.pathInfo, (err, data) => {
+      //   // console.log(data, Prefix);
+      // });
     },
     getBuckets() {
       this.tableLoading = true;
