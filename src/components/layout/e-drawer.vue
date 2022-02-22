@@ -15,7 +15,7 @@
         <img src="img/logo.svg" height="28" />
       </a>
     </div>
-    <div class="pa-8">
+    <div class="pa-6 pt-5">
       <e-stor-usage></e-stor-usage>
     </div>
 
@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <div class="pos-btm" style="bottom: 20px" v-if="token">
+    <div class="pos-btm" style="bottom: 10px" v-if="token">
       <e-menu offset-x>
         <v-btn slot="ref" text block x-large>
           <v-avatar size="26" v-if="userInfo.avatar">

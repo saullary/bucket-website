@@ -8,8 +8,10 @@
         </template>
       </v-breadcrumbs>
       <div class="d-flex ml-auto shrink-0">
-        <nav-item icon="ic-sync" unit="MB">0</nav-item>
-        <nav-item icon="ic-synced" unit="MB" class="ml-7">0</nav-item>
+        <nav-item icon="ic-sync" unit="MB">{{ usageInfo.arSyncing }}</nav-item>
+        <nav-item icon="ic-synced" unit="MB" class="ml-7">{{
+          usageInfo.arSynced
+        }}</nav-item>
         <nav-item unit="Objects" class="ml-7">{{ total }}</nav-item>
       </div>
     </div>
@@ -61,6 +63,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
@@ -78,6 +82,9 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      usageInfo: (s) => s.usageInfo,
+    }),
     navItems() {
       return [
         {

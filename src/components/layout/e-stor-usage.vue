@@ -6,13 +6,28 @@
     </div>
     <v-progress-linear
       rounded
-      height="6"
+      height="8"
       :value="usagePerc * 100"
       class="mt-3"
     ></v-progress-linear>
     <div class="mt-3">
       <b class="fz-18">{{ info.usedStorage || "0" }}</b>
-      <span class="gray fz-14"> / 1024MB used</span>
+      <span class="gray fz-14"> / {{ info.totalStorage }}MB used</span>
+    </div>
+
+    <v-progress-linear
+      color="success"
+      rounded
+      height="8"
+      :value="arUsagePerc * 100"
+      class="mt-5"
+    ></v-progress-linear>
+    <div class="mt-3 d-flex al-c">
+      <span class="gray fz-12">AR Storage</span>
+      <div class="ml-auto">
+        <b class="fz-18">{{ info.arUsed || "0" }}</b>
+        <span class="gray fz-14"> / {{ info.arTotal }}MB used</span>
+      </div>
     </div>
   </div>
 </template>
@@ -32,6 +47,11 @@ export default {
       if (!usedStorage) return 0;
       return usedStorage / totalStorage;
     },
+    arUsagePerc() {
+      const { arUsed, arTotal } = this.info;
+      if (!arTotal) return 0;
+      return arUsed / arTotal;
+    },
   },
   watch: {
     noticeMsg({ name }) {
@@ -49,10 +69,22 @@ export default {
     async getInfo() {
       try {
         const { data } = await this.$http.get("/user/resource/usage");
+        const {
+          arweaveUsedStorage = 0,
+          arweaveSyncingStorage = 0,
+          arweaveTotalStorage = 0,
+        } = data;
         this.$setState({
           usageInfo: {
             totalStorage: parseInt(data.totalStorage / 1024),
             usedStorage: (data.usedStorage / 1024).toFixed(2),
+            arTotal: parseInt(arweaveTotalStorage / 1024),
+            arUsed: (
+              (arweaveUsedStorage + arweaveSyncingStorage) /
+              1024
+            ).toFixed(0),
+            arSyncing: (arweaveSyncingStorage / 1024).toFixed(0),
+            arSynced: (arweaveUsedStorage / 1024).toFixed(0),
           },
         });
       } catch (error) {
