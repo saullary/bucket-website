@@ -333,7 +333,7 @@ export default {
           { text: "Bucket Name", value: "name" },
           { text: "Domain", value: "domain" },
           { text: "CreateAt", value: "createAt" },
-          // { text: "Sync to AR", value: "arAct" },
+          { text: "Sync to AR", value: "arAct" },
         ];
       return [
         { text: "Name", value: "name" },

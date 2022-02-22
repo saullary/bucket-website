@@ -93,11 +93,11 @@ http.interceptors.response.use(
   (res) => {
     const data = res.data;
     if (typeof data == "object" && data && "code" in data) {
-      if (data.code != 200) {
+      if (data.code != 200 && data.code % 1 == 0) {
         let msg = data.message || `${data.code} error`;
         Vue.prototype.$loading.close();
         // console.log(msg)
-        if (data.code < 1e4) {
+        if (data.code == 401) {
           goLogin();
         }
         // console.log(data, res.config);
