@@ -136,6 +136,31 @@ export default {
         this.getObjects();
       }
     },
+    async onSyncAR(name) {
+      console.log(name);
+      try {
+        const html =
+          `<ul>` +
+          "<li>Supports all AR public gateway access</li>" +
+          "<li class='mt-2'>Permanent storage is not removable, and file sizes are limited to 100M</li>" +
+          "<li class='mt-2'>Consumes AR storage</li>" +
+          "</ul>";
+        await this.$confirm(html, "Sync to AR");
+        const { Bucket } = this.pathInfo;
+        this.$loading();
+        await this.$http.post("/arweave/file", {
+          bucket: Bucket,
+          key: this.getFileKey(name),
+        });
+      } catch (error) {
+        //
+      }
+      this.$loading.close();
+    },
+    getFileKey(name) {
+      const { Prefix, Key } = this.pathInfo;
+      return this.inFile ? Key : Prefix + name;
+    },
     async onRename(srcName) {
       try {
         const { Prefix, Key } = this.pathInfo;

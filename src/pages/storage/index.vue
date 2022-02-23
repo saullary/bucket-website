@@ -54,6 +54,10 @@
               <img src="img/icon/ic-rename.svg" width="14" class="mr-2" />
               <span class="gray-7">Rename</span>
             </v-list-item>
+            <v-list-item link @click="onSyncAR(fileName)">
+              <img src="img/icon/ic-ar.svg" width="14" class="mr-2" />
+              <span class="gray-7">Sync to AR</span>
+            </v-list-item>
             <v-list-item link @click="onDelFile">
               <img src="img/icon/ic-delete.svg" width="14" class="mr-2" />
               <span class="red-2">Delete</span>
@@ -109,6 +113,10 @@
               <v-list-item link @click="onRename(selected[0].name)">
                 <img src="img/icon/ic-rename.svg" width="14" class="mr-2" />
                 <span class="gray-7">Rename</span>
+              </v-list-item>
+              <v-list-item link @click="onSyncAR(selected[0].name)">
+                <img src="img/icon/ic-ar.svg" width="14" class="mr-2" />
+                <span class="gray-7">Sync to AR</span>
               </v-list-item>
             </template>
             <template v-else-if="inBucket">
@@ -296,6 +304,9 @@
             <v-switch v-model="item.isAr" dense @click.stop="onStop"></v-switch>
           </div>
         </template>
+        <template v-slot:item.arStatus="{ item, index }">
+          <sync-state :val="index % 5" v-if="item.isFile"></sync-state>
+        </template>
       </v-data-table>
 
       <div class="ta-c mt-8" v-if="!list.length">
@@ -342,7 +353,7 @@ export default {
         { text: "Size", value: "size" },
         { text: "IPFS Hash", value: "hash" },
         { text: "Last Modified", value: "updateAt" },
-        // { text: "Actions", value: "act" },
+        { text: "AR Status", value: "arStatus" },
       ];
     },
     fileInfoList() {
