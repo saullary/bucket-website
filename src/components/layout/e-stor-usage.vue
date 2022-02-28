@@ -12,7 +12,7 @@
     ></v-progress-linear>
     <div class="mt-3">
       <b class="fz-18">{{ info.usedStorage || "0" }}</b>
-      <span class="gray fz-14"> / 1024MB used</span>
+      <span class="gray fz-14"> / {{ info.totalStorage }}MB used</span>
     </div>
   </div>
 </template>
