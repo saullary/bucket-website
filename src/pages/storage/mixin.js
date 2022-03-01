@@ -136,6 +136,23 @@ export default {
         this.getObjects();
       }
     },
+    async onSyncBucket(it) {
+      try {
+        if (it.arLoading) return;
+        this.$set(it, "arLoading", true);
+        // const { data } = await this.$http.post("/arweave/buckets/" + it.name, {
+        //   sync: it.isAr,
+        // });
+        // console.log(data);
+        await this.$sleep(500);
+        console.log(it, it.isAr);
+        // throw new Error("test err");
+      } catch (error) {
+        console.log(error);
+        this.$set(it, "isAr", !it.isAr);
+      }
+      this.$set(it, "arLoading", false);
+    },
     async onSyncAR(name) {
       console.log(name);
       try {

@@ -301,7 +301,13 @@
         </template>
         <template v-slot:item.arAct="{ item }">
           <div class="hide-msg">
-            <v-switch v-model="item.isAr" dense @click.stop="onStop"></v-switch>
+            <v-switch
+              v-model="item.isAr"
+              dense
+              :loading="item.arLoading"
+              :disabled="item.arLoading"
+              @click.stop.prevent="onSyncBucket(item)"
+            ></v-switch>
           </div>
         </template>
         <template v-slot:item.arStatus="{ item, index }">
