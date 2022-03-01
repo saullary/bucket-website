@@ -325,17 +325,20 @@
           }}
         </div>
       </div>
-      <div
-        v-else-if="!finished"
-        class="pd-20 gray ta-c fz-16 mt-5"
-        :class="{
-          'hover-1': !loadingMore,
-        }"
-        @click="onLoadMore"
-        v-intersect="onLoadMore"
-      >
-        {{ loadingMore ? "Loading..." : "Load More" }}
-      </div>
+    </div>
+
+    <div
+      v-if="inFolder && !finished"
+      class="pd-20 gray ta-c fz-16 mt-5"
+      :class="{
+        'hover-1': !loadingMore,
+      }"
+      @click="onLoadMore"
+      v-intersect="onLoadMore"
+    >
+      <span v-if="list.length">{{
+        loadingMore ? "Loading..." : "Load More"
+      }}</span>
     </div>
   </div>
 </template>

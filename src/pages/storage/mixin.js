@@ -317,13 +317,13 @@ export default {
         });
         if (this.loadingMore) {
           this.loadingMore = false;
-          if (!list.length) this.finished = true;
-          else this.folderList = [...this.folderList, ...list];
+          this.folderList = [...this.folderList, ...list];
         } else {
           this.folderList = list;
-          if (list.length < 10) this.finished = true;
         }
+        if (list.length < 5) this.finished = true;
         // console.log(this.folderList);
+        console.log(this.pathInfo, this.folderList.length);
       });
       stream.on("error", (err) => {
         this.tableLoading = false;

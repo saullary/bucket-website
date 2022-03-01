@@ -103,7 +103,7 @@ export default {
       try {
         this.tableLoading = true;
         const { data } = await this.$http.get(
-          "https://yapi.foreverland.xyz/mock/81/arweave/history"
+          "https://yapi.foreverland.xyz/mock/81/arweave/objects"
         );
         this.list = data.list;
         this.total = data.page.total;
