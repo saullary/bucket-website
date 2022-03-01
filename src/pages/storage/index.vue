@@ -151,7 +151,7 @@
           <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
         </template>
       </v-breadcrumbs>
-      <div class="ml-auto shrink-0" v-if="!inFile && !tableLoading">
+      <div class="ml-auto shrink-0" v-if="inBucket && !tableLoading">
         <nav-item :unit="inBucket ? 'Buckets' : 'Objects'">{{
           list.length
         }}</nav-item>
@@ -325,6 +325,17 @@
           }}
         </div>
       </div>
+      <div
+        v-else-if="!finished"
+        class="pd-20 gray ta-c fz-16 mt-5"
+        :class="{
+          'hover-1': !loadingMore,
+        }"
+        @click="onLoadMore"
+        v-intersect="onLoadMore"
+      >
+        {{ loadingMore ? "Loading..." : "Load More" }}
+      </div>
     </div>
   </div>
 </template>
@@ -340,6 +351,8 @@ export default {
       fileLoading: false,
       fileInfo: null,
       domainsMap: {},
+      finished: false,
+      loadingMore: false,
     };
   },
   computed: {

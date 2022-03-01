@@ -1,4 +1,5 @@
 import { mapState } from "vuex";
+import debounce from "../../plugins/debounce";
 
 const BasePath = "/storage/";
 
@@ -92,7 +93,7 @@ export default {
           return it;
         });
       } else if (this.inFolder) list = this.folderList;
-      if (this.searchKey) {
+      if (this.searchKey && !this.inFolder) {
         list = list.filter((it) => {
           return new RegExp(this.searchKey).test(it.name);
         });
@@ -114,6 +115,13 @@ export default {
         Prefix: Key,
         Delimiter: "/",
       };
+    },
+  },
+  watch: {
+    searchKey() {
+      if (this.inFolder) {
+        debounce(this.getList);
+      }
     },
   },
   methods: {
@@ -262,26 +270,38 @@ export default {
       });
       this.onDomain(this.pathInfo.Bucket, true);
     },
+    onLoadMore() {
+      if (this.tableLoading) return;
+      this.loadingMore = true;
+      this.getObjects();
+    },
     getObjects() {
       this.tableLoading = true;
       const { Bucket, Prefix, Delimiter } = this.pathInfo;
-      // const filterFn = (it) => {
-      //   return (it.Prefix || it.Key).indexOf(this.pathInfo.Prefix) == 0;
-      // };
+      let after = "";
+      if (this.loadingMore) {
+        after = this.list[this.list.length - 1].Key;
+      } else {
+        this.finished = false;
+      }
+      let pre = Prefix;
+      if (this.searchKey) {
+        pre += this.searchKey;
+      }
       const stream = this.s3m.extensions.listObjectsV2WithMetadataQuery(
         Bucket,
-        Prefix,
+        pre,
         "",
         Delimiter,
-        1000,
-        ""
+        30,
+        after
       );
       stream.on("data", (data) => {
         this.tableLoading = false;
         data.objects.sort((a, b) => {
           return (b.prefix ? 1 : 0) - (a.prefix ? 1 : 0);
         });
-        this.folderList = data.objects.map((it) => {
+        const list = data.objects.map((it) => {
           if (it.prefix)
             return {
               name: it.prefix.replace(Prefix, "").replace("/", ""),
@@ -295,6 +315,14 @@ export default {
             isFile: true,
           };
         });
+        if (this.loadingMore) {
+          this.loadingMore = false;
+          if (!list.length) this.finished = true;
+          else this.folderList = [...this.folderList, ...list];
+        } else {
+          this.folderList = list;
+          if (list.length < 10) this.finished = true;
+        }
         // console.log(this.folderList);
       });
       stream.on("error", (err) => {
