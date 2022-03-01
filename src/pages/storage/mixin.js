@@ -280,7 +280,9 @@ export default {
       const { Bucket, Prefix, Delimiter } = this.pathInfo;
       let after = "";
       if (this.loadingMore) {
-        after = this.list[this.list.length - 1].Key;
+        const last = this.list[this.list.length - 1];
+        if (last) after = last.Key;
+        else this.loadingMore = false;
       } else {
         this.finished = false;
       }
