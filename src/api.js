@@ -16,9 +16,12 @@ const authApi = inDev
 
 Vue.prototype.$endpoint = endpoint;
 
-const loginUrl = inDev
+let loginUrl = inDev
   ? "https://official-website-test.4everland.app/bucketlogin"
   : "https://www.4everland.org/bucketlogin";
+if (/localhost/.test(location.host)) {
+  loginUrl = "#/login?test=1";
+}
 Vue.prototype.$loginUrl = loginUrl;
 
 const http = Axios.create({
