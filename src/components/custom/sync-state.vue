@@ -1,6 +1,6 @@
 <template>
-  <span class="sync-state" :class="'sta' + val">
-    {{ text }}
+  <span class="sync-state" :class="val">
+    {{ val.capitalize() }}
   </span>
 </template>
 
@@ -8,15 +8,7 @@
 export default {
   props: {
     val: {
-      type: Number,
-      default: 1,
-    },
-  },
-  computed: {
-    text() {
-      return (
-        ["Synced", "Syncing", "Timeout", "Failure"][this.val - 1] || "Desynced"
-      );
+      type: String,
     },
   },
 };
@@ -24,17 +16,18 @@ export default {
 
 <style lang="scss">
 .sync-state {
+  text-transform: capitalize;
   color: #7e8ea8;
-  &.sta1 {
+  &.synced {
     color: #28aa91;
   }
-  &.sta2 {
+  &.syncing {
     color: #0f8dff;
   }
-  &.sta3 {
+  &.timeout {
     color: #ff8843;
   }
-  &.sta4 {
+  &.failure {
     color: #ff5b60;
   }
 }

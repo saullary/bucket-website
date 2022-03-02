@@ -310,8 +310,8 @@
             ></v-switch>
           </div>
         </template>
-        <template v-slot:item.arStatus="{ item, index }">
-          <sync-state :val="index % 5" v-if="item.isFile"></sync-state>
+        <template v-slot:item.arStatus="{ item }">
+          <sync-state :val="item.arStatus" v-if="item.isFile"></sync-state>
         </template>
       </v-data-table>
 

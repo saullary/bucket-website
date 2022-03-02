@@ -315,6 +315,7 @@ export default {
             size: this.$utils.getFileSize(it.size),
             hash: this.$utils.getCidV1(it.etag),
             isFile: true,
+            arStatus: "desynced",
           };
         });
         if (this.loadingMore) {

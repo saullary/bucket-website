@@ -58,6 +58,9 @@
           <img src="img/icon/copy1.svg" width="11" />
         </v-btn>
       </template>
+      <template v-slot:item.arweaveStatus="{ item }">
+        <sync-state :val="item.arweaveStatus"></sync-state>
+      </template>
     </v-data-table>
   </div>
 </template>
