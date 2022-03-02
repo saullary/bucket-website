@@ -31,32 +31,29 @@
           :loading="!fileInfo"
           :download="fileName"
         >
-          <!-- <v-icon size="15">mdi-cloud-download</v-icon> -->
           <img src="img/icon/download.svg" width="16" />
           <span class="ml-2">Download</span>
         </v-btn>
-        <v-btn
-          class="ml-5"
-          outlined
-          v-clipboard="fileUrl.encode()"
-          @success="$toast('Copied to clipboard !')"
-        >
-          <!-- <v-icon size="15">mdi-content-copy</v-icon> -->
-          <img src="img/icon/copy.svg" width="16" />
-          <span class="ml-2">Copy Path</span>
+        <v-btn class="ml-5" outlined @click="onSyncAR(fileName)">
+          <img src="img/icon/ic-ar-sync.svg" width="16" />
+          <span class="ml-2">Sync to AR</span>
         </v-btn>
         <e-menu offset-y open-on-hover>
           <v-btn slot="ref" class="ml-5" icon>
             <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
           <v-list dense>
+            <v-list-item
+              link
+              v-clipboard="fileUrl.encode()"
+              @success="$toast('Copied to clipboard !')"
+            >
+              <img src="img/icon/copy.svg" width="14" class="mr-2" />
+              <span class="gray-7">Copy Path</span>
+            </v-list-item>
             <v-list-item link @click="onRename(fileName)">
               <img src="img/icon/ic-rename.svg" width="14" class="mr-2" />
               <span class="gray-7">Rename</span>
-            </v-list-item>
-            <v-list-item link @click="onSyncAR(fileName)">
-              <img src="img/icon/ic-ar.svg" width="14" class="mr-2" />
-              <span class="gray-7">Sync to AR</span>
             </v-list-item>
             <v-list-item link @click="onDelFile">
               <img src="img/icon/ic-delete.svg" width="14" class="mr-2" />

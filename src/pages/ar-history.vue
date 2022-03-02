@@ -16,13 +16,13 @@
       </div>
     </div>
 
+    <!-- :show-select="list.length > 0" -->
     <v-data-table
       class="hide-bdb"
       :headers="headers"
       :items="list"
       :loading="tableLoading"
       v-model="selected"
-      :show-select="list.length > 0"
       item-key="name"
       no-data-text=""
       loading-text=""
@@ -40,7 +40,7 @@
           target="_blank"
           v-if="item.arweaveHash"
           @click.stop="onStop"
-          :href="`https://${item.arweaveHash}.ipfs.dweb.link`"
+          :href="`https://arweave.net/tx/${item.arweaveHash}`"
         >
           <span class="d-ib line-1" style="width: 160px">
             {{ item.arweaveHash }}
