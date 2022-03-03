@@ -33,7 +33,7 @@ export default [
     },
   },
   {
-    path: "/ar-file/:name/:hash",
+    path: "/ar-file/:name/:id",
     component: ARDetail,
     meta: {
       title: "AR File Info",

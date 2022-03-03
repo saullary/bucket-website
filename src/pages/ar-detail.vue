@@ -85,7 +85,7 @@ export default {
   },
   computed: {
     navItems() {
-      let { name, hash } = this.$route.params;
+      let { name, id } = this.$route.params;
       if (this.info) {
         name = this.info.name;
       }
@@ -97,7 +97,7 @@ export default {
         },
         {
           text: name,
-          to: `/ar-file/${name}/${hash}`,
+          to: `/ar-file/${name}/${id}`,
         },
       ];
     },
@@ -137,8 +137,8 @@ export default {
     async getInfo() {
       try {
         this.loading = true;
-        const { hash } = this.$route.params;
-        const { data } = await this.$http.get(`/arweave/objects/${hash}`);
+        const { id } = this.$route.params;
+        const { data } = await this.$http.get(`/arweave/objects/${id}`);
         this.info = data;
       } catch (error) {
         console.log(error);
