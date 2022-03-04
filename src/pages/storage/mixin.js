@@ -407,6 +407,9 @@ export default {
     async onDelete(item) {
       try {
         const arr = await this.getSelectedObjects(item);
+        if (arr.length > 1000) {
+          throw new Error("You can delete up to 1,000 files at a time.");
+        }
         const suffix = arr.length > 1 ? "s" : "";
         const target = this.inBucket ? "bucket" : "file";
         let html = `Are you sure you want to continue?<ul class='mt-4 ov-a' style="max-height: 40vh">`;
@@ -482,6 +485,10 @@ export default {
         if (it.isFile) arr.push(it);
         else {
           const objArr = await this.getSubObjects(it.name);
+          if (objArr.length >= 900)
+            throw new Error(
+              `Plenty of files are found in folder【${it.name}】 and can only be deleted under the folder.`
+            );
           arr = arr.concat(
             objArr.map((sub) => {
               return {
