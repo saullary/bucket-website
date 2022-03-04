@@ -366,9 +366,12 @@ export default {
     },
     async onDelFile() {
       try {
-        await this.$confirm(
-          "This file will be permanently deleted. Are you sure you want to continue"
-        );
+        let tip =
+          "The file will be permanently deleted. Are you sure you want to continue ?";
+        if (this.fileInfo.arStatus != "desynced") {
+          tip = `Are you sure you want to delete ${this.fileName} ?`;
+        }
+        await this.$confirm(tip);
         const { Key } = this.pathInfo;
         this.$loading();
         await this.delObjects([
@@ -406,7 +409,10 @@ export default {
         const arr = await this.getSelectedObjects(item);
         const suffix = arr.length > 1 ? "s" : "";
         const target = this.inBucket ? "bucket" : "file";
-        let html = `The following ${target}${suffix} will be permanently deleted. Are you sure you want to continue?<ul class='mt-4 ov-a' style="max-height: 40vh">`;
+        let html = `Are you sure you want to continue?<ul class='mt-4 ov-a' style="max-height: 40vh">`;
+        if (this.inFolder && arr.length == 1 && arr[0].arStatus == "desynced") {
+          html = `The following ${target}${suffix} will be permanently deleted. ${html}`;
+        }
         for (const row of arr) {
           html += "<li>" + row.name + "</li>";
         }

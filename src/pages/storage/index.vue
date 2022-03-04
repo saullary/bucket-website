@@ -138,16 +138,6 @@
           </v-list-item>
         </v-list>
       </e-menu>
-      <!-- <v-btn
-        @click="onDelete()"
-        :loading="deleting"
-        color="error"
-        class="ml-5"
-        min-width="36"
-        v-show="!inFile && selected.length"
-      >
-        <v-icon size="18">mdi-trash-can-outline</v-icon>
-      </v-btn> -->
     </div>
 
     <div class="d-flex al-c mt-3">
