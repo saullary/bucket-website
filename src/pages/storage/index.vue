@@ -34,7 +34,12 @@
           <img src="img/icon/download.svg" width="16" />
           <span class="ml-2">Download</span>
         </v-btn>
-        <v-btn class="ml-5" outlined @click="onSyncAR(fileName)">
+        <v-btn
+          class="ml-5"
+          outlined
+          @click="onSyncAR(fileName)"
+          :disabled="fileInfo && fileInfo.arStatus != 'desynced'"
+        >
           <img src="img/icon/ic-ar-sync.svg" width="16" />
           <span class="ml-2">Sync to AR</span>
         </v-btn>
@@ -111,7 +116,11 @@
                 <img src="img/icon/ic-rename.svg" width="14" class="mr-2" />
                 <span class="gray-7">Rename</span>
               </v-list-item>
-              <v-list-item link @click="onSyncAR(selected[0].name)">
+              <v-list-item
+                link
+                @click="onSyncAR(selected[0].name)"
+                v-if="!bucketInfo.isAr"
+              >
                 <img src="img/icon/ic-ar.svg" width="14" class="mr-2" />
                 <span class="gray-7">Sync to AR</span>
               </v-list-item>
@@ -256,7 +265,7 @@
             icon
             small
             color="primary"
-            v-if="item.isFile && originList.length"
+            v-if="item.isFile && bucketInfo.originList.length"
             @click.stop="onStop"
             :href="getViewUrl(item)"
             target="_blank"
@@ -403,21 +412,25 @@ export default {
         },
       ];
     },
-    originList() {
+    bucketInfo() {
       const { Bucket } = this.pathInfo;
+      const item = this.domainList.filter((it) => it.bucketName == Bucket)[0];
       let list = (this.domainsMap[Bucket] || [])
         .filter((it) => it.valid)
         .map((it) => it.name);
-      const item = this.domainList.filter((it) => it.bucketName == Bucket)[0];
       if (item && !list.includes(item.domain)) list.push(item.domain);
-      return list.map((domain) => {
-        return (this.$inDev ? "http:" : "https:") + "//" + domain;
-      });
+      return {
+        ...item,
+        isAr: Bucket == "tt0",
+        originList: list.map((domain) => {
+          return (this.$inDev ? "http:" : "https:") + "//" + domain;
+        }),
+      };
     },
     fileUrls() {
       if (!this.fileInfo || !this.inFile) return [];
       const { Key } = this.pathInfo;
-      const list = this.originList.map((origin) => {
+      const list = this.bucketInfo.originList.map((origin) => {
         return origin + "/" + Key;
       });
       if (!list.length) list.push(this.fileInfo.url);

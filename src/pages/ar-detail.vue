@@ -19,13 +19,13 @@
           type="article"
           max-width="500"
         ></v-skeleton-loader>
-        <div v-else-if="!fileInfo">
+        <div v-else-if="!info">
           <span class="gray">Not Found</span>
         </div>
         <ul class="ls-none" v-else>
           <li
             class="mt-2 mb-2 fz-14 d-flex"
-            v-for="(it, i) in fileInfoList"
+            v-for="(it, i) in infoList"
             :key="i"
           >
             <span class="d-ib pa-1" style="min-width: 130px"

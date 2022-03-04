@@ -177,6 +177,7 @@ export default {
           bucket: Bucket,
           key: this.getFileKey(name),
         });
+        this.getList();
       } catch (error) {
         //
       }
@@ -455,7 +456,7 @@ export default {
     },
     getViewUrl(item) {
       const { Prefix } = this.pathInfo;
-      let url = this.originList[0] + "/" + Prefix + item.name;
+      let url = this.bucketInfo.originList[0] + "/" + Prefix + item.name;
       return url.encode();
     },
     onView(it) {
