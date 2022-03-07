@@ -127,7 +127,9 @@ export default {
   },
   watch: {
     path() {
-      if (this.path == "/ar-history") this.getList();
+      if (this.path == "/ar-history") {
+        this.getList();
+      }
     },
   },
   mounted() {
