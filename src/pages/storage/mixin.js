@@ -127,6 +127,7 @@ export default {
       };
     },
     defArStatus() {
+      if (this.fromHistory) return "syncing";
       const { Bucket } = this.pathInfo;
       const curBucket = this.bucketList.filter((it) => it.name == Bucket)[0];
       if (curBucket) {

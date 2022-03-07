@@ -127,7 +127,7 @@ export default {
   },
   watch: {
     path() {
-      if (this.path == "/ar-history") {
+      if (this.path == "/arweave") {
         this.getList();
       }
     },
