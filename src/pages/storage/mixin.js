@@ -24,8 +24,11 @@ export default {
     path() {
       return decodeURIComponent(this.$route.path);
     },
+    fromHistory() {
+      return /^\/arweave/.test(this.path);
+    },
     inStorage() {
-      return new RegExp(BasePath).test(this.path);
+      return /^\/(storage|arweave\/)/.test(this.path);
     },
     inBucket() {
       return this.path == BasePath;
@@ -44,12 +47,15 @@ export default {
       if (this.inFolder) return this.pathInfo.Prefix.split("/").length - 1;
       return 0;
     },
+    basePath() {
+      return this.fromHistory ? "/arweave/" : BasePath;
+    },
     navItems() {
-      let to = BasePath;
-      const items = [
+      let to = this.basePath;
+      let items = [
         {
-          text: "Storage",
-          to,
+          text: this.fromHistory ? "AR History" : "Storage",
+          to: this.fromHistory ? "/arweave" : to,
           exact: true,
         },
       ];
@@ -58,10 +64,14 @@ export default {
         const text = arr[i];
         if (!text) break;
         to += text + (arr[i + 1] == "" ? "" : "/");
+        console.log(to, i, arr.length - 1);
+        if (this.fromHistory && i < arr.length - 1) {
+          continue;
+        }
         items.push({
           text,
           to,
-          exact: true,
+          exact: i < arr.length - 1,
         });
       }
       return items;
@@ -116,6 +126,14 @@ export default {
         Delimiter: "/",
       };
     },
+    defArStatus() {
+      const { Bucket } = this.pathInfo;
+      const curBucket = this.bucketList.filter((it) => it.name == Bucket)[0];
+      if (curBucket) {
+        return curBucket.isAr ? "syncing" : "desynced";
+      }
+      return "unknown";
+    },
   },
   watch: {
     searchKey() {
@@ -147,6 +165,11 @@ export default {
     async onSyncBucket(it) {
       try {
         if (it.arLoading) return;
+        if (!it.isAr) {
+          await this.$confirm(
+            "There may be some delay to close your ar bucket."
+          );
+        }
         this.$set(it, "arLoading", true);
         const { data } = await this.$http.post("/arweave/buckets/" + it.name, {
           sync: it.isAr,
@@ -160,6 +183,7 @@ export default {
         this.$set(it, "isAr", !it.isAr);
       }
       this.$set(it, "arLoading", false);
+      this.getBuckets();
     },
     async onSyncAR(name) {
       console.log(name);
@@ -254,18 +278,27 @@ export default {
         );
       });
     },
-    headObject() {
+    async headObject() {
+      if (!this.bucketList.length) {
+        await this.getBuckets();
+      }
       this.fileLoading = true;
       this.fileInfo = null;
       this.s3.headObject(this.pathInfo, (err, data) => {
         this.fileLoading = false;
         if (err) return this.onErr(err);
+        console.log(data);
+        let arStatus = "";
+        if (!arStatus) {
+          arStatus = this.defArStatus;
+        }
         this.fileInfo = {
           size: data.ContentLength,
           type: data.ContentType,
           hash: this.$utils.getCidV1(data.ETag),
           updateAt: data.LastModified,
-          url: this.$endpoint + this.path.replace(BasePath, "/"),
+          url: this.$endpoint + this.path.replace(this.basePath, "/"),
+          arStatus,
         };
         console.log(this.fileInfo);
       });
@@ -307,15 +340,14 @@ export default {
         data.objects.sort((a, b) => {
           return (b.prefix ? 1 : 0) - (a.prefix ? 1 : 0);
         });
-        const curBucket = this.bucketList.filter((it) => it.name == Bucket)[0];
         const list = data.objects.map((it) => {
           if (it.prefix)
             return {
               name: it.prefix.replace(Prefix, "").replace("/", ""),
             };
           let arStatus = "";
-          if (!arStatus && curBucket) {
-            arStatus = curBucket.isAr ? "syncing" : "desynced";
+          if (!arStatus) {
+            arStatus = this.defArStatus;
           }
 
           return {
@@ -349,7 +381,6 @@ export default {
     listBuckets() {
       return new Promise((resolve, reject) => {
         this.s3.listBuckets({}, (err, data) => {
-          this.tableLoading = false;
           if (err) {
             this.onErr(err);
             reject(err);
@@ -376,8 +407,10 @@ export default {
             console.log(row.bucket, "no bucket");
             return;
           }
+          const ar = row.arweave || {};
           Object.assign(item, {
-            isAr: row.arweaveSync,
+            isAr: row.arweave ? ar.sync : row.arweaveSync,
+            arCancel: ar.status == "cancel",
             defDomain: row.domain.domain,
           });
         });

@@ -106,7 +106,7 @@ export default {
         },
         {
           label: "AR History",
-          to: "/ar-history",
+          to: "/arweave",
           img: "m-ar",
         },
         {

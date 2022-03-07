@@ -23,7 +23,7 @@
       :items="list"
       :loading="tableLoading"
       v-model="selected"
-      item-key="name"
+      item-key="id"
       no-data-text=""
       loading-text=""
       checkbox-color="#0F8DFF"
@@ -31,6 +31,15 @@
       disable-pagination
       @click:row="onRow"
     >
+      <template v-slot:item.name="{ item }">
+        <span>{{ item.name.cutStr(20, 10) }}</span>
+        <e-tooltip right v-if="item.isDeleted">
+          <v-icon slot="ref" color="#999" size="16" class="pa-1 d-ib ml-2"
+            >mdi-alert-circle</v-icon
+          >
+          <span>Deleted in Bucket.</span>
+        </e-tooltip>
+      </template>
       <template v-slot:item.arweaveHash="{ item }">
         <v-btn
           color="primary"
@@ -62,6 +71,18 @@
         <sync-state :val="item.arweaveStatus"></sync-state>
       </template>
     </v-data-table>
+
+    <div
+      v-if="!finished"
+      class="pd-20 gray ta-c fz-16 mt-5"
+      :class="{
+        'hover-1': !loadingMore,
+      }"
+      @click="onLoadMore"
+      v-intersect="onLoadMore"
+    >
+      {{ loadingMore ? "Loading..." : "Load More" }}
+    </div>
   </div>
 </template>
 
@@ -72,7 +93,7 @@ export default {
   data() {
     return {
       headers: [
-        { text: "Name", value: "key" },
+        { text: "Name", value: "name" },
         { text: "Size", value: "size" },
         { text: "AR Hash", value: "arweaveHash" },
         { text: "Last Modified", value: "updateAt" },
@@ -82,6 +103,9 @@ export default {
       total: 0,
       tableLoading: false,
       selected: [],
+      finished: false,
+      loadingMore: false,
+      cursor: 0,
     };
   },
   computed: {
@@ -95,7 +119,7 @@ export default {
       return [
         {
           text: "AR History",
-          to: "/ar-history",
+          to: "/arweave",
           exact: true,
         },
       ];
@@ -110,15 +134,40 @@ export default {
     this.getList();
   },
   methods: {
+    onLoadMore() {
+      if (this.tableLoading) return;
+      this.loadingMore = true;
+      this.getList();
+    },
     async getList() {
       try {
         this.tableLoading = true;
-        const { data } = await this.$http.get("/arweave/objects");
-        this.list = data.list.map((it) => {
+        if (this.loadingMore) {
+          this.cursor = this.next;
+        } else {
+          this.finished = false;
+          this.cursor = 0;
+        }
+        const { data } = await this.$http.get("/arweave/objects", {
+          params: {
+            cursor: this.cursor,
+          },
+        });
+        this.next = Math.max(1, data.page.next);
+        const list = data.list.map((it, i) => {
+          it.id = it.id || it.cid + i;
+          it.name = it.key.replace(/^.+\//, "");
           it.size = this.$utils.getFileSize(it.size);
           it.updateAt = new Date(it.lastModified * 1e3).format();
           return it;
         });
+        if (this.loadingMore) {
+          this.loadingMore = false;
+          this.list = [...this.list, ...list];
+        } else {
+          this.list = list;
+        }
+        this.finished = !data.page.hasNext;
         this.total = data.page.total;
         // console.log(this.list);
       } catch (error) {
@@ -128,6 +177,9 @@ export default {
     },
     onRow(it) {
       console.log(it);
+      if (it.isDeleted) return;
+      const link = `/arweave/${it.bucket}/${it.key}`;
+      this.$router.push(link);
     },
   },
 };

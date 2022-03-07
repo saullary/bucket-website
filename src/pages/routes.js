@@ -2,7 +2,6 @@ import Home from "./home";
 import Login from "./login";
 import Storage from "./storage";
 import ARHistory from "./ar-history";
-import ARDetail from "./ar-detail";
 import Domains from "./domains";
 import Domain from "./domain";
 import Billing from "./billing";
@@ -26,18 +25,15 @@ export default [
     component: Storage,
   },
   {
-    path: "/ar-history",
+    path: "/arweave",
     component: ARHistory,
     meta: {
       title: "AR History",
     },
   },
   {
-    path: "/ar-file/:name/:id",
-    component: ARDetail,
-    meta: {
-      title: "AR File Info",
-    },
+    path: "/arweave/*",
+    component: Storage,
   },
   {
     path: "/domain",

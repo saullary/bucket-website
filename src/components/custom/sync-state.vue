@@ -1,5 +1,5 @@
 <template>
-  <span class="sync-state" :class="val">
+  <span class="sync-state" :class="val" v-if="val">
     {{ val.capitalize() }}
   </span>
 </template>

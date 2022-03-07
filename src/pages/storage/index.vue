@@ -45,7 +45,7 @@
             <img src="img/icon/ic-ar-sync.svg" width="16" />
             <span class="ml-2">Sync to AR</span>
           </v-btn>
-          <e-menu offset-y open-on-hover>
+          <e-menu offset-y open-on-hover v-if="!fromHistory">
             <v-btn slot="ref" class="ml-5" icon>
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
@@ -194,6 +194,27 @@
                   <v-icon size="15" class="ml-auto">mdi-content-copy</v-icon>
                 </v-btn>
               </div>
+              <div v-else-if="it.name == 'arHash'">
+                <template v-if="fileInfo.arStatus == 'synced'">
+                  <v-btn
+                    rounded
+                    text
+                    small
+                    target="_blank"
+                    :href="`https://${it.value}.ipfs.dweb.link`"
+                  >
+                    {{ it.value }}
+                  </v-btn>
+                  <v-btn icon small v-clipboard="it.arHash" @success="onCopied">
+                    <v-icon size="15" class="ml-auto">mdi-content-copy</v-icon>
+                  </v-btn>
+                </template>
+                <template v-else>
+                  <v-btn small text disabled>
+                    <sync-state :val="fileInfo.arStatus"></sync-state>
+                  </v-btn>
+                </template>
+              </div>
               <div v-else-if="it.name == 'url'">
                 <p v-for="(link, j) in it.value" :key="j">
                   <v-btn
@@ -299,14 +320,20 @@
           </v-btn>
         </template>
         <template v-slot:item.arAct="{ item }">
-          <div class="hide-msg">
+          <div class="hide-msg d-flex al-c">
             <v-switch
               v-model="item.isAr"
               dense
               :loading="item.arLoading"
-              :disabled="item.arLoading"
+              :disabled="item.arLoading || item.arCancel"
               @click.stop.prevent="onSyncBucket(item)"
             ></v-switch>
+            <e-tooltip top v-if="item.arCancel && !tableLoading">
+              <v-btn slot="ref" plain x-small @click.stop="getList">
+                <v-icon>mdi-refresh</v-icon>
+              </v-btn>
+              <span>Closing. Click to refresh.</span>
+            </e-tooltip>
           </div>
         </template>
         <template v-slot:item.arStatus="{ item }">
@@ -402,6 +429,11 @@ export default {
           label: "Object URL",
           name: "url",
           value: this.fileUrls,
+        },
+        {
+          label: "AR Hash",
+          name: "arHash",
+          value: this.arHash,
         },
       ];
     },
