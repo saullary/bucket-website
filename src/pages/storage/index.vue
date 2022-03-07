@@ -34,38 +34,41 @@
           <img src="img/icon/download.svg" width="16" />
           <span class="ml-2">Download</span>
         </v-btn>
-        <v-btn
-          class="ml-5"
-          outlined
-          @click="onSyncAR(fileName)"
-          :disabled="fileInfo && fileInfo.arStatus != 'desynced'"
-        >
-          <img src="img/icon/ic-ar-sync.svg" width="16" />
-          <span class="ml-2">Sync to AR</span>
-        </v-btn>
-        <e-menu offset-y open-on-hover>
-          <v-btn slot="ref" class="ml-5" icon>
-            <v-icon>mdi-dots-vertical</v-icon>
+
+        <template v-if="fileInfo">
+          <v-btn
+            class="ml-5"
+            outlined
+            @click="onSyncAR(fileName)"
+            :disabled="fileInfo && fileInfo.arStatus != 'desynced'"
+          >
+            <img src="img/icon/ic-ar-sync.svg" width="16" />
+            <span class="ml-2">Sync to AR</span>
           </v-btn>
-          <v-list dense>
-            <v-list-item
-              link
-              v-clipboard="fileUrl.encode()"
-              @success="$toast('Copied to clipboard !')"
-            >
-              <img src="img/icon/copy.svg" width="14" class="mr-2" />
-              <span class="gray-7">Copy Path</span>
-            </v-list-item>
-            <v-list-item link @click="onRename(fileName)">
-              <img src="img/icon/ic-rename.svg" width="14" class="mr-2" />
-              <span class="gray-7">Rename</span>
-            </v-list-item>
-            <v-list-item link @click="onDelFile">
-              <img src="img/icon/ic-delete.svg" width="14" class="mr-2" />
-              <span class="red-2">Delete</span>
-            </v-list-item>
-          </v-list>
-        </e-menu>
+          <e-menu offset-y open-on-hover>
+            <v-btn slot="ref" class="ml-5" icon>
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+            <v-list dense>
+              <v-list-item
+                link
+                v-clipboard="fileUrl.encode()"
+                @success="$toast('Copied to clipboard !')"
+              >
+                <img src="img/icon/copy.svg" width="14" class="mr-2" />
+                <span class="gray-7">Copy Path</span>
+              </v-list-item>
+              <v-list-item link @click="onRename(fileName)">
+                <img src="img/icon/ic-rename.svg" width="14" class="mr-2" />
+                <span class="gray-7">Rename</span>
+              </v-list-item>
+              <v-list-item link @click="onDelFile">
+                <img src="img/icon/ic-delete.svg" width="14" class="mr-2" />
+                <span class="red-2">Delete</span>
+              </v-list-item>
+            </v-list>
+          </e-menu>
+        </template>
       </div>
       <div v-show="inFolder">
         <v-btn color="primary" @click="$refs.upload.showPop = true">
@@ -362,7 +365,7 @@ export default {
       if (this.inBucket)
         return [
           { text: "Bucket Name", value: "name" },
-          { text: "Domain", value: "domain" },
+          { text: "Domain", value: "defDomain" },
           { text: "CreateAt", value: "createAt" },
           { text: "Sync to AR", value: "arAct" },
         ];
@@ -445,15 +448,15 @@ export default {
     s3() {
       this.getList();
     },
-    async bucketList(val) {
-      if (!val.length) return;
-      const { data } = await this.$http.get("/domains/stat");
-      // console.log(data);
-      if (data && data.stats) {
-        this.domainList = data.stats;
-        localStorage.domainList = JSON.stringify(this.domainList);
-      }
-    },
+    // async bucketList(val) {
+    //   if (!val.length) return;
+    //   const { data } = await this.$http.get("/domains/stat");
+    //   // console.log(data);
+    //   if (data && data.stats) {
+    //     this.domainList = data.stats;
+    //     localStorage.domainList = JSON.stringify(this.domainList);
+    //   }
+    // },
   },
   mounted() {
     this.getList();

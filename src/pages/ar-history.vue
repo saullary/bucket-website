@@ -75,7 +75,7 @@ export default {
         { text: "Name", value: "key" },
         { text: "Size", value: "size" },
         { text: "AR Hash", value: "arweaveHash" },
-        { text: "Last Modified", value: "LastModified" },
+        { text: "Last Modified", value: "updateAt" },
         { text: "AR Status", value: "arweaveStatus" },
       ],
       list: [],
@@ -88,6 +88,9 @@ export default {
     ...mapState({
       usageInfo: (s) => s.usageInfo,
     }),
+    path() {
+      return this.$route.path;
+    },
     navItems() {
       return [
         {
@@ -98,6 +101,11 @@ export default {
       ];
     },
   },
+  watch: {
+    path() {
+      if (this.path == "/ar-history") this.getList();
+    },
+  },
   mounted() {
     this.getList();
   },
@@ -105,12 +113,14 @@ export default {
     async getList() {
       try {
         this.tableLoading = true;
-        const { data } = await this.$http.get(
-          "https://yapi.foreverland.xyz/mock/81/arweave/objects"
-        );
-        this.list = data.list;
+        const { data } = await this.$http.get("/arweave/objects");
+        this.list = data.list.map((it) => {
+          it.size = this.$utils.getFileSize(it.size);
+          it.updateAt = new Date(it.lastModified * 1e3).format();
+          return it;
+        });
         this.total = data.page.total;
-        console.log(this.list);
+        // console.log(this.list);
       } catch (error) {
         console.log(error);
       }

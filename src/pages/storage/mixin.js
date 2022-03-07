@@ -148,10 +148,10 @@ export default {
       try {
         if (it.arLoading) return;
         this.$set(it, "arLoading", true);
-        // const { data } = await this.$http.post("/arweave/buckets/" + it.name, {
-        //   sync: it.isAr,
-        // });
-        // console.log(data);
+        const { data } = await this.$http.post("/arweave/buckets/" + it.name, {
+          sync: it.isAr,
+        });
+        console.log(data);
         await this.$sleep(500);
         console.log(it, it.isAr);
         // throw new Error("test err");
@@ -173,7 +173,7 @@ export default {
         await this.$confirm(html, "Sync to AR");
         const { Bucket } = this.pathInfo;
         this.$loading();
-        await this.$http.post("/arweave/file", {
+        await this.$http.post("/arweave/object", {
           bucket: Bucket,
           key: this.getFileKey(name),
         });
@@ -276,7 +276,10 @@ export default {
       this.loadingMore = true;
       this.getObjects();
     },
-    getObjects() {
+    async getObjects() {
+      if (!this.bucketList.length) {
+        await this.getBuckets();
+      }
       this.tableLoading = true;
       const { Bucket, Prefix, Delimiter } = this.pathInfo;
       let after = "";
@@ -304,11 +307,17 @@ export default {
         data.objects.sort((a, b) => {
           return (b.prefix ? 1 : 0) - (a.prefix ? 1 : 0);
         });
+        const curBucket = this.bucketList.filter((it) => it.name == Bucket)[0];
         const list = data.objects.map((it) => {
           if (it.prefix)
             return {
               name: it.prefix.replace(Prefix, "").replace("/", ""),
             };
+          let arStatus = "";
+          if (!arStatus && curBucket) {
+            arStatus = curBucket.isAr ? "syncing" : "desynced";
+          }
+
           return {
             Key: it.name,
             name: it.name.replace(Prefix, ""),
@@ -316,7 +325,7 @@ export default {
             size: this.$utils.getFileSize(it.size),
             hash: this.$utils.getCidV1(it.etag),
             isFile: true,
-            arStatus: "desynced",
+            arStatus,
           };
         });
         if (this.loadingMore) {
@@ -326,8 +335,8 @@ export default {
           this.folderList = list;
         }
         if (list.length < 5) this.finished = true;
-        // console.log(this.folderList);
-        console.log(this.pathInfo, this.folderList.length);
+        // console.log(this.pathInfo, this.folderList);
+        console.log(data.objects);
       });
       stream.on("error", (err) => {
         this.tableLoading = false;
@@ -337,19 +346,47 @@ export default {
       //   // console.log(data, Prefix);
       // });
     },
-    getBuckets() {
-      this.tableLoading = true;
-      this.s3.listBuckets({}, (err, data) => {
-        this.tableLoading = false;
-        if (err) return this.onErr(err);
-        this.bucketList = data.Buckets.map((it) => {
-          return {
-            name: it.Name,
-            createAt: it.CreationDate.format(),
-          };
+    listBuckets() {
+      return new Promise((resolve, reject) => {
+        this.s3.listBuckets({}, (err, data) => {
+          this.tableLoading = false;
+          if (err) {
+            this.onErr(err);
+            reject(err);
+          }
+          const list = data.Buckets.map((it) => {
+            return {
+              name: it.Name,
+              createAt: it.CreationDate.format(),
+            };
+          });
+          resolve(list);
         });
-        // console.log(this.bucketList);
       });
+    },
+    async getBuckets() {
+      this.tableLoading = true;
+      try {
+        const list = await this.listBuckets();
+        const { data } = await this.$http.get("/buckets/extra");
+        console.log(data);
+        data.list.forEach((row) => {
+          const item = list.filter((it) => it.name == row.bucket)[0];
+          if (!item) {
+            console.log(row.bucket, "no bucket");
+            return;
+          }
+          Object.assign(item, {
+            isAr: row.arweaveSync,
+            defDomain: row.domain.domain,
+          });
+        });
+        console.log(list);
+        this.bucketList = list;
+      } catch (error) {
+        console.log(error);
+      }
+      this.tableLoading = false;
     },
     delBucket(Bucket) {
       return new Promise((resolve, reject) => {
