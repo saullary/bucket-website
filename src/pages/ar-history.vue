@@ -179,7 +179,7 @@ export default {
     },
     onRow(it) {
       console.log(it);
-      if (it.isDeleted) return;
+      if (it.isDeleted) return this.$toast("Deleted in Bucket.");
       const link = `/arweave/${it.bucket}/${it.key}`;
       this.$router.push(link);
     },
