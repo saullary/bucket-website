@@ -161,6 +161,10 @@ export default {
         this.showSnackbar = true;
       } else this.showAlert = true;
     },
+    showAlert(val) {
+      if (val) this.isComplete = false;
+      else if (!this.isComplete) this.hideAlert(0);
+    },
   },
   created() {
     const showModal = (config) => {
@@ -269,6 +273,7 @@ export default {
       } else {
         if (fail) fail();
       }
+      this.isComplete = true;
       this.showAlert = false;
     },
   },
