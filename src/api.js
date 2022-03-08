@@ -121,10 +121,7 @@ http.interceptors.response.use(
       data.message ||
       statusText ||
       (status ? `${config.url}：${status}` : error.message);
-    if (msg == "Network Error") {
-      msg =
-        "A network error has occurred. Please check your connections and try again.";
-    }
+    msg = handleMsg(msg);
     if (status == 401) {
       goLogin();
     } else if (msg) {
@@ -140,6 +137,25 @@ http.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+function handleMsg(msg) {
+  return (
+    {
+      "Network Error":
+        "A network error has occurred. Please check your connections and try again.",
+      UNKNOWN_ERROR: "unknown exception",
+      VALIDATE_ERROR: "params validate error",
+      OAUTH_UNKNOWN_ERROR: "oauth validate request failed",
+      BUCKET_ACCESS_DENIED: "user haven't access to this bucket",
+      BUCKET_TOO_MANY_DOMAINS: "number of bucket domains gte 20",
+      BUCKET_SYNC_STATUS_CONFLICT:
+        "request param sync equal current bucket sync status",
+      STORAGE_IS_NOT_ENOUGH: "ARWEAVE storage not enough",
+      OBJECT_NOT_FOUND: "s3 object not found",
+      OBJECT_ALREADY_EXIST: "ARWEAVE object already exist",
+    }[msg] || msg
+  );
+}
 
 Vue.prototype.$http = http;
 
