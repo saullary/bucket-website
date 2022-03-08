@@ -192,7 +192,7 @@ export default {
       });
     },
     async beforeArSync() {
-      const skey = "noShowArTip";
+      const skey = "arTipOff";
       if (localStorage[skey]) return;
       const html =
         `<ul>` +

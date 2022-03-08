@@ -606,7 +606,7 @@ export default {
             if (form1.isAr) {
               await this.syncBucket(Bucket, true);
             }
-            await this.$sleep(500);
+            await this.$sleep(1000);
             this.$loading.close();
             this.getBuckets();
           }
