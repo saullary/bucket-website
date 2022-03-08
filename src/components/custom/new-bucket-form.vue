@@ -4,7 +4,7 @@
       <p class="black-6 fz-14 mr-auto">Arweave</p>
       <v-switch v-model="isAr"></v-switch>
     </div>
-    <div class="tip-wrap mt-5">
+    <div class="tip-wrap mt-5" v-show="isAr">
       The start Arweave storage space is 100MB, and files stored on Arweave
       network can't be deleted.
     </div>
