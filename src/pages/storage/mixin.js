@@ -168,13 +168,13 @@ export default {
         if (it.arLoading) return;
         if (!it.isAr) {
           await this.$confirm(
-            "There may be some delay to close your ar bucket."
+            "When you close sync to AR, it will become closing status, and you won't be able to properly close it until all your files have been synchronized. Are you sure you want to close it?"
           );
+        } else {
+          await this.beforeArSync();
         }
         this.$set(it, "arLoading", true);
-        const { data } = await this.$http.post("/arweave/buckets/" + it.name, {
-          sync: it.isAr,
-        });
+        const { data } = await this.syncBucket(it.name, it.isAr);
         console.log(data);
         await this.$sleep(500);
         console.log(it, it.isAr);
@@ -186,16 +186,31 @@ export default {
       this.$set(it, "arLoading", false);
       this.getBuckets();
     },
+    async syncBucket(name, sync) {
+      return this.$http.post("/arweave/buckets/" + name, {
+        sync,
+      });
+    },
+    async beforeArSync() {
+      const skey = "noShowArTip";
+      if (localStorage[skey]) return;
+      const html =
+        `<ul>` +
+        "<li>Supports all AR public gateway access</li>" +
+        "<li class='mt-2'>Permanent storage is not removable, and file sizes are limited to 100M</li>" +
+        "<li class='mt-2'>Consumes AR storage</li>" +
+        "</ul>";
+      return this.$confirm(html, "Sync to AR", {
+        comp1: "no-show-form",
+      }).then((data) => {
+        if (data.form1.noShow) localStorage[skey] = 1;
+        return data;
+      });
+    },
     async onSyncAR(name) {
       console.log(name);
       try {
-        const html =
-          `<ul>` +
-          "<li>Supports all AR public gateway access</li>" +
-          "<li class='mt-2'>Permanent storage is not removable, and file sizes are limited to 100M</li>" +
-          "<li class='mt-2'>Consumes AR storage</li>" +
-          "</ul>";
-        await this.$confirm(html, "Sync to AR");
+        await this.beforeArSync();
         const { Bucket } = this.pathInfo;
         this.$loading();
         await this.$http.post("/arweave/object", {

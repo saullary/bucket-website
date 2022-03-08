@@ -571,9 +571,10 @@ export default {
     async addBucket() {
       try {
         const msg1 = "Bucket names must be between 3 and 48 characters long.";
-        const { value: Bucket } = await this.$prompt("", "New Bucket", {
+        const { value: Bucket, form1 } = await this.$prompt("", "New Bucket", {
           icon: "mdi-folder-multiple-plus",
           hideIcon: true,
+          comp1: "new-bucket-form",
           inputAttrs: {
             label: "Bucket Name",
             // placeholder: "",
@@ -602,6 +603,9 @@ export default {
           },
           async (err) => {
             if (err) return this.onErr(err);
+            if (form1.isAr) {
+              await this.syncBucket(Bucket, true);
+            }
             await this.$sleep(500);
             this.$loading.close();
             this.getBuckets();
