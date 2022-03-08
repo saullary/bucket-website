@@ -200,12 +200,21 @@ export default {
         "<li class='mt-2'>Permanent storage is not removable, and file sizes are limited to 100M</li>" +
         "<li class='mt-2'>Consumes AR storage</li>" +
         "</ul>";
+      const fn = (data) => {
+        if (data.form1.noShow) localStorage[skey] = 1;
+        console.log(data);
+      };
       return this.$confirm(html, "Sync to AR", {
         comp1: "no-show-form",
-      }).then((data) => {
-        if (data.form1.noShow) localStorage[skey] = 1;
-        return data;
-      });
+      })
+        .then((data) => {
+          fn(data);
+          return data;
+        })
+        .catch((data) => {
+          fn(data);
+          throw new Error();
+        });
     },
     async onSyncAR(name) {
       console.log(name);

@@ -255,9 +255,12 @@ export default {
       this.form1 = form;
     },
     async hideAlert(isOk) {
-      const { success, fail, showInput } = this.alertInfo;
+      const { success, fail, showInput, comp1 } = this.alertInfo;
+      let body = {};
+      if (comp1) {
+        body.form1 = this.form1 || this.alertInfo.form1 || {};
+      }
       if (isOk) {
-        let body = {};
         if (showInput) {
           const valid = this.$refs.form.validate();
           if (!valid) {
@@ -266,12 +269,9 @@ export default {
           }
           body.value = this.inputVal;
         }
-        if (this.alertInfo.comp1) {
-          body.form1 = this.form1 || this.alertInfo.form1 || {};
-        }
         if (success) success(body);
       } else {
-        if (fail) fail();
+        if (fail) fail(body);
       }
       this.isComplete = true;
       this.showAlert = false;
