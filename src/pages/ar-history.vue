@@ -81,7 +81,9 @@
       @click="onLoadMore"
       v-intersect="onLoadMore"
     >
-      {{ loadingMore ? "Loading..." : "Load More" }}
+      <span v-if="list.length">
+        {{ loadingMore ? "Loading..." : "Load More" }}
+      </span>
     </div>
   </div>
 </template>
