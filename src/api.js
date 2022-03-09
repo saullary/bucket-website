@@ -100,8 +100,9 @@ http.interceptors.response.use(
   (res) => {
     const data = res.data;
     if (typeof data == "object" && data && "code" in data) {
-      if (data.code != 200 && data.code % 1 == 0) {
+      if (data.code != 200) {
         let msg = data.message || `${data.code} error`;
+        msg = handleMsg(data.code, msg);
         Vue.prototype.$loading.close();
         // console.log(msg)
         if (data.code == 401) {
@@ -125,7 +126,7 @@ http.interceptors.response.use(
       data.message ||
       statusText ||
       (status ? `${config.url}：${status}` : error.message);
-    msg = handleMsg(msg);
+    msg = handleMsg(data.code, msg);
     if (status == 401) {
       goLogin();
     } else if (msg) {
@@ -142,22 +143,15 @@ http.interceptors.response.use(
   }
 );
 
-function handleMsg(msg) {
+function handleMsg(code, msg) {
   return (
     {
       "Network Error":
         "A network error has occurred. Please check your connections and try again.",
-      UNKNOWN_ERROR: "unknown exception",
-      VALIDATE_ERROR: "params validate error",
-      OAUTH_UNKNOWN_ERROR: "oauth validate request failed",
-      BUCKET_ACCESS_DENIED: "user haven't access to this bucket",
-      BUCKET_TOO_MANY_DOMAINS: "number of bucket domains gte 20",
-      BUCKET_SYNC_STATUS_CONFLICT:
-        "request param sync equal current bucket sync status",
-      STORAGE_IS_NOT_ENOUGH: "ARWEAVE storage not enough",
-      OBJECT_NOT_FOUND: "s3 object not found",
-      OBJECT_ALREADY_EXIST: "ARWEAVE object already exist",
-    }[msg] || msg
+    }[msg] ||
+    msg ||
+    code ||
+    "Unknown Error"
   );
 }
 

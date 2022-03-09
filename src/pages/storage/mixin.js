@@ -129,7 +129,7 @@ export default {
       }
     },
     onErr(err) {
-      this.$alert(err.message);
+      if (err.message) this.$alert(err.message);
     },
     getList() {
       if (!this.s3) return;
