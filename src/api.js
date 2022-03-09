@@ -6,8 +6,11 @@ const inDev = /xyz/.test(process.env.VUE_APP_BASE_URL);
 Vue.prototype.$inDev = inDev;
 
 Vue.prototype.$arHashPre = inDev
+  ? "https://ar.foreverland.xyz/"
+  : "https://arweave.net/";
+Vue.prototype.$arVerifyPre = inDev
   ? "https://ar.foreverland.xyz/tx/"
-  : "https://arweave.net/tx/";
+  : "https://viewblock.io/arweave/tx/";
 
 const baseURL = process.env.VUE_APP_BASE_URL;
 
@@ -120,12 +123,9 @@ http.interceptors.response.use(
     return res;
   },
   (error) => {
-    const { config = {}, data = {}, status, statusText } = error.response || {};
+    const { data = {}, status, statusText } = error.response || {};
     console.log(error, status, statusText);
-    let msg =
-      data.message ||
-      statusText ||
-      (status ? `${config.url}：${status}` : error.message);
+    let msg = data.message || error.message;
     msg = handleMsg(data.code, msg);
     if (status == 401) {
       goLogin();
@@ -144,15 +144,13 @@ http.interceptors.response.use(
 );
 
 function handleMsg(code, msg) {
-  return (
-    {
-      "Network Error":
-        "A network error has occurred. Please check your connections and try again.",
-    }[msg] ||
-    msg ||
-    code ||
-    "Unknown Error"
-  );
+  console.log(code, msg);
+  if (msg == "Network Error")
+    return "A network error has occurred. Please check your connections and try again.";
+  if (!msg && typeof code == "string") {
+    return code;
+  }
+  return msg || "Unknown Error";
 }
 
 Vue.prototype.$http = http;

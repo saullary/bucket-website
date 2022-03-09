@@ -63,7 +63,6 @@ export default {
         const text = arr[i];
         if (!text) break;
         to += text + (arr[i + 1] == "" ? "" : "/");
-        console.log(to, i, arr.length - 1);
         if (this.fromHistory && i < arr.length - 1) {
           continue;
         }
@@ -198,7 +197,7 @@ export default {
     async onSyncAR(name) {
       console.log(name);
       if (this.inFile && this.fileInfo.arStatus == "synced") {
-        window.open(this.$arHashPre + this.fileInfo.arHash);
+        window.open(this.$arVerifyPre + this.fileInfo.arHash);
         return;
       }
       try {
@@ -411,7 +410,7 @@ export default {
       try {
         const list = await this.listBuckets();
         const { data } = await this.$http.get("/buckets/extra");
-        console.log(data);
+        // console.log(data);
         data.list.forEach((row) => {
           const item = list.filter((it) => it.name == row.bucket)[0];
           if (!item) {
