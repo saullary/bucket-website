@@ -313,7 +313,8 @@ export default {
         this.fileLoading = false;
         if (err) return this.onErr(err);
         console.log(data);
-        let arStatus = "";
+        const meta = data.Metadata;
+        let arStatus = meta["arweave-status"];
         if (!arStatus) {
           arStatus = this.defArStatus;
         }
@@ -324,6 +325,7 @@ export default {
           updateAt: data.LastModified,
           url: this.$endpoint + this.path.replace(this.basePath, "/"),
           arStatus,
+          arHash: meta["arweave-hash"],
         };
         console.log(this.fileInfo);
       });

@@ -195,17 +195,24 @@
                 </v-btn>
               </div>
               <div v-else-if="it.name == 'arHash'">
-                <template v-if="fileInfo.arStatus == 'synced'">
+                <template
+                  v-if="fileInfo.arStatus == 'synced' && fileInfo.arHash"
+                >
                   <v-btn
                     rounded
                     text
                     small
                     target="_blank"
-                    :href="`https://${it.value}.ipfs.dweb.link`"
+                    :href="`https://arweave.net/tx/${fileInfo.arHash}`"
                   >
                     {{ it.value }}
                   </v-btn>
-                  <v-btn icon small v-clipboard="it.arHash" @success="onCopied">
+                  <v-btn
+                    icon
+                    small
+                    v-clipboard="fileInfo.arHash"
+                    @success="onCopied"
+                  >
                     <v-icon size="15" class="ml-auto">mdi-content-copy</v-icon>
                   </v-btn>
                 </template>
@@ -433,7 +440,7 @@ export default {
         {
           label: "AR Hash",
           name: "arHash",
-          value: this.arHash,
+          value: info.arHash,
         },
       ];
     },
