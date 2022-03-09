@@ -76,16 +76,26 @@ new Vue({
       this.initS3();
     },
     async initS3() {
-      if (localStorage.domainList == "undefined" || localStorage.stsData) {
-        localStorage.clear();
-        location.reload();
-      }
       let stsData = JSON.parse(localStorage.stsData1 || "null");
-      if (!stsData || Date.now() >= (stsData.expiredAt - 3600) * 1000) {
+      if (!stsData || Date.now() >= (stsData.expiredAt - 3600) * 1e3) {
         const { data } = await this.$http.get("/user/sts/assume-role");
         stsData = data;
         localStorage.stsData1 = JSON.stringify(data);
       }
+      // auto refresh sts
+      if (this.s3Timing) {
+        clearTimeout(this.s3Timing);
+      }
+      const refreshDelay = (stsData.expiredAt - 3600) * 1e3 - Date.now();
+      if (refreshDelay) {
+        this.s3Timing = setTimeout(() => {
+          this.initS3();
+        }, refreshDelay);
+        console.info(
+          `refresh sts after ${(refreshDelay / 3600 / 1e3).toFixed(2)}h`
+        );
+      }
+
       const { accessKey, secretKey, sessionToken } = stsData;
       const s3 = new S3({
         endpoint,
