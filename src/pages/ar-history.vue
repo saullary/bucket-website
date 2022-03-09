@@ -60,7 +60,7 @@
           icon
           small
           @click.stop="onStop"
-          v-clipboard="$arHashPre + item.arweaveHash"
+          v-clipboard="item.arweaveHash"
           @success="$toast('Copied to clipboard !')"
         >
           <!-- <v-icon size="14" color="primary">mdi-content-copy</v-icon> -->

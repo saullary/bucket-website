@@ -217,7 +217,7 @@
                   <v-btn
                     icon
                     small
-                    v-clipboard="$arHashPre + fileInfo.arHash"
+                    v-clipboard="fileInfo.arHash"
                     @success="onCopied"
                   >
                     <v-icon size="15" class="ml-auto">mdi-content-copy</v-icon>
