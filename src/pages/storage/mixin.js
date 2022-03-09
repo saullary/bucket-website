@@ -449,7 +449,7 @@ export default {
         let tip =
           "The file will be permanently deleted. Are you sure you want to continue ?";
         if (this.fileInfo.arStatus != "desynced") {
-          tip = `Are you sure you want to delete ${this.fileName} ?`;
+          tip = `The file will be permanently deleted, but can’t be deleted from the AR network, and your AR storage space will not increase. Would you like to continue?`;
         }
         await this.$confirm(tip);
         const { Key } = this.pathInfo;
@@ -492,10 +492,11 @@ export default {
         }
         const suffix = arr.length > 1 ? "s" : "";
         const target = this.inBucket ? "bucket" : "file";
-        let html = `Are you sure you want to continue?<ul class='mt-4 ov-a' style="max-height: 40vh">`;
-        if (this.inFolder && arr.length == 1 && arr[0].arStatus == "desynced") {
-          html = `The following ${target}${suffix} will be permanently deleted. ${html}`;
+        let html = `The following ${target}${suffix} will be permanently deleted. Are you sure you want to continue?`;
+        if (this.inFolder && arr.length == 1 && arr[0].arStatus != "desynced") {
+          html = `The following file${suffix} will be permanently deleted, but can’t be deleted from the AR network, and your AR storage space will not increase. Would you like to continue?`;
         }
+        html += `<ul class='mt-4 ov-a' style="max-height: 40vh">`;
         for (const row of arr) {
           html += "<li>" + row.name + "</li>";
         }

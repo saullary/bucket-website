@@ -87,7 +87,7 @@ new Vue({
         clearTimeout(this.s3Timing);
       }
       const refreshDelay = (stsData.expiredAt - 3600) * 1e3 - Date.now();
-      if (refreshDelay) {
+      if (refreshDelay > 1e3) {
         this.s3Timing = setTimeout(() => {
           this.initS3();
         }, refreshDelay);
