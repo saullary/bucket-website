@@ -566,7 +566,6 @@ export default {
     onView(it) {
       window.open(this.getViewUrl(it));
     },
-    onStop() {},
     onRow(it) {
       const url = this.getPath(it);
       this.$router.push(url);

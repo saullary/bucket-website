@@ -495,6 +495,7 @@ export default {
     this.checkNew();
   },
   methods: {
+    onStop() {},
     onCopied() {
       this.$toast("Copied to clipboard !");
     },

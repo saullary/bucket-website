@@ -138,6 +138,7 @@ export default {
     this.getList();
   },
   methods: {
+    onStop() {},
     onLoadMore() {
       if (this.tableLoading) return;
       this.loadingMore = true;
