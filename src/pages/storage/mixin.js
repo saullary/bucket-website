@@ -367,16 +367,17 @@ export default {
         data.objects.sort((a, b) => {
           return (b.prefix ? 1 : 0) - (a.prefix ? 1 : 0);
         });
+        // console.log(data.objects);
         const list = data.objects.map((it) => {
           if (it.prefix)
             return {
               name: it.prefix.replace(Prefix, "").replace("/", ""),
             };
-          let arStatus = "";
+          const meta = it.metadata || {};
+          let arStatus = meta["X-Amz-Meta-Arweave-Status"];
           if (!arStatus) {
             arStatus = this.defArStatus;
           }
-
           return {
             Key: it.name,
             name: it.name.replace(Prefix, ""),
@@ -385,6 +386,7 @@ export default {
             hash: this.$utils.getCidV1(it.etag),
             isFile: true,
             arStatus,
+            arHash: meta["X-Amz-Meta-Arweave-Hash"],
           };
         });
         if (this.loadingMore) {
