@@ -446,14 +446,13 @@ export default {
     },
     bucketInfo() {
       const { Bucket } = this.pathInfo;
-      const item = this.domainList.filter((it) => it.bucketName == Bucket)[0];
+      const item = this.bucketList.filter((it) => it.name == Bucket)[0];
       let list = (this.domainsMap[Bucket] || [])
         .filter((it) => it.valid)
         .map((it) => it.name);
-      if (item && !list.includes(item.domain)) list.push(item.domain);
+      if (item && !list.includes(item.defDomain)) list.push(item.defDomain);
       return {
         ...item,
-        isAr: Bucket == "tt0",
         originList: list.map((domain) => {
           return (this.$inDev ? "http:" : "https:") + "//" + domain;
         }),
@@ -487,15 +486,6 @@ export default {
     s3() {
       this.getList();
     },
-    // async bucketList(val) {
-    //   if (!val.length) return;
-    //   const { data } = await this.$http.get("/domains/stat");
-    //   // console.log(data);
-    //   if (data && data.stats) {
-    //     this.domainList = data.stats;
-    //     localStorage.domainList = JSON.stringify(this.domainList);
-    //   }
-    // },
   },
   mounted() {
     this.getList();

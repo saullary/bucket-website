@@ -9,7 +9,6 @@ export default {
       BasePath,
       tableLoading: false,
       bucketList: [],
-      domainList: JSON.parse(localStorage.domainList || "[]"),
       folderList: [],
       selected: [],
       deleting: false,
@@ -79,30 +78,10 @@ export default {
     list() {
       let list = [];
       if (this.inBucket) {
-        list = this.bucketList.map((it) => {
-          it.domainInfo = this.domainList.filter(
-            (d) => d.bucketName == it.name
-          )[0];
-          if (it.domainInfo) {
-            it.domains = [
-              {
-                name: "Loading",
-              },
-            ];
-            if (this.domainsMap[it.name]) {
-              it.domains = [
-                ...this.domainsMap[it.name],
-                {
-                  icon: "mdi-plus",
-                  name: "Add domain",
-                  to: "/domain?bucket=" + it.name,
-                },
-              ];
-            }
-          }
-          return it;
-        });
-      } else if (this.inFolder) list = this.folderList;
+        list = this.bucketList;
+      } else if (this.inFolder) {
+        list = this.folderList;
+      }
       if (this.searchKey && !this.inFolder) {
         list = list.filter((it) => {
           return new RegExp(this.searchKey).test(it.name);
@@ -397,7 +376,6 @@ export default {
         }
         if (list.length < 5) this.finished = true;
         // console.log(this.pathInfo, this.folderList);
-        console.log(data.objects);
       });
       stream.on("error", (err) => {
         this.tableLoading = false;
@@ -443,7 +421,7 @@ export default {
             defDomain: row.domain.domain,
           });
         });
-        console.log(list);
+        // console.log(list);
         this.bucketList = list;
       } catch (error) {
         console.log(error);
