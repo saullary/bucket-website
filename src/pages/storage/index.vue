@@ -40,10 +40,17 @@
             class="ml-5"
             outlined
             @click="onSyncAR(fileName)"
-            :disabled="fileInfo && fileInfo.arStatus != 'desynced'"
+            :disabled="
+              fileInfo &&
+              ['desynced', 'synced'].indexOf(fileInfo.arStatus) == -1
+            "
+            :color="fileInfo.arStatus == 'synced' ? 'success' : ''"
           >
             <img src="img/icon/ic-ar-sync.svg" width="16" />
-            <span class="ml-2">Sync to AR</span>
+            <span class="ml-2">
+              <span v-if="fileInfo.arStatus == 'synced'">Verify on AR</span>
+              <span v-else>Sync to AR</span>
+            </span>
           </v-btn>
           <e-menu offset-y open-on-hover v-if="!fromHistory">
             <v-btn slot="ref" class="ml-5" icon>
@@ -203,14 +210,14 @@
                     text
                     small
                     target="_blank"
-                    :href="`https://arweave.net/tx/${fileInfo.arHash}`"
+                    :href="$arHashPre + fileInfo.arHash"
                   >
                     {{ it.value }}
                   </v-btn>
                   <v-btn
                     icon
                     small
-                    v-clipboard="fileInfo.arHash"
+                    v-clipboard="$arHashPre + fileInfo.arHash"
                     @success="onCopied"
                   >
                     <v-icon size="15" class="ml-auto">mdi-content-copy</v-icon>
@@ -219,6 +226,9 @@
                 <template v-else>
                   <v-btn small text disabled>
                     <sync-state :val="fileInfo.arStatus"></sync-state>
+                  </v-btn>
+                  <v-btn slot="ref" plain x-small @click.stop="headObject">
+                    <v-icon>mdi-refresh</v-icon>
                   </v-btn>
                 </template>
               </div>

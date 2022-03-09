@@ -49,7 +49,7 @@
           target="_blank"
           v-if="item.arweaveHash"
           @click.stop="onStop"
-          :href="`https://arweave.net/tx/${item.arweaveHash}`"
+          :href="$arHashPre + item.arweaveHash"
         >
           <span class="d-ib line-1" style="width: 160px">
             {{ item.arweaveHash }}
@@ -60,7 +60,7 @@
           icon
           small
           @click.stop="onStop"
-          v-clipboard="item.arweaveHash"
+          v-clipboard="$arHashPre + item.arweaveHash"
           @success="$toast('Copied to clipboard !')"
         >
           <!-- <v-icon size="14" color="primary">mdi-content-copy</v-icon> -->

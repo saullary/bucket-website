@@ -5,6 +5,10 @@ import AsyncLock from "async-lock";
 const inDev = /xyz/.test(process.env.VUE_APP_BASE_URL);
 Vue.prototype.$inDev = inDev;
 
+Vue.prototype.$arHashPre = inDev
+  ? "https://ar.foreverland.xyz/tx/"
+  : "https://arweave.net/tx/";
+
 const baseURL = process.env.VUE_APP_BASE_URL;
 
 export const endpoint = inDev

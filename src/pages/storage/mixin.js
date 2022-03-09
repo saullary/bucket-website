@@ -197,6 +197,10 @@ export default {
     },
     async onSyncAR(name) {
       console.log(name);
+      if (this.inFile && this.fileInfo.arStatus == "synced") {
+        window.open(this.$arHashPre + this.fileInfo.arHash);
+        return;
+      }
       try {
         await this.beforeArSync();
         const { Bucket } = this.pathInfo;
