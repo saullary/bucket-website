@@ -227,7 +227,13 @@
                   <v-btn small text disabled>
                     <sync-state :val="fileInfo.arStatus"></sync-state>
                   </v-btn>
-                  <v-btn slot="ref" plain x-small @click.stop="headObject">
+                  <v-btn
+                    slot="ref"
+                    plain
+                    x-small
+                    @click.stop="headObject"
+                    v-if="fileInfo.arStatus == 'syncing'"
+                  >
                     <v-icon>mdi-refresh</v-icon>
                   </v-btn>
                 </template>
