@@ -74,17 +74,15 @@ export default {
           arweaveSyncingStorage = 0,
           arweaveTotalStorage = 0,
         } = data;
+        let arUsed = (arweaveUsedStorage + arweaveSyncingStorage) / 1024;
         this.$setState({
           usageInfo: {
             totalStorage: parseInt(data.totalStorage / 1024),
             usedStorage: (data.usedStorage / 1024).toFixed(2),
             arTotal: parseInt(arweaveTotalStorage / 1024),
-            arUsed: (
-              (arweaveUsedStorage + arweaveSyncingStorage) /
-              1024
-            ).toFixed(0),
-            arSyncing: (arweaveSyncingStorage / 1024).toFixed(0),
-            arSynced: (arweaveUsedStorage / 1024).toFixed(0),
+            arUsed: arUsed.toFixed(arUsed > 100 ? 0 : 2),
+            arSyncing: (arweaveSyncingStorage / 1024).toFixed(2),
+            arSynced: (arweaveUsedStorage / 1024).toFixed(2),
           },
         });
       } catch (error) {
