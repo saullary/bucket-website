@@ -33,6 +33,7 @@ new Vue({
     ...mapState({
       token: (s) => s.token(),
       noticeMsg: (s) => s.noticeMsg,
+      isFocus: (s) => s.isFocus,
     }),
   },
   mounted() {
@@ -46,6 +47,16 @@ new Vue({
     token(val) {
       if (val) {
         this.onInit();
+      }
+    },
+    isFocus(val) {
+      if (val) {
+        setTimeout(() => {
+          const stsData = JSON.parse(localStorage.stsData1 || "null");
+          if (stsData && stsData.expiredAt - Date.now() / 1e3 < 600) {
+            location.reload();
+          }
+        }, 1e3);
       }
     },
     noticeMsg({ name }) {
