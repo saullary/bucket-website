@@ -152,6 +152,7 @@ export default {
   },
   watch: {
     alertInfo(info) {
+      console.log(info);
       this.showAlert = false;
       this.showLoading = false;
       this.form1 = null;
@@ -162,6 +163,7 @@ export default {
       } else this.showAlert = true;
     },
     showAlert(val) {
+      console.log("alert", val);
       if (val) this.isComplete = false;
       else if (!this.isComplete) this.hideAlert(0);
     },
@@ -255,6 +257,8 @@ export default {
       this.form1 = form;
     },
     async hideAlert(isOk) {
+      console.log(this.isComplete);
+      this.isComplete = true;
       const { success, fail, showInput, comp1 } = this.alertInfo;
       let body = {};
       if (comp1) {
@@ -273,7 +277,6 @@ export default {
       } else {
         if (fail) fail(body);
       }
-      this.isComplete = true;
       this.showAlert = false;
     },
   },

@@ -549,7 +549,6 @@ export default {
         this.$toast(`${name} created successfully`);
       } catch (error) {
         console.log(error);
-        if (error) this.$alert(error.message);
       }
       this.tableLoading = false;
     },
@@ -562,8 +561,10 @@ export default {
             Key,
           },
           (err, data) => {
-            if (err) reject(err);
-            else resolve(data);
+            if (err) {
+              this.onErr(err);
+              reject(err);
+            } else resolve(data);
           }
         );
       });
