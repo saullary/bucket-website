@@ -9,7 +9,7 @@ import { endpoint } from "./api";
 // import AWS from "aws-sdk";
 import { S3 } from "@aws-sdk/client-s3";
 Vue.config.productionTip = false;
-var Minio = require("minio");
+const Minio = require("minio-s");
 
 router.beforeEach((to, _, next) => {
   let { title } = to.meta || {};
