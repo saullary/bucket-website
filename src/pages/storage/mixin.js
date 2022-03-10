@@ -140,7 +140,18 @@ export default {
       }
     },
     onErr(err) {
-      if (err.message) this.$alert(err.message);
+      if (!err) return;
+      let msg = err.message;
+      if (!msg) return;
+      if (["Failed to fetch"].includes(msg)) {
+        this.$confirm(msg, "Network Error", {
+          confirmText: "Retry",
+        }).then(() => {
+          this.getList();
+        });
+        return;
+      }
+      this.$alert(err.message);
     },
     getList() {
       if (!this.s3) return;
