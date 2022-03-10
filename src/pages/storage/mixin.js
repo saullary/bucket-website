@@ -328,6 +328,7 @@ export default {
           url: this.$endpoint + this.path.replace(this.basePath, "/"),
           arStatus,
           arHash: meta["arweave-hash"],
+          arFailReason: meta["arweave-failed-reason"],
         };
         console.log(this.fileInfo);
       });

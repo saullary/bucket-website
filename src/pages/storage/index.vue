@@ -222,12 +222,17 @@
                 </template>
                 <template v-else>
                   <v-btn small text disabled>
-                    <sync-state :val="fileArStatus"></sync-state>
+                    <sync-state
+                      :val="fileArStatus"
+                      style="border: 1px solid; padding: 3px 8px"
+                      class="bdrs-3"
+                    ></sync-state>
                   </v-btn>
                   <v-btn
                     slot="ref"
-                    plain
+                    text
                     x-small
+                    outlined
                     @click.stop="headObject"
                     v-if="fileArStatus == 'syncing'"
                   >
@@ -237,6 +242,9 @@
                     class="d-flex al-c f-wrap ml-2 fz-13"
                     v-if="['failure', 'timeout'].includes(fileArStatus)"
                   >
+                    <span v-if="fileInfo.arFailReason" class="mr-2 fz-13">{{
+                      fileInfo.arFailReason
+                    }}</span>
                     <template v-if="!bucketInfo.isAr">
                       <v-btn
                         small
