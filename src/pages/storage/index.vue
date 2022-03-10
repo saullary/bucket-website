@@ -233,16 +233,20 @@
                   >
                     <v-icon>mdi-refresh</v-icon>
                   </v-btn>
-                  <div class="d-flex al-c f-wrap ml-3 fz-13">
-                    <span class="gray">Here are two options for you:</span>
-                    <v-btn
-                      small
-                      text
-                      color="primary"
-                      @click="onSyncAR(fileName, 'delete')"
-                      >Cancel Bridge AR</v-btn
-                    >
-                    <span>or</span>
+                  <div
+                    class="d-flex al-c f-wrap ml-2 fz-13"
+                    v-if="['failure', 'timeout'].includes(fileArStatus)"
+                  >
+                    <template v-if="!bucketInfo.isAr">
+                      <v-btn
+                        small
+                        text
+                        color="primary"
+                        @click="onSyncAR(fileName, 'delete')"
+                        >Cancel Bridge AR</v-btn
+                      >
+                      <span>or</span>
+                    </template>
                     <v-btn
                       small
                       text
