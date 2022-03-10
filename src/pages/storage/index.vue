@@ -242,7 +242,7 @@
                         small
                         text
                         color="primary"
-                        @click="onSyncAR(fileName, 'delete')"
+                        @click="onSyncAR(fileName, 'put')"
                         >Cancel Bridge AR</v-btn
                       >
                       <span>or</span>
