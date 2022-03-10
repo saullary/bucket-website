@@ -397,7 +397,7 @@ export default {
         } else {
           this.folderList = list;
         }
-        if (list.length < 5) this.finished = true;
+        if (list.length < 10) this.finished = true;
         // console.log(this.pathInfo, this.folderList);
       });
       stream.on("error", (err) => {
