@@ -41,14 +41,13 @@
             outlined
             @click="onSyncAR(fileName)"
             :disabled="
-              fileInfo &&
-              ['desynced', 'synced'].indexOf(fileInfo.arStatus) == -1
+              fileInfo && ['desynced', 'synced'].indexOf(fileArStatus) == -1
             "
-            :color="fileInfo.arStatus == 'synced' ? 'success' : ''"
+            :color="fileArStatus == 'synced' ? 'success' : ''"
           >
             <img src="img/icon/ic-ar-sync.svg" width="16" />
             <span class="ml-2">
-              <span v-if="fileInfo.arStatus == 'synced'">Verify on AR</span>
+              <span v-if="fileArStatus == 'synced'">Verify on AR</span>
               <span v-else>Sync to AR</span>
             </span>
           </v-btn>
@@ -201,10 +200,8 @@
                   <v-icon size="15" class="ml-auto">mdi-content-copy</v-icon>
                 </v-btn>
               </div>
-              <div v-else-if="it.name == 'arHash'">
-                <template
-                  v-if="fileInfo.arStatus == 'synced' && fileInfo.arHash"
-                >
+              <div v-else-if="it.name == 'arHash'" class="d-flex al-c f-wrap">
+                <template v-if="fileArStatus == 'synced' && fileInfo.arHash">
                   <v-btn
                     rounded
                     text
@@ -225,17 +222,35 @@
                 </template>
                 <template v-else>
                   <v-btn small text disabled>
-                    <sync-state :val="fileInfo.arStatus"></sync-state>
+                    <sync-state :val="fileArStatus"></sync-state>
                   </v-btn>
                   <v-btn
                     slot="ref"
                     plain
                     x-small
                     @click.stop="headObject"
-                    v-if="fileInfo.arStatus == 'syncing'"
+                    v-if="fileArStatus == 'syncing'"
                   >
                     <v-icon>mdi-refresh</v-icon>
                   </v-btn>
+                  <div class="d-flex al-c f-wrap ml-3 fz-13">
+                    <span class="gray">Here are two options for you:</span>
+                    <v-btn
+                      small
+                      text
+                      color="primary"
+                      @click="onSyncAR(fileName, 'delete')"
+                      >Cancel Bridge AR</v-btn
+                    >
+                    <span>or</span>
+                    <v-btn
+                      small
+                      text
+                      color="primary"
+                      @click="onSyncAR(fileName)"
+                      >Retry Bridge AR</v-btn
+                    >
+                  </div>
                 </template>
               </div>
               <div v-else-if="it.name == 'url'">

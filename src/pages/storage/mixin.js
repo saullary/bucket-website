@@ -55,6 +55,12 @@ export default {
       }
       return null;
     },
+    fileArStatus() {
+      if (this.inFile) {
+        return this.fileInfo.arStatus;
+      }
+      return null;
+    },
     navItems() {
       let to = this.basePath;
       let items = [
@@ -200,7 +206,7 @@ export default {
           throw new Error();
         });
     },
-    async onSyncAR(name) {
+    async onSyncAR(name, method = "post") {
       console.log(name);
       if (this.selectArStatus == "syncing") {
         this.$alert("The file is being synced").then(() => {
@@ -208,15 +214,17 @@ export default {
         });
         return;
       }
-      if (this.inFile && this.fileInfo.arStatus == "synced") {
+      if (this.fileArStatus == "synced") {
         window.open(this.$arVerifyPre + this.fileInfo.arHash);
         return;
       }
       try {
-        await this.beforeArSync();
+        if (this.fileArStatus == "desynced") {
+          await this.beforeArSync();
+        }
         const { Bucket } = this.pathInfo;
         this.$loading();
-        await this.$http.post("/arweave/object", {
+        await this.$http[method]("/arweave/object", {
           bucket: Bucket,
           key: this.getFileKey(name),
         });
