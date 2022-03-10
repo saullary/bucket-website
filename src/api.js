@@ -107,10 +107,6 @@ http.interceptors.response.use(
         let msg = data.message || `${data.code} error`;
         msg = handleMsg(data.code, msg);
         Vue.prototype.$loading.close();
-        // console.log(msg)
-        if (data.code == 401) {
-          goLogin();
-        }
         // console.log(data, res.config);
         const error = new Error(msg);
         error.code = data.code;
