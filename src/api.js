@@ -93,7 +93,7 @@ http.interceptors.response.use(
   (res) => {
     const data = res.data;
     if (typeof data == "object" && data && "code" in data) {
-      if (data.code != 200) {
+      if (data.code != 200 && data.code != "SUCCESS") {
         let msg = data.message || `${data.code} error`;
         Vue.prototype.$loading.close();
         // console.log(msg)
