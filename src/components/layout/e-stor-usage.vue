@@ -81,7 +81,7 @@ export default {
             totalStorage: parseInt(data.totalStorage / 1024),
             usedStorage: (data.usedStorage / 1024).toFixed(2),
             arTotal: parseInt(arweaveTotalStorage / 1024),
-            arUsed: arUsed.toFixed(arUsed > 100 ? 0 : 2),
+            arUsed: arUsed.toFixed(arUsed >= 100 ? 0 : 2),
             arSyncing: (arweaveSyncingStorage / 1024).toFixed(2),
             arSynced: (arweaveUsedStorage / 1024).toFixed(2),
           },
