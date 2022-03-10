@@ -96,10 +96,6 @@ http.interceptors.response.use(
       if (data.code != 200 && data.code != "SUCCESS") {
         let msg = data.message || `${data.code} error`;
         Vue.prototype.$loading.close();
-        // console.log(msg)
-        if (data.code < 1e4) {
-          goLogin();
-        }
         // console.log(data, res.config);
         const error = new Error(msg);
         error.code = data.code;
