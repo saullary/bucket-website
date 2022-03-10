@@ -72,9 +72,13 @@
           <v-btn v-if="!uploading" outlined @click="onClear">{{
             files.length ? "Clear" : "Cancel"
           }}</v-btn>
-          <v-btn color="primary" class="ml-4" @click="onConfirm">{{
-            confirmTxt
-          }}</v-btn>
+          <v-btn
+            color="primary"
+            class="ml-4"
+            :disabled="!files.length"
+            @click="onConfirm"
+            >{{ confirmTxt }}</v-btn
+          >
         </div>
       </div>
     </v-dialog>
