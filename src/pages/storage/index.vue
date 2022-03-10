@@ -129,7 +129,7 @@
               <v-list-item
                 link
                 @click="onSyncAR(selected[0].name)"
-                v-if="!bucketInfo.isAr"
+                v-if="!bucketInfo.isAr && selectArStatus != 'synced'"
               >
                 <img src="img/icon/ic-ar.svg" width="14" class="mr-2" />
                 <span class="gray-7">Sync to AR</span>

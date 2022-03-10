@@ -49,6 +49,12 @@ export default {
     basePath() {
       return this.fromHistory ? "/arweave/" : BasePath;
     },
+    selectArStatus() {
+      if (this.inFolder && this.selected.length == 1) {
+        return this.selected[0].arStatus;
+      }
+      return null;
+    },
     navItems() {
       let to = this.basePath;
       let items = [
@@ -196,6 +202,12 @@ export default {
     },
     async onSyncAR(name) {
       console.log(name);
+      if (this.selectArStatus == "syncing") {
+        this.$alert("The file is being synced").then(() => {
+          this.getList();
+        });
+        return;
+      }
       if (this.inFile && this.fileInfo.arStatus == "synced") {
         window.open(this.$arVerifyPre + this.fileInfo.arHash);
         return;
@@ -493,7 +505,7 @@ export default {
         const suffix = arr.length > 1 ? "s" : "";
         const target = this.inBucket ? "bucket" : "file";
         let html = `The following ${target}${suffix} will be permanently deleted. Are you sure you want to continue?`;
-        if (this.inFolder && arr.length == 1 && arr[0].arStatus != "desynced") {
+        if (this.selectArStatus && this.selectArStatus != "desynced") {
           html = `The following file${suffix} will be permanently deleted, but can’t be deleted from the AR network, and your AR storage space will not increase. Would you like to continue?`;
         }
         html += `<ul class='mt-4 ov-a' style="max-height: 40vh">`;
