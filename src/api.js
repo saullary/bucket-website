@@ -105,7 +105,7 @@ http.interceptors.response.use(
     if (typeof data == "object" && data && "code" in data) {
       if (data.code != 200 && data.code != "SUCCESS") {
         let msg = data.message || `${data.code} error`;
-        msg = handleMsg(data.code, msg);
+        handleMsg(data.code, msg);
         Vue.prototype.$loading.close();
         // console.log(data, res.config);
         const error = new Error(msg);
@@ -122,18 +122,7 @@ http.interceptors.response.use(
     const { data = {}, status, statusText } = error.response || {};
     console.log(error, status, statusText);
     let msg = data.message || error.message;
-    msg = handleMsg(data.code, msg);
-    if (status == 401) {
-      goLogin();
-    } else if (msg) {
-      setTimeout(() => {
-        Vue.prototype.$alert(msg).then(() => {
-          if (msg == "Request aborted") {
-            location.reload();
-          }
-        });
-      }, 10);
-    }
+    handleMsg(data.code, msg);
     error.code = data.code;
     return Promise.reject(error);
   }
@@ -142,11 +131,24 @@ http.interceptors.response.use(
 function handleMsg(code, msg) {
   console.log(code, msg);
   if (msg == "Network Error")
-    return "A network error has occurred. Please check your connections and try again.";
+    msg =
+      "A network error has occurred. Please check your connections and try again.";
   if (!msg && typeof code == "string") {
-    return code;
+    msg = code;
   }
-  return msg || "Unknown Error";
+  msg = msg || "Unknown Error";
+
+  if (code == 401) {
+    goLogin();
+  } else if (msg) {
+    setTimeout(() => {
+      Vue.prototype.$alert(msg).then(() => {
+        if (msg == "Request aborted") {
+          location.reload();
+        }
+      });
+    }, 10);
+  }
 }
 
 Vue.prototype.$http = http;
