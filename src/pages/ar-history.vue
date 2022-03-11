@@ -37,7 +37,7 @@
           <v-icon slot="ref" color="#999" size="16" class="pa-1 d-ib ml-2"
             >mdi-alert-circle</v-icon
           >
-          <span>Deleted in Bucket.</span>
+          <span>Deleted in Bucket</span>
         </e-tooltip>
       </template>
       <template v-slot:item.arweaveHash="{ item }">
