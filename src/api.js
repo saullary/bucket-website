@@ -5,6 +5,13 @@ import AsyncLock from "async-lock";
 const inDev = /xyz/.test(process.env.VUE_APP_BASE_URL);
 Vue.prototype.$inDev = inDev;
 
+Vue.prototype.$arHashPre = inDev
+  ? "https://arweave.net/" // https://ar.foreverland.xyz/
+  : "https://arweave.net/";
+Vue.prototype.$arVerifyPre = inDev
+  ? "https://viewblock.io/arweave/tx/" // https://ar.foreverland.xyz/tx/
+  : "https://viewblock.io/arweave/tx/";
+
 const baseURL = process.env.VUE_APP_BASE_URL;
 
 export const endpoint = inDev
@@ -16,9 +23,12 @@ const authApi = inDev
 
 Vue.prototype.$endpoint = endpoint;
 
-const loginUrl = inDev
+let loginUrl = inDev
   ? "https://official-website-test.4everland.app/bucketlogin"
   : "https://www.4everland.org/bucketlogin";
+if (/localhost/.test(location.host)) {
+  loginUrl = "#/login?test=1";
+}
 Vue.prototype.$loginUrl = loginUrl;
 
 const http = Axios.create({
@@ -95,6 +105,7 @@ http.interceptors.response.use(
     if (typeof data == "object" && data && "code" in data) {
       if (data.code != 200 && data.code != "SUCCESS") {
         let msg = data.message || `${data.code} error`;
+        handleMsg(data.code, msg);
         Vue.prototype.$loading.close();
         // console.log(data, res.config);
         const error = new Error(msg);
@@ -108,31 +119,37 @@ http.interceptors.response.use(
     return res;
   },
   (error) => {
-    const { config = {}, data = {}, status, statusText } = error.response || {};
+    const { data = {}, status, statusText } = error.response || {};
     console.log(error, status, statusText);
-    let msg =
-      data.message ||
-      statusText ||
-      (status ? `${config.url}：${status}` : error.message);
-    if (msg == "Network Error") {
-      msg =
-        "A network error has occurred. Please check your connections and try again.";
-    }
-    if (status == 401) {
-      goLogin();
-    } else if (msg) {
-      setTimeout(() => {
-        Vue.prototype.$alert(msg).then(() => {
-          if (msg == "Request aborted") {
-            location.reload();
-          }
-        });
-      }, 10);
-    }
+    let msg = data.message || error.message;
+    handleMsg(data.code, msg);
     error.code = data.code;
     return Promise.reject(error);
   }
 );
+
+function handleMsg(code, msg) {
+  console.log(code, msg);
+  if (msg == "Network Error")
+    msg =
+      "A network error has occurred. Please check your connections and try again.";
+  if (!msg && typeof code == "string") {
+    msg = code;
+  }
+  msg = msg || "Unknown Error";
+
+  if (code == 401) {
+    goLogin();
+  } else if (msg) {
+    setTimeout(() => {
+      Vue.prototype.$alert(msg).then(() => {
+        if (msg == "Request aborted") {
+          location.reload();
+        }
+      });
+    }, 10);
+  }
+}
 
 Vue.prototype.$http = http;
 

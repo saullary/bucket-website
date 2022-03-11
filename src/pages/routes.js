@@ -25,11 +25,15 @@ export default [
     component: Storage,
   },
   {
-    path: "/ar-history",
+    path: "/arweave",
     component: ARHistory,
     meta: {
       title: "AR History",
     },
+  },
+  {
+    path: "/arweave/*",
+    component: Storage,
   },
   {
     path: "/domain",

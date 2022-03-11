@@ -31,35 +31,50 @@
           :loading="!fileInfo"
           :download="fileName"
         >
-          <!-- <v-icon size="15">mdi-cloud-download</v-icon> -->
           <img src="img/icon/download.svg" width="16" />
           <span class="ml-2">Download</span>
         </v-btn>
-        <v-btn
-          class="ml-5"
-          outlined
-          v-clipboard="fileUrl.encode()"
-          @success="$toast('Copied to clipboard !')"
-        >
-          <!-- <v-icon size="15">mdi-content-copy</v-icon> -->
-          <img src="img/icon/copy.svg" width="16" />
-          <span class="ml-2">Copy Path</span>
-        </v-btn>
-        <e-menu offset-y open-on-hover>
-          <v-btn slot="ref" class="ml-5" icon>
-            <v-icon>mdi-dots-vertical</v-icon>
+
+        <template v-if="fileInfo">
+          <v-btn
+            class="ml-5"
+            outlined
+            @click="onSyncAR(fileName)"
+            :disabled="
+              fileInfo && ['desynced', 'synced'].indexOf(fileArStatus) == -1
+            "
+            :color="fileArStatus == 'synced' ? 'success' : ''"
+          >
+            <img src="img/icon/ic-ar-sync.svg" width="16" />
+            <span class="ml-2">
+              <span v-if="fileArStatus == 'synced'">Verify on AR</span>
+              <span v-else>Sync to AR</span>
+            </span>
           </v-btn>
-          <v-list dense>
-            <v-list-item link @click="onRename(fileName)">
-              <img src="img/icon/ic-rename.svg" width="14" class="mr-2" />
-              <span class="gray-7">Rename</span>
-            </v-list-item>
-            <v-list-item link @click="onDelFile">
-              <img src="img/icon/ic-delete.svg" width="14" class="mr-2" />
-              <span class="red-2">Delete</span>
-            </v-list-item>
-          </v-list>
-        </e-menu>
+          <e-menu offset-y open-on-hover v-if="!fromHistory">
+            <v-btn slot="ref" class="ml-5" icon>
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+            <v-list dense>
+              <v-list-item
+                link
+                v-clipboard="fileUrl.encode()"
+                @success="$toast('Copied to clipboard !')"
+              >
+                <img src="img/icon/copy.svg" width="14" class="mr-2" />
+                <span class="gray-7">Copy Path</span>
+              </v-list-item>
+              <v-list-item link @click="onRename(fileName)">
+                <img src="img/icon/ic-rename.svg" width="14" class="mr-2" />
+                <span class="gray-7">Rename</span>
+              </v-list-item>
+              <v-list-item link @click="onDelFile">
+                <img src="img/icon/ic-delete.svg" width="14" class="mr-2" />
+                <span class="red-2">Delete</span>
+              </v-list-item>
+            </v-list>
+          </e-menu>
+        </template>
       </div>
       <div v-show="inFolder">
         <v-btn color="primary" @click="$refs.upload.showPop = true">
@@ -110,6 +125,14 @@
                 <img src="img/icon/ic-rename.svg" width="14" class="mr-2" />
                 <span class="gray-7">Rename</span>
               </v-list-item>
+              <v-list-item
+                link
+                @click="onSyncAR(selected[0].name)"
+                v-if="!bucketInfo.isAr && selectArStatus != 'synced'"
+              >
+                <img src="img/icon/ic-ar.svg" width="14" class="mr-2" />
+                <span class="gray-7">Sync to AR</span>
+              </v-list-item>
             </template>
             <template v-else-if="inBucket">
               <v-list-item :to="`/domain?bucket=${selected[0].name}`">
@@ -124,16 +147,6 @@
           </v-list-item>
         </v-list>
       </e-menu>
-      <!-- <v-btn
-        @click="onDelete()"
-        :loading="deleting"
-        color="error"
-        class="ml-5"
-        min-width="36"
-        v-show="!inFile && selected.length"
-      >
-        <v-icon size="18">mdi-trash-can-outline</v-icon>
-      </v-btn> -->
     </div>
 
     <div class="d-flex al-c mt-3">
@@ -143,8 +156,10 @@
           <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
         </template>
       </v-breadcrumbs>
-      <div class="gray fz-14 ml-auto shrink-0" v-if="!inFile && !tableLoading">
-        Total: {{ list.length }}
+      <div class="ml-auto shrink-0" v-if="inBucket && !tableLoading">
+        <nav-item :unit="inBucket ? 'Buckets' : 'Objects'">{{
+          list.length
+        }}</nav-item>
       </div>
     </div>
 
@@ -184,6 +199,70 @@
                 <v-btn icon small v-clipboard="it.value" @success="onCopied">
                   <v-icon size="15" class="ml-auto">mdi-content-copy</v-icon>
                 </v-btn>
+              </div>
+              <div v-else-if="it.name == 'arHash'" class="d-flex al-c f-wrap">
+                <template v-if="fileArStatus == 'synced' && fileInfo.arHash">
+                  <v-btn
+                    rounded
+                    text
+                    small
+                    target="_blank"
+                    :href="$arHashPre + fileInfo.arHash"
+                  >
+                    {{ it.value }}
+                  </v-btn>
+                  <v-btn
+                    icon
+                    small
+                    v-clipboard="fileInfo.arHash"
+                    @success="onCopied"
+                  >
+                    <v-icon size="15" class="ml-auto">mdi-content-copy</v-icon>
+                  </v-btn>
+                </template>
+                <template v-else>
+                  <v-btn small text disabled>
+                    <sync-state
+                      :val="fileArStatus"
+                      style="border: 1px solid; padding: 3px 8px"
+                      class="bdrs-3"
+                    ></sync-state>
+                  </v-btn>
+                  <v-btn
+                    slot="ref"
+                    text
+                    x-small
+                    @click.stop="headObject"
+                    v-if="fileArStatus == 'syncing'"
+                  >
+                    <v-icon>mdi-refresh</v-icon>
+                  </v-btn>
+                  <div
+                    class="d-flex al-c f-wrap ml-2 fz-13"
+                    v-if="['failure', 'timeout'].includes(fileArStatus)"
+                  >
+                    <span v-if="fileInfo.arFailReason" class="mr-2 fz-13">{{
+                      fileInfo.arFailReason
+                    }}</span>
+                    <template v-if="!bucketInfo.isAr">
+                      <v-btn
+                        small
+                        text
+                        color="primary"
+                        @click="onSyncAR(fileName, 'put')"
+                        >Cancel Bridge AR</v-btn
+                      >
+                      <span>or</span>
+                    </template>
+                    <v-btn
+                      small
+                      text
+                      color="primary"
+                      @click="onSyncAR(fileName)"
+                      >Retry Bridge AR</v-btn
+                    >
+                  </div>
+                </template>
               </div>
               <div v-else-if="it.name == 'url'">
                 <p v-for="(link, j) in it.value" :key="j">
@@ -249,7 +328,7 @@
             icon
             small
             color="primary"
-            v-if="item.isFile && originList.length"
+            v-if="item.isFile && bucketInfo.originList.length"
             @click.stop="onStop"
             :href="getViewUrl(item)"
             target="_blank"
@@ -290,9 +369,24 @@
           </v-btn>
         </template>
         <template v-slot:item.arAct="{ item }">
-          <div class="hide-msg">
-            <v-switch v-model="item.isAr" dense @click.stop="onStop"></v-switch>
+          <div class="hide-msg d-flex al-c">
+            <v-switch
+              v-model="item.isAr"
+              dense
+              :loading="item.arLoading"
+              :disabled="item.arLoading || item.arCancel"
+              @click.stop.prevent="onSyncBucket(item)"
+            ></v-switch>
+            <e-tooltip top v-if="item.arCancel && !tableLoading">
+              <v-btn slot="ref" plain x-small @click.stop="getList">
+                <v-icon>mdi-refresh</v-icon>
+              </v-btn>
+              <span>Closing. Click to refresh.</span>
+            </e-tooltip>
           </div>
+        </template>
+        <template v-slot:item.arStatus="{ item }">
+          <sync-state :val="item.arStatus" v-if="item.isFile"></sync-state>
         </template>
       </v-data-table>
 
@@ -307,6 +401,20 @@
         </div>
       </div>
     </div>
+
+    <div
+      v-if="inFolder && !finished"
+      class="pd-20 gray ta-c fz-16 mt-5"
+      :class="{
+        'hover-1': !loadingMore,
+      }"
+      @click="onLoadMore"
+      v-intersect="onLoadMore"
+    >
+      <span v-if="list.length">{{
+        loadingMore ? "Loading..." : "Load More"
+      }}</span>
+    </div>
   </div>
 </template>
 
@@ -318,9 +426,11 @@ export default {
   data() {
     return {
       popUpload: false,
-      fileLoading: false,
+      fileLoading: true,
       fileInfo: null,
       domainsMap: {},
+      finished: false,
+      loadingMore: false,
     };
   },
   computed: {
@@ -331,16 +441,16 @@ export default {
       if (this.inBucket)
         return [
           { text: "Bucket Name", value: "name" },
-          { text: "Domain", value: "domain" },
+          { text: "Domain", value: "defDomain" },
           { text: "CreateAt", value: "createAt" },
-          // { text: "Sync to AR", value: "arAct" },
+          { text: "Sync to AR", value: "arAct" },
         ];
       return [
         { text: "Name", value: "name" },
         { text: "Size", value: "size" },
         { text: "IPFS Hash", value: "hash" },
         { text: "Last Modified", value: "updateAt" },
-        // { text: "Actions", value: "act" },
+        { text: "AR Status", value: "arStatus" },
       ];
     },
     fileInfoList() {
@@ -369,23 +479,31 @@ export default {
           name: "url",
           value: this.fileUrls,
         },
+        {
+          label: "AR Hash",
+          name: "arHash",
+          value: info.arHash,
+        },
       ];
     },
-    originList() {
+    bucketInfo() {
       const { Bucket } = this.pathInfo;
+      const item = this.bucketList.filter((it) => it.name == Bucket)[0];
       let list = (this.domainsMap[Bucket] || [])
         .filter((it) => it.valid)
         .map((it) => it.name);
-      const item = this.domainList.filter((it) => it.bucketName == Bucket)[0];
-      if (item && !list.includes(item.domain)) list.push(item.domain);
-      return list.map((domain) => {
-        return (this.$inDev ? "http:" : "https:") + "//" + domain;
-      });
+      if (item && !list.includes(item.defDomain)) list.push(item.defDomain);
+      return {
+        ...item,
+        originList: list.map((domain) => {
+          return (this.$inDev ? "http:" : "https:") + "//" + domain;
+        }),
+      };
     },
     fileUrls() {
       if (!this.fileInfo || !this.inFile) return [];
       const { Key } = this.pathInfo;
-      const list = this.originList.map((origin) => {
+      const list = this.bucketInfo.originList.map((origin) => {
         return origin + "/" + Key;
       });
       if (!list.length) list.push(this.fileInfo.url);
@@ -410,21 +528,13 @@ export default {
     s3() {
       this.getList();
     },
-    async bucketList(val) {
-      if (!val.length) return;
-      const { data } = await this.$http.get("/domains/stat");
-      // console.log(data);
-      if (data && data.stats) {
-        this.domainList = data.stats;
-        localStorage.domainList = JSON.stringify(this.domainList);
-      }
-    },
   },
   mounted() {
     this.getList();
     this.checkNew();
   },
   methods: {
+    onStop() {},
     onCopied() {
       this.$toast("Copied to clipboard !");
     },
@@ -479,7 +589,6 @@ export default {
         this.$toast(`${name} created successfully`);
       } catch (error) {
         console.log(error);
-        if (error) this.$alert(error.message);
       }
       this.tableLoading = false;
     },
@@ -492,8 +601,10 @@ export default {
             Key,
           },
           (err, data) => {
-            if (err) reject(err);
-            else resolve(data);
+            if (err) {
+              this.onErr(err);
+              reject(err);
+            } else resolve(data);
           }
         );
       });
@@ -501,9 +612,10 @@ export default {
     async addBucket() {
       try {
         const msg1 = "Bucket names must be between 3 and 48 characters long.";
-        const { value: Bucket } = await this.$prompt("", "New Bucket", {
+        const { value: Bucket, form1 } = await this.$prompt("", "New Bucket", {
           icon: "mdi-folder-multiple-plus",
           hideIcon: true,
+          comp1: "new-bucket-form",
           inputAttrs: {
             label: "Bucket Name",
             // placeholder: "",
@@ -532,7 +644,10 @@ export default {
           },
           async (err) => {
             if (err) return this.onErr(err);
-            await this.$sleep(500);
+            if (form1.isAr) {
+              await this.syncBucket(Bucket, true);
+            }
+            await this.$sleep(1000);
             this.$loading.close();
             this.getBuckets();
           }

@@ -15,12 +15,15 @@ const store = new Vuex.Store({
     appInfo: {
       title: "",
     },
-    token: ()=>{ return localStorage.token },
+    token: () => {
+      return localStorage.token;
+    },
     loginSta: 0,
     userInfo: JSON.parse(localStorage.userInfo || "{}"),
     noticeMsg: {},
     alertInfo: {},
     s3: null,
+    s3m: null,
     searchKey: "",
     usageInfo: {},
   },

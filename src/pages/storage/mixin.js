@@ -1,4 +1,5 @@
 import { mapState } from "vuex";
+import debounce from "../../plugins/debounce";
 
 const BasePath = "/storage/";
 
@@ -8,7 +9,6 @@ export default {
       BasePath,
       tableLoading: false,
       bucketList: [],
-      domainList: JSON.parse(localStorage.domainList || "[]"),
       folderList: [],
       selected: [],
       deleting: false,
@@ -17,13 +17,17 @@ export default {
   computed: {
     ...mapState({
       s3: (s) => s.s3,
+      s3m: (s) => s.s3m,
       searchKey: (s) => s.searchKey,
     }),
     path() {
       return decodeURIComponent(this.$route.path);
     },
+    fromHistory() {
+      return /^\/arweave/.test(this.path);
+    },
     inStorage() {
-      return new RegExp(BasePath).test(this.path);
+      return /^\/(storage|arweave\/)/.test(this.path);
     },
     inBucket() {
       return this.path == BasePath;
@@ -42,12 +46,27 @@ export default {
       if (this.inFolder) return this.pathInfo.Prefix.split("/").length - 1;
       return 0;
     },
+    basePath() {
+      return this.fromHistory ? "/arweave/" : BasePath;
+    },
+    selectArStatus() {
+      if (this.inFolder && this.selected.length == 1) {
+        return this.selected[0].arStatus;
+      }
+      return null;
+    },
+    fileArStatus() {
+      if (this.inFile) {
+        return this.fileInfo.arStatus;
+      }
+      return null;
+    },
     navItems() {
-      let to = BasePath;
-      const items = [
+      let to = this.basePath;
+      let items = [
         {
-          text: "Storage",
-          to,
+          text: this.fromHistory ? "AR History" : "Storage",
+          to: this.fromHistory ? "/arweave" : to,
           exact: true,
         },
       ];
@@ -56,10 +75,13 @@ export default {
         const text = arr[i];
         if (!text) break;
         to += text + (arr[i + 1] == "" ? "" : "/");
+        if (this.fromHistory && i < arr.length - 1) {
+          continue;
+        }
         items.push({
           text,
           to,
-          exact: true,
+          exact: i < arr.length - 1,
         });
       }
       return items;
@@ -67,31 +89,11 @@ export default {
     list() {
       let list = [];
       if (this.inBucket) {
-        list = this.bucketList.map((it) => {
-          it.domainInfo = this.domainList.filter(
-            (d) => d.bucketName == it.name
-          )[0];
-          if (it.domainInfo) {
-            it.domains = [
-              {
-                name: "Loading",
-              },
-            ];
-            if (this.domainsMap[it.name]) {
-              it.domains = [
-                ...this.domainsMap[it.name],
-                {
-                  icon: "mdi-plus",
-                  name: "Add domain",
-                  to: "/domain?bucket=" + it.name,
-                },
-              ];
-            }
-          }
-          return it;
-        });
-      } else if (this.inFolder) list = this.folderList;
-      if (this.searchKey) {
+        list = this.bucketList;
+      } else if (this.inFolder) {
+        list = this.folderList;
+      }
+      if (this.searchKey && !this.inFolder) {
         list = list.filter((it) => {
           return new RegExp(this.searchKey).test(it.name);
         });
@@ -114,6 +116,22 @@ export default {
         Delimiter: "/",
       };
     },
+    defArStatus() {
+      if (this.fromHistory) return "syncing";
+      const { Bucket } = this.pathInfo;
+      const curBucket = this.bucketList.filter((it) => it.name == Bucket)[0];
+      if (curBucket) {
+        return curBucket.isAr ? "syncing" : "desynced";
+      }
+      return "unknown";
+    },
+  },
+  watch: {
+    searchKey() {
+      if (this.inFolder) {
+        debounce(this.getList);
+      }
+    },
   },
   methods: {
     checkNew() {
@@ -122,6 +140,17 @@ export default {
       }
     },
     onErr(err) {
+      if (!err) return;
+      let msg = err.message;
+      if (!msg) return;
+      if (["Failed to fetch"].includes(msg)) {
+        this.$confirm(msg, "Network Error", {
+          confirmText: "Retry",
+        }).then(() => {
+          this.getList();
+        });
+        return;
+      }
       this.$alert(err.message);
     },
     getList() {
@@ -134,6 +163,91 @@ export default {
       } else if (this.inFolder) {
         this.getObjects();
       }
+    },
+    async onSyncBucket(it) {
+      try {
+        if (it.arLoading) return;
+        if (!it.isAr) {
+          await this.$confirm(
+            "When you close sync to AR, it will become closing status, and you won't be able to properly close it until all your files have been synchronized. Are you sure you want to close it?"
+          );
+        } else {
+          await this.beforeArSync();
+        }
+        this.$set(it, "arLoading", true);
+        const { data } = await this.syncBucket(it.name, it.isAr);
+        console.log(data);
+        await this.$sleep(500);
+        console.log(it, it.isAr);
+        // throw new Error("test err");
+      } catch (error) {
+        console.log(error);
+        this.$set(it, "isAr", !it.isAr);
+      }
+      this.$set(it, "arLoading", false);
+      this.getBuckets();
+    },
+    async syncBucket(name, sync) {
+      return this.$http.post("/arweave/buckets/" + name, {
+        sync,
+      });
+    },
+    async beforeArSync() {
+      const skey = "arTipOff";
+      if (localStorage[skey]) return;
+      const html =
+        `<ul>` +
+        "<li>Supports all AR public gateway access</li>" +
+        "<li class='mt-2'>Permanent storage is not removable, and file sizes are limited to 100M</li>" +
+        "<li class='mt-2'>Consumes AR storage</li>" +
+        "</ul>";
+      const fn = (data) => {
+        if (data.form1.noShow) localStorage[skey] = 1;
+        console.log(data);
+      };
+      return this.$confirm(html, "Sync to AR", {
+        comp1: "no-show-form",
+      })
+        .then((data) => {
+          fn(data);
+          return data;
+        })
+        .catch((data) => {
+          fn(data);
+          throw new Error();
+        });
+    },
+    async onSyncAR(name, method = "post") {
+      console.log(name);
+      if (this.selectArStatus == "syncing") {
+        this.$alert("The file is being synced").then(() => {
+          this.getList();
+        });
+        return;
+      }
+      if (this.fileArStatus == "synced") {
+        window.open(this.$arVerifyPre + this.fileInfo.arHash);
+        return;
+      }
+      try {
+        if (this.fileArStatus == "desynced") {
+          await this.beforeArSync();
+        }
+        const { Bucket } = this.pathInfo;
+        this.$loading();
+        await this.$http[method]("/arweave/object", {
+          bucket: Bucket,
+          key: this.getFileKey(name),
+        });
+        this.getList();
+      } catch (error) {
+        //
+      }
+      this.$loading.close();
+    },
+    getFileKey(name) {
+      const { Prefix, Key } = this.pathInfo;
+      return this.inFile ? Key : Prefix + name;
     },
     async onRename(srcName) {
       try {
@@ -202,66 +316,155 @@ export default {
         );
       });
     },
-    headObject() {
+    async headObject() {
+      if (!this.bucketList.length) {
+        await this.getBuckets();
+      }
       this.fileLoading = true;
       this.fileInfo = null;
       this.s3.headObject(this.pathInfo, (err, data) => {
         this.fileLoading = false;
         if (err) return this.onErr(err);
+        console.log(data);
+        const meta = data.Metadata;
+        let arStatus = meta["arweave-status"];
+        if (!arStatus) {
+          arStatus = this.defArStatus;
+        }
         this.fileInfo = {
           size: data.ContentLength,
           type: data.ContentType,
           hash: this.$utils.getCidV1(data.ETag),
           updateAt: data.LastModified,
-          url: this.$endpoint + this.path.replace(BasePath, "/"),
+          url: this.$endpoint + this.path.replace(this.basePath, "/"),
+          arStatus,
+          arHash: meta["arweave-hash"],
+          arFailReason: (meta["arweave-failed-reason"] || "").replaceAll(
+            "-",
+            " "
+          ),
         };
         console.log(this.fileInfo);
       });
       this.onDomain(this.pathInfo.Bucket, true);
     },
-    getObjects() {
-      this.tableLoading = true;
-      const { Prefix } = this.pathInfo;
-      const filterFn = (it) => {
-        return (it.Prefix || it.Key).indexOf(this.pathInfo.Prefix) == 0;
-      };
-      this.s3.listObjectsV2(this.pathInfo, (err, data) => {
-        this.tableLoading = false;
-        if (err) return this.onErr(err);
-        // console.log(data, Prefix);
-        this.folderList = [
-          ...(data.CommonPrefixes || []).filter(filterFn).map((it) => {
-            return {
-              name: it.Prefix.replace(Prefix, "").replace("/", ""),
-            };
-          }),
-          ...(data.Contents || []).filter(filterFn).map((it) => {
-            return {
-              Key: it.Key,
-              name: it.Key.replace(Prefix, ""),
-              updateAt: it.LastModified.format(),
-              size: this.$utils.getFileSize(it.Size),
-              hash: this.$utils.getCidV1(it.ETag),
-              isFile: true,
-            };
-          }),
-        ];
-        // console.log(this.folderList);
-      });
+    onLoadMore() {
+      if (this.tableLoading) return;
+      this.loadingMore = true;
+      this.getObjects();
     },
-    getBuckets() {
+    async getObjects() {
+      if (!this.bucketList.length) {
+        await this.getBuckets();
+      }
       this.tableLoading = true;
-      this.s3.listBuckets({}, (err, data) => {
+      const { Bucket, Prefix, Delimiter } = this.pathInfo;
+      let after = "";
+      if (this.loadingMore) {
+        const last = this.list[this.list.length - 1];
+        if (last) after = last.Key;
+        else this.loadingMore = false;
+      } else {
+        this.finished = false;
+      }
+      let pre = Prefix;
+      if (this.searchKey) {
+        pre += this.searchKey;
+      }
+      const stream = this.s3m.extensions.listObjectsV2WithMetadataQuery(
+        Bucket,
+        pre,
+        "",
+        Delimiter,
+        30,
+        after
+      );
+      stream.on("data", (data) => {
         this.tableLoading = false;
-        if (err) return this.onErr(err);
-        this.bucketList = data.Buckets.map((it) => {
+        data.objects.sort((a, b) => {
+          return (b.prefix ? 1 : 0) - (a.prefix ? 1 : 0);
+        });
+        console.log(data.objects);
+        const list = data.objects.map((it) => {
+          if (it.prefix)
+            return {
+              name: it.prefix.replace(Prefix, "").replace("/", ""),
+            };
+          const meta = it.metadata || {};
+          let arStatus = meta["X-Amz-Meta-Arweave-Status"];
+          if (!arStatus) {
+            arStatus = this.defArStatus;
+          }
           return {
-            name: it.Name,
-            createAt: it.CreationDate.format(),
+            Key: it.name,
+            name: it.name.replace(Prefix, ""),
+            updateAt: it.lastModified.format(),
+            size: this.$utils.getFileSize(it.size),
+            hash: this.$utils.getCidV1(it.etag),
+            isFile: true,
+            arStatus,
+            arHash: meta["X-Amz-Meta-Arweave-Hash"],
           };
         });
-        // console.log(this.bucketList);
+        if (this.loadingMore) {
+          this.loadingMore = false;
+          this.folderList = [...this.folderList, ...list];
+        } else {
+          this.folderList = list;
+        }
+        if (list.length < 10) this.finished = true;
+        // console.log(this.pathInfo, this.folderList);
       });
+      stream.on("error", (err) => {
+        this.tableLoading = false;
+        if (err) return this.onErr(err);
+      });
+      // this.s3.listObjectsV2(this.pathInfo, (err, data) => {
+      //   // console.log(data, Prefix);
+      // });
+    },
+    listBuckets() {
+      return new Promise((resolve, reject) => {
+        this.s3.listBuckets({}, (err, data) => {
+          if (err) {
+            this.onErr(err);
+            reject(err);
+          }
+          const list = data.Buckets.map((it) => {
+            return {
+              name: it.Name,
+              createAt: it.CreationDate.format(),
+            };
+          });
+          resolve(list);
+        });
+      });
+    },
+    async getBuckets() {
+      this.tableLoading = true;
+      try {
+        const list = await this.listBuckets();
+        const { data } = await this.$http.get("/buckets/extra");
+        // console.log(data);
+        data.list.forEach((row) => {
+          const item = list.filter((it) => it.name == row.bucket)[0];
+          if (!item) {
+            console.log(row.bucket, "no bucket");
+            return;
+          }
+          const ar = row.arweave || {};
+          Object.assign(item, {
+            isAr: row.arweave ? ar.sync : row.arweaveSync,
+            arCancel: ar.status == "cancel",
+            defDomain: row.domain.domain,
+          });
+        });
+        // console.log(list);
+        this.bucketList = list;
+      } catch (error) {
+        console.log(error);
+      }
+      this.tableLoading = false;
     },
     delBucket(Bucket) {
       return new Promise((resolve, reject) => {
@@ -278,9 +481,12 @@ export default {
     },
     async onDelFile() {
       try {
-        await this.$confirm(
-          "This file will be permanently deleted. Are you sure you want to continue"
-        );
+        let tip =
+          "The file will be permanently deleted. Are you sure you want to continue ?";
+        if (this.fileInfo.arStatus != "desynced") {
+          tip = `The file will be permanently deleted, but can’t be deleted from the AR network, and your AR storage space will not increase. Would you like to continue?`;
+        }
+        await this.$confirm(tip);
         const { Key } = this.pathInfo;
         this.$loading();
         await this.delObjects([
@@ -316,9 +522,20 @@ export default {
     async onDelete(item) {
       try {
         const arr = await this.getSelectedObjects(item);
+        if (arr.length > 1000) {
+          throw new Error("You can delete up to 1,000 files at a time.");
+        }
         const suffix = arr.length > 1 ? "s" : "";
         const target = this.inBucket ? "bucket" : "file";
-        let html = `The following ${target}${suffix} will be permanently deleted. Are you sure you want to continue?<ul class='mt-4 ov-a' style="max-height: 40vh">`;
+        let html = `The following ${target}${suffix} will be permanently deleted. Are you sure you want to continue?`;
+        if (
+          this.inFolder &&
+          this.selected.filter((it) => it.arStatus != "desynced").length
+        ) {
+          const pre = arr.length == 1 ? "" : "files in AR";
+          html = `The following file${suffix} will be permanently deleted, but ${pre} can’t be deleted from the AR network, and your AR storage space will not increase. Would you like to continue?`;
+        }
+        html += `<ul class='mt-4 ov-a' style="max-height: 40vh">`;
         for (const row of arr) {
           html += "<li>" + row.name + "</li>";
         }
@@ -368,13 +585,12 @@ export default {
     },
     getViewUrl(item) {
       const { Prefix } = this.pathInfo;
-      let url = this.originList[0] + "/" + Prefix + item.name;
+      let url = this.bucketInfo.originList[0] + "/" + Prefix + item.name;
       return url.encode();
     },
     onView(it) {
       window.open(this.getViewUrl(it));
     },
-    onStop() {},
     onRow(it) {
       const url = this.getPath(it);
       this.$router.push(url);
@@ -388,6 +604,10 @@ export default {
         if (it.isFile) arr.push(it);
         else {
           const objArr = await this.getSubObjects(it.name);
+          if (objArr.length >= 900)
+            throw new Error(
+              `Plenty of files are found in folder【${it.name}】 and can only be deleted under the folder.`
+            );
           arr = arr.concat(
             objArr.map((sub) => {
               return {

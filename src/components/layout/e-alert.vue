@@ -76,6 +76,13 @@
               ></v-text-field>
             </v-form>
           </div>
+
+          <component
+            :is="alertInfo.comp1"
+            v-if="alertInfo.comp1"
+            :form="alertInfo.form1"
+            @input="onForm1"
+          ></component>
         </v-card-text>
         <v-card-actions class="pb-3">
           <v-spacer></v-spacer>
@@ -147,11 +154,16 @@ export default {
     alertInfo(info) {
       this.showAlert = false;
       this.showLoading = false;
+      this.form1 = null;
       if (info.type == "loading") {
         this.showLoading = info.isLoading;
       } else if (info.type == "snackbar") {
         this.showSnackbar = true;
       } else this.showAlert = true;
+    },
+    showAlert(val) {
+      if (val) this.isComplete = false;
+      else if (!this.isComplete) this.hideAlert(0);
     },
   },
   created() {
@@ -239,10 +251,17 @@ export default {
     };
   },
   methods: {
+    onForm1(form) {
+      this.form1 = form;
+    },
     async hideAlert(isOk) {
-      const { success, fail, showInput } = this.alertInfo;
+      this.isComplete = true;
+      const { success, fail, showInput, comp1 } = this.alertInfo;
+      let body = {};
+      if (comp1) {
+        body.form1 = this.form1 || this.alertInfo.form1 || {};
+      }
       if (isOk) {
-        let body = {};
         if (showInput) {
           const valid = this.$refs.form.validate();
           if (!valid) {
@@ -253,7 +272,7 @@ export default {
         }
         if (success) success(body);
       } else {
-        if (fail) fail();
+        if (fail) fail(body);
       }
       this.showAlert = false;
     },
