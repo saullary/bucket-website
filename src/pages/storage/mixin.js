@@ -59,6 +59,9 @@ export default {
       if (this.inFile) {
         return this.fileInfo.arStatus;
       }
+      if (this.inFolder) {
+        return this.selectArStatus;
+      }
       return null;
     },
     navItems() {
