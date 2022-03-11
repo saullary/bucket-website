@@ -243,6 +243,9 @@ export default {
           key: this.getFileKey(name),
         });
         this.getList();
+        this.$setMsg({
+          name: "updateUsage",
+        });
       } catch (error) {
         //
       }
