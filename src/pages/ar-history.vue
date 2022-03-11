@@ -72,6 +72,13 @@
       </template>
     </v-data-table>
 
+    <div class="ta-c mt-8" v-if="!list.length">
+      <img src="img/empty1.svg" width="80" />
+      <div class="mt-3 gray fz-14">
+        {{ tableLoading ? `Loading files...` : `No files found` }}
+      </div>
+    </div>
+
     <div
       v-if="!finished"
       class="pd-20 gray ta-c fz-16 mt-5"
@@ -81,7 +88,7 @@
       @click="onLoadMore"
       v-intersect="onLoadMore"
     >
-      <span v-if="list.length">
+      <span v-if="list.length" v-show="!tableLoading">
         {{ loadingMore ? "Loading..." : "Load More" }}
       </span>
     </div>
