@@ -232,7 +232,6 @@
                     slot="ref"
                     text
                     x-small
-                    outlined
                     @click.stop="headObject"
                     v-if="fileArStatus == 'syncing'"
                   >

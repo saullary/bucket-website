@@ -6,10 +6,10 @@ const inDev = /xyz/.test(process.env.VUE_APP_BASE_URL);
 Vue.prototype.$inDev = inDev;
 
 Vue.prototype.$arHashPre = inDev
-  ? "https://ar.foreverland.xyz/"
+  ? "https://arweave.net/" // https://ar.foreverland.xyz/
   : "https://arweave.net/";
 Vue.prototype.$arVerifyPre = inDev
-  ? "https://ar.foreverland.xyz/tx/"
+  ? "https://viewblock.io/arweave/tx/" // https://ar.foreverland.xyz/tx/
   : "https://viewblock.io/arweave/tx/";
 
 const baseURL = process.env.VUE_APP_BASE_URL;
