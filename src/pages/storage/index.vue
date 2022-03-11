@@ -426,7 +426,7 @@ export default {
   data() {
     return {
       popUpload: false,
-      fileLoading: false,
+      fileLoading: true,
       fileInfo: null,
       domainsMap: {},
       finished: false,

@@ -339,7 +339,10 @@ export default {
           url: this.$endpoint + this.path.replace(this.basePath, "/"),
           arStatus,
           arHash: meta["arweave-hash"],
-          arFailReason: (meta["arweave-failed-reason"] || "").replaceAll("-", " "),
+          arFailReason: (meta["arweave-failed-reason"] || "").replaceAll(
+            "-",
+            " "
+          ),
         };
         console.log(this.fileInfo);
       });
@@ -525,8 +528,12 @@ export default {
         const suffix = arr.length > 1 ? "s" : "";
         const target = this.inBucket ? "bucket" : "file";
         let html = `The following ${target}${suffix} will be permanently deleted. Are you sure you want to continue?`;
-        if (this.selectArStatus && this.selectArStatus != "desynced") {
-          html = `The following file${suffix} will be permanently deleted, but can’t be deleted from the AR network, and your AR storage space will not increase. Would you like to continue?`;
+        if (
+          this.inFolder &&
+          this.selected.filter((it) => it.arStatus != "desynced").length
+        ) {
+          const pre = arr.length == 1 ? "" : "files in AR";
+          html = `The following file${suffix} will be permanently deleted, but ${pre} can’t be deleted from the AR network, and your AR storage space will not increase. Would you like to continue?`;
         }
         html += `<ul class='mt-4 ov-a' style="max-height: 40vh">`;
         for (const row of arr) {
