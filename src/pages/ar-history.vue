@@ -34,8 +34,8 @@
       <template v-slot:item.name="{ item }">
         <span>{{ item.name.cutStr(20, 10) }}</span>
         <e-tooltip right v-if="item.isDeleted">
-          <v-icon slot="ref" color="#999" size="16" class="pa-1 d-ib ml-2"
-            >mdi-alert-circle</v-icon
+          <v-icon slot="ref" color="#333" size="18" class="pa-1 d-ib ml-2"
+            >mdi-alert-circle-outline</v-icon
           >
           <span>Deleted in Bucket</span>
         </e-tooltip>
@@ -181,8 +181,8 @@ export default {
       this.tableLoading = false;
     },
     onRow(it) {
-      console.log(it);
-      if (it.isDeleted) return this.$toast("Deleted in Bucket.");
+      // console.log(it);
+      if (it.isDeleted) return this.$toast("The file was deleted in Bucket.");
       const link = `/arweave/${it.bucket}/${it.key}`;
       this.$router.push(link);
     },
