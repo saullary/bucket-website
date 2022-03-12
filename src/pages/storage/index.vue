@@ -248,9 +248,8 @@
                       <v-btn
                         small
                         text
-                        color="primary"
                         @click="onSyncAR(fileName, 'put')"
-                        >Cancel Bridge AR</v-btn
+                        >Cancel</v-btn
                       >
                       <span>or</span>
                     </template>
@@ -259,7 +258,7 @@
                       text
                       color="primary"
                       @click="onSyncAR(fileName)"
-                      >Retry Bridge AR</v-btn
+                      >Retry</v-btn
                     >
                   </div>
                 </template>
