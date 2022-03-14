@@ -138,7 +138,7 @@ function handleMsg(code, msg) {
   }
   msg = msg || "Unknown Error";
 
-  if (code == 401) {
+  if (code == 401 || code == "ACCESS_TOKEN_HAS_EXPIRED") {
     goLogin();
   } else if (msg) {
     setTimeout(() => {
