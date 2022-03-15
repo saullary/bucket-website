@@ -37,7 +37,10 @@
     :mini-variant.sync="mini"
     v-model="drawer"
     app
+    clipped
   >
+    <e-stor-usage v-show="false"></e-stor-usage>
+    <div class="pa-5"></div>
     <v-list rounded dense>
       <!-- :prepend-icon="item.action" -->
       <v-list-group
@@ -112,6 +115,17 @@ export default {
     },
     list() {
       return [
+        {
+          label: "Hosting",
+          icon: "mdi-file-multiple",
+          subs: [
+            {
+              label: "AR History",
+              to: "/arweave",
+              img: "m-ar",
+            },
+          ],
+        },
         {
           label: "Bucket",
           icon: "mdi-file-multiple",

@@ -76,7 +76,8 @@ body {
     pointer-events: none;
   }
   .v-navigation-drawer, .v-navigation-drawer__content {
-    overflow: visible;
+    overflow-x: visible;
+    overflow-y: visible;
     cursor: pointer;
   }
 }
