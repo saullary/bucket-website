@@ -40,35 +40,39 @@
     clipped
   >
     <e-stor-usage v-show="false"></e-stor-usage>
+    {{ hasActive }}
     <div class="pa-5"></div>
     <v-list rounded dense>
       <!-- :prepend-icon="item.action" -->
-      <v-list-group
-        v-for="(it, i) in list"
-        :key="i"
-        v-model="it.active"
-        no-action
-      >
-        <template v-slot:activator>
-          <v-list-item-icon>
-            <v-icon size="18">{{ it.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>
-              <b>{{ it.label }}</b>
-            </v-list-item-title>
-          </v-list-item-content>
-        </template>
-
-        <v-list-item
-          class="sub"
-          :to="sub.to"
-          :href="sub.href"
-          :target="sub.href ? '_blank' : ''"
-          v-for="(sub, j) in it.subs"
-          :key="j"
+      <template v-for="(it, i) in list">
+        <v-list-group
+          v-model="it.active"
+          :group="it.group"
+          v-if="it.subs"
+          :key="i"
+          no-action
         >
-          <!-- <v-list-item-icon>
+          <template v-slot:activator>
+            <e-drawer-icon
+              :it="it"
+              :active="(hasActive && it.group.test(path)) || it.active"
+            ></e-drawer-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                <b>{{ it.label }}</b>
+              </v-list-item-title>
+            </v-list-item-content>
+          </template>
+
+          <v-list-item
+            class="sub"
+            :to="sub.to"
+            :href="sub.href"
+            :target="sub.href ? '_blank' : ''"
+            v-for="(sub, j) in it.subs"
+            :key="j"
+          >
+            <!-- <v-list-item-icon>
             <img
               :src="`img/icon/${sub.img}${
                 path.indexOf(it.to) == 0 ? '' : '-0'
@@ -76,11 +80,30 @@
               width="18"
             />
           </v-list-item-icon> -->
+            <v-list-item-content>
+              <v-list-item-title v-text="sub.label"></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
+
+        <v-list-item
+          v-else
+          :to="it.to"
+          :href="it.href"
+          :target="it.href ? '_blank' : ''"
+          :key="i"
+        >
+          <e-drawer-icon
+            :it="it"
+            :active="path.indexOf(it.to) == 0"
+          ></e-drawer-icon>
           <v-list-item-content>
-            <v-list-item-title v-text="sub.label"></v-list-item-title>
+            <v-list-item-title>
+              <b>{{ it.label }}</b>
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </v-list-group>
+      </template>
     </v-list>
 
     <div class="pos-a mini-arrow" @click="mini = !mini">
@@ -100,6 +123,7 @@ export default {
     return {
       drawer: null,
       mini: false,
+      groupIdx: 0,
       filesPath: initFilePath,
       domainPath: initDomainPath,
     };
@@ -113,43 +137,50 @@ export default {
     path() {
       return this.$route.path;
     },
+    hasActive() {
+      // todo: use array to save active
+      return false; //this.list.filter((it) => it.active).length > 0;
+    },
     list() {
       return [
         {
+          label: "Overview",
+          img: "m-overview",
+          to: "/overview",
+          active: false,
+        },
+        {
           label: "Hosting",
-          icon: "mdi-file-multiple",
+          img: "m-hosting",
+          group: /projects/i,
           subs: [
             {
-              label: "AR History",
-              to: "/arweave",
-              img: "m-ar",
+              label: "Projects",
+              to: "/projects",
             },
           ],
         },
         {
           label: "Bucket",
-          icon: "mdi-file-multiple",
+          img: "m-bucket",
+          active: false,
+          group: /storage|ar|domain/i,
           subs: [
             {
               label: "Files",
               to: this.path.includes(initFilePath)
                 ? initFilePath
                 : this.filesPath,
-
-              img: "m-files",
             },
             {
               label: "AR History",
               to: "/arweave",
-              img: "m-ar",
             },
             {
               label: "Domains",
               to: this.path.includes(initDomainPath)
                 ? initDomainPath
                 : this.domainPath,
-              icon: "mdi-wan",
-              img: "m-domains",
             },
           ],
         },
@@ -157,6 +188,9 @@ export default {
     },
   },
   watch: {
+    groupIdx() {
+      console.log(this.groupIdx);
+    },
     noticeMsg({ name }) {
       if (name == "showDrawer") {
         this.drawer = true;
