@@ -6,10 +6,10 @@
 @import 'anim';
 
 $color1: #0F8DFF;
-@font-face {
-  font-family: Poppins;
-  src: url('/font/Poppins-Medium.ttf');
-}
+// @font-face {
+//   font-family: Poppins;
+//   src: url('/font/Poppins-Medium.ttf');
+// }
 body {
   box-sizing: border-box;
   text-rendering: optimizeLegibility;
@@ -75,13 +75,17 @@ body {
   .v-input--switch.v-input--is-disabled {
     pointer-events: none;
   }
+  .v-navigation-drawer, .v-navigation-drawer__content {
+    overflow: visible;
+    cursor: pointer;
+  }
 }
 .color-1 {
   color: $color1;
 }
 
 .v-main {
-  background: #F4F9FF;
+  background: #F9FBFC;
 }
 
 .v-dialog .v-label {

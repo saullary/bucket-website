@@ -4,7 +4,6 @@ import Storage from "./storage";
 import ARHistory from "./ar-history";
 import Domains from "./domains";
 import Domain from "./domain";
-import Billing from "./billing";
 import Settings from "./settings";
 import Apikey from "./user/apikey";
 
@@ -45,13 +44,6 @@ export default [
   {
     path: "/domain/:name",
     component: Domain,
-  },
-  {
-    path: "/billing",
-    component: Billing,
-    meta: {
-      title: "Billing",
-    },
   },
   {
     path: "/settings",

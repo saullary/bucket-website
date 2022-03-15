@@ -1,8 +1,9 @@
 <template>
   <v-app>
+    <e-header></e-header>
     <e-drawer v-if="!meta.noLogin" />
     <v-main>
-      <e-header v-if="!meta.noLogin" />
+      <!-- <e-serach v-if="!meta.noLogin" /> -->
       <e-wrap>
         <keep-alive>
           <router-view></router-view>

@@ -1,74 +1,87 @@
 <style lang="scss">
 .e-drawer {
-  background: linear-gradient(160deg, #ffffff 0%, #d7e9ff 50%, #fff1fe 100%);
   box-shadow: 5px 0px 30px 0px rgba(0, 0, 0, 0.1);
   .v-navigation-drawer__border {
     display: none;
+  }
+  .mini-arrow {
+    right: -10px;
+    bottom: 25px;
+    background: #fff;
+    transform: rotate(45deg);
+    .icon {
+      transform: rotate(-45deg);
+    }
+  }
+  &.v-navigation-drawer--mini-variant .mini-arrow {
+    .icon {
+      transform: rotate(135deg);
+    }
+  }
+  .v-list-item--active {
+    color: #34a9ff;
+    background: none;
+    &.sub::before {
+      opacity: 0;
+    }
+    &.v-list-group__header::before {
+      opacity: 0.12 !important;
+    }
   }
 }
 </style>
 
 <template>
-  <v-navigation-drawer class="e-drawer" v-model="drawer" app>
-    <div class="pt-10 pb-3 ta-c">
-      <a href="/">
-        <img src="img/logo.svg" height="28" />
-      </a>
-    </div>
-    <div class="pa-6 pt-5">
-      <e-stor-usage></e-stor-usage>
-    </div>
+  <v-navigation-drawer
+    class="e-drawer"
+    :mini-variant.sync="mini"
+    v-model="drawer"
+    app
+  >
+    <v-list rounded dense>
+      <!-- :prepend-icon="item.action" -->
+      <v-list-group
+        v-for="(it, i) in list"
+        :key="i"
+        v-model="it.active"
+        no-action
+      >
+        <template v-slot:activator>
+          <v-list-item-icon>
+            <v-icon size="18">{{ it.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>
+              <b>{{ it.label }}</b>
+            </v-list-item-title>
+          </v-list-item-content>
+        </template>
 
-    <v-divider></v-divider>
-
-    <div class="pa-8">
-      <div class="mb-4" v-for="(it, i) in list" :key="i">
-        <v-btn
-          class="menu-btn"
-          rounded
-          plain
-          block
-          :to="it.to"
-          :href="it.href"
-          :target="it.href ? '_blank' : ''"
+        <v-list-item
+          class="sub"
+          :to="sub.to"
+          :href="sub.href"
+          :target="sub.href ? '_blank' : ''"
+          v-for="(sub, j) in it.subs"
+          :key="j"
         >
-          <div class="d-flex al-c" style="min-width: 110px">
-            <!-- <v-icon size="16">{{ it.icon }}</v-icon> -->
+          <!-- <v-list-item-icon>
             <img
-              :src="`img/icon/${it.img}${
+              :src="`img/icon/${sub.img}${
                 path.indexOf(it.to) == 0 ? '' : '-0'
               }.svg`"
               width="18"
             />
-            <span class="ml-4" style="min-width: 65px">{{ it.label }}</span>
-          </div>
-        </v-btn>
-      </div>
-    </div>
+          </v-list-item-icon> -->
+          <v-list-item-content>
+            <v-list-item-title v-text="sub.label"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-group>
+    </v-list>
 
-    <div class="pos-btm" style="bottom: 10px" v-if="token">
-      <e-menu offset-x>
-        <v-btn slot="ref" text block x-large>
-          <v-avatar size="26" v-if="userInfo.avatar">
-            <v-img :src="userInfo.avatar" v-if="userInfo.avatar"></v-img>
-            <!-- <avatar :text="userInfo.username"></avatar> -->
-          </v-avatar>
-          <img v-else src="img/icon/u-wallet.svg" height="20" />
-
-          <span class="ml-3 gray-3 fz-14">{{
-            userInfo.username ? userInfo.username.cutStr(6, 6) : "Unknown"
-          }}</span>
-          <v-icon class="ml-auto" color="#aaa">mdi-chevron-right</v-icon>
-        </v-btn>
-        <v-list dense>
-          <v-list-item link to="/apikey">
-            <span>Settings</span>
-          </v-list-item>
-          <v-list-item link @click="onLogout">
-            <span>Disconnect</span>
-          </v-list-item>
-        </v-list>
-      </e-menu>
+    <div class="pos-a mini-arrow" @click="mini = !mini">
+      <v-icon class="icon">mdi-chevron-left</v-icon>
     </div>
   </v-navigation-drawer>
 </template>
@@ -83,6 +96,7 @@ export default {
   data() {
     return {
       drawer: null,
+      mini: false,
       filesPath: initFilePath,
       domainPath: initDomainPath,
     };
@@ -99,40 +113,31 @@ export default {
     list() {
       return [
         {
-          label: "Files",
-          to: this.path.includes(initFilePath) ? initFilePath : this.filesPath,
+          label: "Bucket",
           icon: "mdi-file-multiple",
-          img: "m-files",
-        },
-        {
-          label: "AR History",
-          to: "/arweave",
-          img: "m-ar",
-        },
-        {
-          label: "Domains",
-          to: this.path.includes(initDomainPath)
-            ? initDomainPath
-            : this.domainPath,
-          icon: "mdi-wan",
-          img: "m-domains",
-        },
-        {
-          label: "Billing",
-          to: "/billing",
-          icon: "mdi-credit-card-outline",
-          img: "m-billing",
-        },
-        // {
-        //   label: "Settings",
-        //   to: "/settings",
-        //   icon: "cog-outline",
-        // },
-        {
-          label: "Docs",
-          href: "https://docs.bucket.4everland.org/",
-          icon: "mdi-file-document-outline",
-          img: "m-docs",
+          subs: [
+            {
+              label: "Files",
+              to: this.path.includes(initFilePath)
+                ? initFilePath
+                : this.filesPath,
+
+              img: "m-files",
+            },
+            {
+              label: "AR History",
+              to: "/arweave",
+              img: "m-ar",
+            },
+            {
+              label: "Domains",
+              to: this.path.includes(initDomainPath)
+                ? initDomainPath
+                : this.domainPath,
+              icon: "mdi-wan",
+              img: "m-domains",
+            },
+          ],
         },
       ];
     },
