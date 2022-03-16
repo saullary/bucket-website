@@ -5,7 +5,7 @@ import ARHistory from "./ar-history";
 import Domains from "./domains";
 import Domain from "./domain";
 import Settings from "./settings";
-import Apikey from "./user/apikey";
+import Overview from "./overview";
 
 export default [
   {
@@ -20,8 +20,18 @@ export default [
     },
   },
   {
+    path: "/overview",
+    component: Overview,
+    meta: {
+      title: "Overview",
+    },
+  },
+  {
     path: "/storage/*",
     component: Storage,
+    meta: {
+      title: "Storage",
+    },
   },
   {
     path: "/arweave",
@@ -50,13 +60,6 @@ export default [
     component: Settings,
     meta: {
       title: "Settings",
-    },
-  },
-  {
-    path: "/apikey",
-    component: Apikey,
-    meta: {
-      title: "API Key",
     },
   },
 ];

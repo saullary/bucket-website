@@ -4,14 +4,18 @@
   .v-navigation-drawer__border {
     display: none;
   }
+  .group-item {
+    margin-bottom: 10px !important;
+  }
   .mini-arrow {
-    right: -10px;
+    right: -8px;
     bottom: 25px;
     padding: 5px;
     background: #fff;
     transform: rotate(45deg);
     cursor: pointer;
     .icon {
+      width: 14px;
       transform: rotate(-45deg);
     }
   }
@@ -52,6 +56,7 @@
     <v-list rounded dense>
       <template v-for="(it, i) in list">
         <v-list-group
+          class="group-item"
           v-model="activeArr[i]"
           @input="onToggle(i, $event)"
           :group="it.group"
@@ -84,6 +89,7 @@
         </v-list-group>
 
         <v-list-item
+          class="group-item"
           v-else
           :to="it.to"
           :href="it.href"
@@ -105,7 +111,7 @@
 
     <div class="pos-a mini-arrow" @click="mini = !mini">
       <!-- <v-icon class="icon">mdi-chevron-left</v-icon> -->
-      <img src="img/svg/mini-arrow.svg" width="16" class="icon d-b" />
+      <img src="img/svg/mini-arrow.svg" class="icon d-b" />
     </div>
   </v-navigation-drawer>
 </template>
