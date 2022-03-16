@@ -299,9 +299,6 @@
         disable-pagination
         @click:row="onRow"
       >
-        <!-- <template v-slot:item.data-table-select="row">
-          <v-checkbox v-model="row.isSelected" @input="row.select"></v-checkbox>
-        </template> -->
         <template v-slot:item.name="{ item }">
           <v-btn
             :color="inBucket ? 'primary' : '#000'"
@@ -324,8 +321,7 @@
             :href="getViewUrl(item)"
             target="_blank"
           >
-            <!-- <v-icon size="14">mdi-eye-outline</v-icon> -->
-            <img src="img/icon/eye.svg" width="13" />
+            <img src="img/svg/view.svg" width="14" />
           </v-btn>
         </template>
         <template v-slot:item.domain="{ item }">
@@ -336,6 +332,7 @@
         <template v-slot:item.hash="{ item }">
           <v-btn
             rounded
+            color="primary"
             x-small
             text
             target="_blank"
@@ -343,8 +340,8 @@
             @click.stop="onStop"
             :href="`https://${item.hash}.ipfs.dweb.link`"
           >
-            <span class="d-ib line-1" style="width: 160px">
-              {{ item.hash }}
+            <span class="d-ib line-1" style="width: 80px">
+              {{ item.hash.cutStr(5, 4) }}
             </span>
           </v-btn>
           <v-btn
@@ -356,7 +353,7 @@
             @success="$toast('Copied to clipboard !')"
           >
             <!-- <v-icon size="14" color="primary">mdi-content-copy</v-icon> -->
-            <img src="img/icon/copy1.svg" width="11" />
+            <img src="img/svg/copy.svg" width="12" />
           </v-btn>
         </template>
         <template v-slot:item.arAct="{ item }">
