@@ -6,7 +6,7 @@
 <template>
   <v-app-bar id="e-header" app clipped-left height="60" color="#fff">
     <a href="/">
-      <img src="img/logo.svg" height="30" />
+      <img src="img/svg/logo.svg" height="30" class="d-b" />
     </a>
   </v-app-bar>
 </template>

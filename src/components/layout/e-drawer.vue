@@ -13,9 +13,14 @@
       transform: rotate(-45deg);
     }
   }
-  &.v-navigation-drawer--mini-variant .mini-arrow {
-    .icon {
-      transform: rotate(135deg);
+  &.v-navigation-drawer--mini-variant {
+    .v-list-item {
+      padding-left: 11px;
+    }
+    .mini-arrow {
+      .icon {
+        transform: rotate(135deg);
+      }
     }
   }
   .v-list-item--active {
@@ -40,23 +45,20 @@
     clipped
   >
     <e-stor-usage v-show="false"></e-stor-usage>
-    {{ hasActive }}
+
     <div class="pa-5"></div>
     <v-list rounded dense>
-      <!-- :prepend-icon="item.action" -->
       <template v-for="(it, i) in list">
         <v-list-group
-          v-model="it.active"
+          v-model="activeArr[i]"
+          @input="onToggle(i, $event)"
           :group="it.group"
           v-if="it.subs"
           :key="i"
           no-action
         >
           <template v-slot:activator>
-            <e-drawer-icon
-              :it="it"
-              :active="(hasActive && it.group.test(path)) || it.active"
-            ></e-drawer-icon>
+            <e-drawer-icon :it="it" :active="activeArr[i]"></e-drawer-icon>
             <v-list-item-content>
               <v-list-item-title>
                 <b>{{ it.label }}</b>
@@ -65,6 +67,7 @@
           </template>
 
           <v-list-item
+            :ref="i + '-' + j"
             class="sub"
             :to="sub.to"
             :href="sub.href"
@@ -72,14 +75,6 @@
             v-for="(sub, j) in it.subs"
             :key="j"
           >
-            <!-- <v-list-item-icon>
-            <img
-              :src="`img/icon/${sub.img}${
-                path.indexOf(it.to) == 0 ? '' : '-0'
-              }.svg`"
-              width="18"
-            />
-          </v-list-item-icon> -->
             <v-list-item-content>
               <v-list-item-title v-text="sub.label"></v-list-item-title>
             </v-list-item-content>
@@ -123,7 +118,7 @@ export default {
     return {
       drawer: null,
       mini: false,
-      groupIdx: 0,
+      activeArr: [],
       filesPath: initFilePath,
       domainPath: initDomainPath,
     };
@@ -136,10 +131,6 @@ export default {
     }),
     path() {
       return this.$route.path;
-    },
-    hasActive() {
-      // todo: use array to save active
-      return false; //this.list.filter((it) => it.active).length > 0;
     },
     list() {
       return [
@@ -188,9 +179,6 @@ export default {
     },
   },
   watch: {
-    groupIdx() {
-      console.log(this.groupIdx);
-    },
     noticeMsg({ name }) {
       if (name == "showDrawer") {
         this.drawer = true;
@@ -210,6 +198,10 @@ export default {
     },
   },
   methods: {
+    onToggle(i, open) {
+      if (!open) return;
+      this.$refs[i + "-0"][0].$el.click();
+    },
     onLogout() {
       localStorage.clear();
       location.href = "index.html";

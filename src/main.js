@@ -13,7 +13,7 @@ const Minio = require("minio-s");
 
 router.beforeEach((to, _, next) => {
   let { title } = to.meta || {};
-  const name = "4EVERLAND BUCKET";
+  const name = "4EVERLAND";
   if (title) {
     title += " - " + name;
     for (const key in to.params) {

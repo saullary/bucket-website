@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <e-header></e-header>
+    <e-header v-if="!meta.noLogin"></e-header>
     <e-drawer v-if="!meta.noLogin" />
     <v-main>
       <!-- <e-serach v-if="!meta.noLogin" /> -->
