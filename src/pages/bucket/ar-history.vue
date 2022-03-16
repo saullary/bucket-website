@@ -1,12 +1,6 @@
 <template>
   <div>
     <div class="d-flex al-c mt-3">
-      <img src="img/icon/nav-folder.svg" height="14" class="mr-2" />
-      <v-breadcrumbs :items="navItems" class="pl-0">
-        <template v-slot:divider>
-          <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
-        </template>
-      </v-breadcrumbs>
       <div class="d-flex ml-auto shrink-0">
         <nav-item icon="ic-sync" unit="MB">{{ usageInfo.arSyncing }}</nav-item>
         <nav-item icon="ic-synced" unit="MB" class="ml-7">{{
@@ -190,7 +184,7 @@ export default {
     onRow(it) {
       // console.log(it);
       if (it.isDeleted) return this.$toast("The file was deleted in Bucket.");
-      const link = `/arweave/${it.bucket}/${it.key}`;
+      const link = `/bucket/arweave/${it.bucket}/${it.key}`;
       this.$router.push(link);
     },
   },

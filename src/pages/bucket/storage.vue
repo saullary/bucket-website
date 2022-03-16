@@ -19,7 +19,7 @@
       <div v-show="inBucket">
         <v-btn color="primary" @click="addBucket">
           <!-- <v-icon size="15">mdi-folder-multiple-plus</v-icon> -->
-          <img src="img/icon/add1.svg" width="12" />
+          <img src="img/svg/add1.svg" width="12" />
           <span class="ml-2">New Bucket</span>
         </v-btn>
       </div>
@@ -149,21 +149,16 @@
       </e-menu>
     </div>
 
-    <div class="d-flex al-c mt-3">
-      <img src="img/icon/nav-folder.svg" height="14" class="mr-2" />
-      <v-breadcrumbs :items="navItems" class="pl-0">
-        <template v-slot:divider>
-          <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
-        </template>
-      </v-breadcrumbs>
+    <!-- <div class="d-flex al-c mt-3">
       <div class="ml-auto shrink-0" v-if="inBucket && !tableLoading">
         <nav-item :unit="inBucket ? 'Buckets' : 'Objects'">{{
           list.length
         }}</nav-item>
       </div>
-    </div>
+    </div> -->
+    <div class="pa-2"></div>
 
-    <div v-if="inFile">
+    <div v-if="inFile" class="mt-4">
       <v-card outlined>
         <div class="pd-15-20">
           <span>File Info</span>
@@ -245,10 +240,7 @@
                       fileInfo.arFailReason
                     }}</span>
                     <template v-if="!bucketInfo.isAr">
-                      <v-btn
-                        small
-                        text
-                        @click="onSyncAR(fileName, 'put')"
+                      <v-btn small text @click="onSyncAR(fileName, 'put')"
                         >Cancel</v-btn
                       >
                       <span>or</span>
@@ -418,7 +410,7 @@
 </template>
 
 <script>
-import mixin from "./mixin";
+import mixin from "./storage-mixin";
 
 export default {
   mixins: [mixin],

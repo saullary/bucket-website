@@ -119,8 +119,8 @@
 <script>
 import { mapState } from "vuex";
 
-const initFilePath = "/storage/";
-const initDomainPath = "/domain";
+const initFilePath = "/bucket/storage/";
+const initDomainPath = "/bucket/domain";
 
 export default {
   data() {
@@ -152,11 +152,11 @@ export default {
         {
           label: "Hosting",
           img: "m-hosting",
-          group: /projects/i,
+          group: /^\/hosting/i,
           subs: [
             {
               label: "Projects",
-              to: "/projects",
+              to: "/hosting/projects",
             },
           ],
         },
@@ -164,7 +164,7 @@ export default {
           label: "Bucket",
           img: "m-bucket",
           active: false,
-          group: /storage|ar|domain/i,
+          group: /^\/bucket/i,
           subs: [
             {
               label: "Files",
@@ -174,7 +174,7 @@ export default {
             },
             {
               label: "AR History",
-              to: "/arweave",
+              to: "/bucket/arweave",
             },
             {
               label: "Domains",
@@ -209,6 +209,7 @@ export default {
   methods: {
     onToggle(i, open) {
       if (!open) return;
+      if (this.list[i].group.test(this.path)) return;
       this.$refs[i + "-0"][0].$el.click();
     },
     onLogout() {

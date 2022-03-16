@@ -11,7 +11,7 @@
     <div class="btn-wrap">
       <v-btn color="primary" @click="showPop = true">
         <!-- <v-icon size="16">mdi-plus-circle-outline</v-icon> -->
-        <img src="img/icon/add1.svg" width="12" />
+        <img src="img/svg/add1.svg" width="12" />
         <span class="ml-2">Add Domain</span>
       </v-btn>
       <v-btn

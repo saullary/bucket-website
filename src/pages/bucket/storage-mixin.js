@@ -1,7 +1,7 @@
 import { mapState } from "vuex";
 import debounce from "../../plugins/debounce";
 
-const BasePath = "/storage/";
+const BasePath = "/bucket/storage/";
 
 export default {
   data() {
@@ -19,15 +19,16 @@ export default {
       s3: (s) => s.s3,
       s3m: (s) => s.s3m,
       searchKey: (s) => s.searchKey,
+      navItems: (s) => s.navItems,
     }),
     path() {
       return decodeURIComponent(this.$route.path);
     },
     fromHistory() {
-      return /^\/arweave/.test(this.path);
+      return /^\/bucket\/arweave/.test(this.path);
     },
     inStorage() {
-      return /^\/(storage|arweave\/)/.test(this.path);
+      return /^\/bucket\/(storage|arweave\/)/.test(this.path);
     },
     inBucket() {
       return this.path == BasePath;
@@ -47,7 +48,7 @@ export default {
       return 0;
     },
     basePath() {
-      return this.fromHistory ? "/arweave/" : BasePath;
+      return this.fromHistory ? "/bucket/arweave/" : BasePath;
     },
     selectArStatus() {
       if (this.inFolder && this.selected.length == 1) {
@@ -63,31 +64,6 @@ export default {
         return this.selectArStatus;
       }
       return null;
-    },
-    navItems() {
-      let to = this.basePath;
-      let items = [
-        {
-          text: this.fromHistory ? "AR History" : "Storage",
-          to: this.fromHistory ? "/arweave" : to,
-          exact: true,
-        },
-      ];
-      const arr = this.path.replace(to, "").split("/");
-      for (const i in arr) {
-        const text = arr[i];
-        if (!text) break;
-        to += text + (arr[i + 1] == "" ? "" : "/");
-        if (this.fromHistory && i < arr.length - 1) {
-          continue;
-        }
-        items.push({
-          text,
-          to,
-          exact: i < arr.length - 1,
-        });
-      }
-      return items;
     },
     list() {
       let list = [];
@@ -105,7 +81,7 @@ export default {
     },
     pathInfo() {
       if (this.inBucket || !this.inStorage) return {};
-      const arr = this.path.split("/").slice(2);
+      const arr = this.path.split("/").slice(3);
       const Key = arr.slice(1).join("/");
       const Bucket = arr[0];
       if (this.inFile)
@@ -331,7 +307,7 @@ export default {
       this.s3.headObject(this.pathInfo, (err, data) => {
         this.fileLoading = false;
         if (err) return this.onErr(err);
-        console.log(data);
+        // console.log(data);
         const meta = data.Metadata;
         let arStatus = meta["arweave-status"];
         if (!arStatus) {
@@ -350,7 +326,6 @@ export default {
             " "
           ),
         };
-        console.log(this.fileInfo);
       });
       this.onDomain(this.pathInfo.Bucket, true);
     },

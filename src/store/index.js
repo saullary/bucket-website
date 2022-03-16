@@ -26,6 +26,7 @@ const store = new Vuex.Store({
     s3m: null,
     searchKey: "",
     usageInfo: {},
+    navItems: [],
   },
   mutations: {
     [SET_DATA](state, data) {
