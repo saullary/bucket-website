@@ -69,12 +69,18 @@
             {{ sucNum }}/ {{ files.length }} uploaded
           </div>
 
-          <v-btn v-if="!uploading" outlined @click="onClear">{{
-            files.length ? "Clear" : "Cancel"
-          }}</v-btn>
+          <v-btn
+            v-if="!uploading"
+            outlined
+            rounded
+            width="100"
+            @click="onClear"
+            >{{ files.length ? "Clear" : "Cancel" }}</v-btn
+          >
           <v-btn
             color="primary"
-            class="ml-4"
+            rounded
+            class="ml-6"
             :disabled="!files.length"
             @click="onConfirm"
             >{{ confirmTxt }}</v-btn
