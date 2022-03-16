@@ -7,8 +7,10 @@
   .mini-arrow {
     right: -10px;
     bottom: 25px;
+    padding: 5px;
     background: #fff;
     transform: rotate(45deg);
+    cursor: pointer;
     .icon {
       transform: rotate(-45deg);
     }
@@ -102,7 +104,8 @@
     </v-list>
 
     <div class="pos-a mini-arrow" @click="mini = !mini">
-      <v-icon class="icon">mdi-chevron-left</v-icon>
+      <!-- <v-icon class="icon">mdi-chevron-left</v-icon> -->
+      <img src="img/svg/mini-arrow.svg" width="16" class="icon d-b" />
     </div>
   </v-navigation-drawer>
 </template>
