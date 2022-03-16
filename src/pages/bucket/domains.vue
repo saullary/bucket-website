@@ -7,7 +7,6 @@
     ></v-skeleton-loader>
   </div>
   <div v-else>
-    <!-- <e-page-title desc="">Domain</e-page-title> -->
     <div class="btn-wrap">
       <v-btn color="primary" @click="showPop = true">
         <!-- <v-icon size="16">mdi-plus-circle-outline</v-icon> -->
@@ -17,12 +16,13 @@
       <v-btn
         @click="onDelete"
         :loading="deleting"
-        color="error"
+        outlined
         class="ml-5"
         min-width="36"
         v-show="selected.length"
       >
-        <v-icon size="18">mdi-trash-can-outline</v-icon>
+        <img src="img/svg/delete.svg" width="12" />
+        <span class="ml-2">Delete</span>
       </v-btn>
     </div>
     <div class="mt-4">
@@ -224,7 +224,7 @@ export default {
         const suffix = this.selected.length > 1 ? "s" : "";
         let html = `The following domain${suffix} will be permanently deleted along with associated <b>aliases</b> and <b>certs</b>. 
           <br>Are you sure you want to continue?`;
-        html += '<ul class="mt-5">';
+        html += '<ul class="mt-5 gray">';
         for (const it of this.selected) {
           html += `<li class="mt-2">${it.domain}</li>`;
         }

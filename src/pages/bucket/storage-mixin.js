@@ -516,7 +516,7 @@ export default {
           const pre = arr.length == 1 ? "" : "files in AR";
           html = `The following file${suffix} will be permanently deleted, but ${pre} can’t be deleted from the AR network, and your AR storage space will not increase. Would you like to continue?`;
         }
-        html += `<ul class='mt-4 ov-a' style="max-height: 40vh">`;
+        html += `<ul class='mt-4 ov-a gray' style="max-height: 40vh">`;
         for (const row of arr) {
           html += "<li>" + row.name + "</li>";
         }

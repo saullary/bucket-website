@@ -79,7 +79,7 @@
       <div v-show="inFolder">
         <v-btn color="primary" @click="$refs.upload.showPop = true">
           <!-- <v-icon size="15">mdi-cloud-upload</v-icon> -->
-          <img src="img/icon/upload.svg" width="16" />
+          <img src="img/svg/upload.svg" width="16" />
           <span class="ml-2">Upload</span>
         </v-btn>
         <v-btn
@@ -89,7 +89,7 @@
           @click="addFolder"
         >
           <!-- <v-icon size="15">mdi-folder-plus-outline</v-icon> -->
-          <img src="img/icon/add0.svg" width="12" />
+          <img src="img/svg/add0.svg" width="12" />
           <span class="ml-2">New Folder</span>
         </v-btn>
       </div>
