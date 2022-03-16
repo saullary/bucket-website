@@ -19,7 +19,7 @@
 
   <div v-else class="e-settings">
     <div class="bdr-1">
-      <v-tabs :color="$color1" v-model="curIdx">
+      <v-tabs :color="$color1" v-model="curIdx" height="44">
         <v-tab v-for="(it, i) in list" :key="i">
           {{ it.text }}
         </v-tab>
@@ -90,6 +90,10 @@ export default {
 .e-settings {
   .theme--light.v-tabs > .v-tabs-bar {
     background-color: transparent;
+  }
+  .v-tabs-slider {
+    width: 55%;
+    margin: auto;
   }
 }
 </style>
