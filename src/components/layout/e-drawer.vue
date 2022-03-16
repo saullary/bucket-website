@@ -167,7 +167,7 @@ export default {
           group: /^\/bucket/i,
           subs: [
             {
-              label: "Files",
+              label: "Storage",
               to: this.path.includes(initFilePath)
                 ? initFilePath
                 : this.filesPath,
