@@ -1,6 +1,5 @@
 <template>
   <div>
-    <e-page-title desc="desc" class="mb-4">Settings</e-page-title>
     <e-settings :list="list" />
   </div>
 </template>

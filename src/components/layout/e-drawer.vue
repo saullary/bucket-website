@@ -125,7 +125,7 @@ const initDomainPath = "/bucket/domain";
 export default {
   data() {
     return {
-      drawer: null,
+      drawer: true,
       mini: false,
       activeArr: [],
       filesPath: initFilePath,
@@ -183,6 +183,12 @@ export default {
                 : this.domainPath,
             },
           ],
+        },
+        {
+          label: "Plan",
+          img: "m-plan",
+          to: "/settings",
+          active: false,
         },
       ];
     },
