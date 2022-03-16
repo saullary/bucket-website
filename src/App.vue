@@ -4,12 +4,16 @@
     <e-drawer v-if="!meta.noLogin" />
     <v-main>
       <!-- <e-serach v-if="!meta.noLogin" /> -->
-      <div>
-        <v-breadcrumbs :items="navItems" class="pl-5 pb-0">
-          <template v-slot:divider>
-            <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
-          </template>
-        </v-breadcrumbs>
+      <div class="d-flex al-c ml-5 mt-5">
+        <b class="fz-25 mr-3">{{ title }}</b>
+        <template v-if="navItems.length">
+          <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
+          <v-breadcrumbs :items="navItems" class="pa-0 ml-3">
+            <template v-slot:divider>
+              <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
+            </template>
+          </v-breadcrumbs>
+        </template>
       </div>
       <div class="pa-5">
         <e-wrap class="main-wrap">
@@ -32,6 +36,9 @@ export default {
     },
     path() {
       return this.$route.path;
+    },
+    title() {
+      return this.path.split("/")[1].capitalize();
     },
     navItems() {
       const { params } = this.$route;
