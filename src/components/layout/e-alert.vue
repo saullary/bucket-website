@@ -84,20 +84,23 @@
             @input="onForm1"
           ></component>
         </v-card-text>
-        <v-card-actions class="pb-3">
+        <v-card-actions class="pb-3 ta-c">
           <v-spacer></v-spacer>
           <v-btn
             text
-            color="#666"
+            outlined
+            rounded
+            width="100"
             v-if="alertInfo.showCancel"
             @click="hideAlert(0)"
           >
             {{ alertInfo.cancelText || "Cancel" }}
           </v-btn>
           <v-btn
-            class="ml-4"
+            class="ml-6"
+            rounded
+            width="100"
             v-bind="{
-              text: true,
               color: 'primary',
               ...alertInfo.confirmTextAttrs,
             }"
@@ -115,6 +118,7 @@
           >
             {{ alertInfo.copyBtnText || "Copy" }}
           </v-btn>
+          <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
     </v-dialog>
