@@ -41,7 +41,7 @@
       >
         <template v-slot:item.domain="{ item }">
           <v-btn
-            :to="`/domain/${item.domain}`"
+            :to="`/bucket/domain/${item.domain}`"
             :color="item.valid ? 'success' : 'error'"
             rounded
             text

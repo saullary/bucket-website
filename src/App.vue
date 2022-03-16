@@ -34,10 +34,31 @@ export default {
       return this.$route.path;
     },
     navItems() {
-      if (/^\/bucket\/(arweave|storage)/.test(this.path)) {
+      const { params } = this.$route;
+      let items = [];
+      // bucket domain
+      if (this.path.indexOf("/bucket/domain") == 0) {
+        items = [
+          {
+            text: "Domains",
+            to: "/bucket/domain",
+            exact: true,
+          },
+        ];
+        const { name } = params;
+        if (name)
+          items.push({
+            text: name,
+            to: "/bucket/domain/" + name,
+            exact: true,
+          });
+        return items;
+      }
+      // bucket storage ar
+      else if (/^\/bucket\/(arweave|storage)/.test(this.path)) {
         const isAr = /^\/bucket\/arweave/.test(this.path);
         let to = isAr ? "/bucket/arweave" : "/bucket/storage/";
-        let items = [
+        items = [
           {
             text: isAr ? "AR History" : "Storage",
             to,
@@ -61,7 +82,7 @@ export default {
         }
         return items;
       }
-      return [];
+      return items;
     },
   },
   watch: {

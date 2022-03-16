@@ -28,7 +28,7 @@ export default {
       return /^\/bucket\/arweave/.test(this.path);
     },
     inStorage() {
-      return /^\/bucket\/(storage|arweave\/)/.test(this.path);
+      return /^\/bucket\/(storage|arweave)\//.test(this.path);
     },
     inBucket() {
       return this.path == BasePath;

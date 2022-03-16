@@ -1,12 +1,5 @@
 <template>
   <div>
-    <e-page-title desc="">Domain</e-page-title>
-    <v-breadcrumbs :items="navItems" class="pl-0 mt-2">
-      <template v-slot:divider>
-        <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
-      </template>
-    </v-breadcrumbs>
-
     <div v-if="!info">
       <v-skeleton-loader type="article" max-width="600" />
     </div>
@@ -118,20 +111,6 @@ export default {
     domain() {
       const { name } = this.$route.params;
       return name;
-    },
-    navItems() {
-      return [
-        {
-          text: "Domains",
-          to: "/domain",
-          exact: true,
-        },
-        {
-          text: this.domain,
-          to: "/domain/" + this.domain,
-          exact: true,
-        },
-      ];
     },
   },
   watch: {
