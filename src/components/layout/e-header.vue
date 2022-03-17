@@ -79,6 +79,7 @@ export default {
             {
               label: "Documents",
               icon: "m-docs",
+              href: "https://docs.bucket.4everland.org/",
             },
             {
               label: "Community",
@@ -105,6 +106,7 @@ export default {
           {
             label: "Settings",
             icon: "m-settings",
+            to: "/settings",
           },
           {
             label: "My Collection",
@@ -113,6 +115,7 @@ export default {
           {
             label: "My Referral",
             icon: "m-refer",
+            to: "/referral",
           },
           {
             label: "Report",

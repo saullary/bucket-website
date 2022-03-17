@@ -186,7 +186,7 @@ export default {
         {
           label: "Plan",
           img: "m-plan",
-          to: "/settings",
+          to: "/plan",
           active: false,
         },
       ];

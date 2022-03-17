@@ -14,8 +14,16 @@ export default {
           comp: "st-billing",
         },
         {
-          text: "Tokens",
+          text: "Account Binding",
+          comp: "st-binding",
+        },
+        {
+          text: "Auth Tokens",
           comp: "st-tokens",
+        },
+        {
+          text: "General",
+          comp: "st-general",
         },
       ],
     };

@@ -1,9 +1,12 @@
 import Home from "./home";
 import Login from "./login";
+
+import Overview from "./overview";
+import Plan from "./plan";
+
 import HostingRoutes from "./hosting/routes";
 import BucketRoutes from "./bucket/routes";
-import Settings from "./settings";
-import Overview from "./overview";
+import UserRoutes from "./user/routes";
 
 export default [
   {
@@ -26,11 +29,13 @@ export default [
   },
   ...HostingRoutes,
   ...BucketRoutes,
+  ...UserRoutes,
+
   {
-    path: "/settings",
-    component: Settings,
+    path: "/plan",
+    component: Plan,
     meta: {
-      title: "Settings",
+      title: "Plan",
     },
   },
 ];
