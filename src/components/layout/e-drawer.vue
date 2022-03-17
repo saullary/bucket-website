@@ -46,11 +46,17 @@
   <v-navigation-drawer
     class="e-drawer"
     :mini-variant.sync="mini"
-    v-model="drawer"
+    v-model="isShow"
     app
     clipped
   >
     <e-stor-usage v-show="false"></e-stor-usage>
+
+    <div>
+      <a href="/" class="mt-8 d-b" v-if="asMobile">
+        <img :src="`img/svg/logo.svg`" height="26" class="d-b m-auto" />
+      </a>
+    </div>
 
     <div class="pa-5"></div>
     <v-list rounded dense>
@@ -124,7 +130,7 @@ const initDomainPath = "/bucket/domain";
 export default {
   data() {
     return {
-      drawer: true,
+      isShow: this.asMobile,
       mini: false,
       activeArr: [],
       filesPath: initFilePath,
@@ -137,6 +143,9 @@ export default {
       userInfo: (s) => s.userInfo,
       token: (s) => s.token(),
     }),
+    asMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
     path() {
       return this.$route.path;
     },
@@ -195,7 +204,7 @@ export default {
   watch: {
     noticeMsg({ name }) {
       if (name == "showDrawer") {
-        this.drawer = true;
+        this.isShow = true;
       }
     },
     path(val, oldVal) {

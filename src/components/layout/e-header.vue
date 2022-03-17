@@ -14,7 +14,11 @@
 <template>
   <v-app-bar id="e-header" app clipped-left height="60" color="#fff">
     <a href="/">
-      <img src="img/svg/logo.svg" height="30" class="d-b" />
+      <img
+        :src="`img/svg/logo${asMobile ? '-m' : ''}.svg`"
+        height="30"
+        class="d-b"
+      />
     </a>
     <v-spacer></v-spacer>
     <template>
@@ -78,6 +82,9 @@ export default {
       pageLoaded: (s) => s.pageLoaded,
       userInfo: (s) => s.userInfo,
     }),
+    asMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
     menus() {
       const info = this.userInfo;
       if (!info.registeredAt) return [];

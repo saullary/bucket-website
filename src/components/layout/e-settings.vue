@@ -1,6 +1,6 @@
 <template>
   <div v-if="asMobile">
-    <v-expansion-panels accordion v-model="curIdx">
+    <v-expansion-panels v-model="curIdx">
       <v-expansion-panel v-for="(it, i) in list" :key="i">
         <v-expansion-panel-header>
           {{ it.text }}
