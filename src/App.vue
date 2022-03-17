@@ -1,17 +1,23 @@
 <template>
   <v-app>
-    <e-header v-if="!meta.noLogin"></e-header>
-    <e-drawer v-if="!meta.noLogin" />
-    <v-main>
-      <e-nav v-if="!meta.noLogin"></e-nav>
-      <div class="pa-5">
-        <e-wrap class="main-wrap">
-          <keep-alive>
-            <router-view></router-view>
-          </keep-alive>
-        </e-wrap>
-      </div>
+    <v-main v-if="meta.noLogin">
+      <router-view></router-view>
     </v-main>
+
+    <template v-else>
+      <e-header></e-header>
+      <e-drawer />
+      <v-main>
+        <e-nav></e-nav>
+        <div class="pa-5">
+          <e-wrap class="main-wrap">
+            <keep-alive>
+              <router-view></router-view>
+            </keep-alive>
+          </e-wrap>
+        </div>
+      </v-main>
+    </template>
 
     <e-alert></e-alert>
   </v-app>

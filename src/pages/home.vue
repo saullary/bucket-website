@@ -87,7 +87,7 @@ export default {
           };
           this.$setState(data);
         }
-        this.$router.replace("/storage/");
+        this.$router.replace("/overview");
       } else {
         location.href = this.$loginUrl;
       }
