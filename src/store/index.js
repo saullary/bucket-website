@@ -9,6 +9,7 @@ const SET_DATA = "setData";
 const store = new Vuex.Store({
   state: {
     nowDate: new Date(),
+    pageLoaded: false,
     ...getWH(),
     isTouch: "ontouchstart" in window,
     isFocus: true,
@@ -76,5 +77,12 @@ setInterval(() => {
     nowDate: new Date(),
   });
 }, 1e3);
+
+window.onload = () => {
+  // console.log("onload", window.jdenticon);
+  setState({
+    pageLoaded: true,
+  });
+};
 
 export default store;

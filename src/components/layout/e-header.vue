@@ -29,8 +29,14 @@
           class="ml-4"
         >
           <div class="u-avatar" v-if="it.avatar">
-            <v-avatar size="22">
+            <v-avatar size="22" class="bg-white">
               <v-img :src="it.avatar"></v-img>
+              <!-- <svg
+                v-if="pageLoaded"
+                width="80"
+                height="80"
+                :data-jdenticon-value="it.label"
+              ></svg> -->
             </v-avatar>
           </div>
           <span :style="{ color: it.color || '#555' }">{{ it.label }}</span>
@@ -69,9 +75,12 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState({
+      pageLoaded: (s) => s.pageLoaded,
       userInfo: (s) => s.userInfo,
     }),
     menus() {
+      const info = this.userInfo;
+      if (!info.registeredAt) return [];
       let list = [
         {
           label: "Support",
@@ -96,10 +105,10 @@ export default {
           ],
         },
       ];
-      const info = this.userInfo;
+
       list.push({
         label: (info.username || "unkown").cutStr(6, 6),
-        avatar: info.avatar || "img/svg/header/u-wallet.svg",
+        avatar: info.avatar || "img/bg/user/def-avatar.png",
         color: "white",
         btnBg: "#CAC3E0",
         subs: [
@@ -129,9 +138,6 @@ export default {
       });
       return list;
     },
-  },
-  data() {
-    return {};
   },
 };
 </script>
