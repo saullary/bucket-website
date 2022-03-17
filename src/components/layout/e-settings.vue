@@ -18,14 +18,14 @@
   </div>
 
   <div v-else class="e-settings">
-    <div class="bdr-1">
-      <v-tabs :color="$color1" v-model="curIdx" height="44">
+    <div>
+      <v-tabs color="black" v-model="curIdx" height="44" hide-slider>
         <v-tab v-for="(it, i) in list" :key="i">
           {{ it.text }}
         </v-tab>
       </v-tabs>
     </div>
-    <div class="mt-3">
+    <div class="con-wrap">
       <component
         :is="it.comp"
         :info="info"
@@ -91,9 +91,27 @@ export default {
   .theme--light.v-tabs > .v-tabs-bar {
     background-color: transparent;
   }
-  .v-tabs-slider {
-    width: 55%;
-    margin: auto;
+  .v-slide-group__content {
+    padding-top: 2px;
+    padding-left: 2px;
+  }
+  .v-tab--active {
+    background: #fff;
+    &,
+    &:before {
+      border-radius: 12px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    box-shadow: 0 0 2px #999999b3;
+    font-weight: bold;
+  }
+  .con-wrap {
+    margin-left: 2px;
+    min-height: 70vh;
+    padding: 15px;
+    background: #fff;
+    box-shadow: 0 0 2px #999999b3;
   }
 }
 </style>

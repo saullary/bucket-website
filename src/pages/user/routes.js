@@ -7,6 +7,7 @@ export default [
     component: Settings,
     meta: {
       title: "Settings",
+      wrapCls: "pa-0",
     },
   },
   {

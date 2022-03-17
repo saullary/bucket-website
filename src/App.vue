@@ -10,7 +10,7 @@
       <v-main>
         <e-nav></e-nav>
         <div class="pa-5">
-          <e-wrap class="main-wrap">
+          <e-wrap :class="meta.wrapCls || 'main-wrap'">
             <keep-alive>
               <router-view></router-view>
             </keep-alive>
