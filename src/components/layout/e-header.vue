@@ -18,28 +18,47 @@
     </a>
     <v-spacer></v-spacer>
     <template>
-      <v-btn
-        text
-        rounded
-        :style="{
-          background: it.btnBg,
-        }"
-        v-for="(it, i) in menus"
-        :key="i"
-        class="ml-4"
-      >
-        <div class="u-avatar" v-if="it.avatar">
-          <v-avatar size="22">
-            <v-img :src="it.avatar"></v-img>
-          </v-avatar>
-        </div>
-        <span :style="{ color: it.color }">{{ it.label }}</span>
-        <img
-          :src="`img/svg/header/ic-down-${it.color || 'def'}.svg`"
-          width="10"
-          class="ml-2"
-        />
-      </v-btn>
+      <e-menu offset-y open-on-hover v-for="(it, i) in menus" :key="i">
+        <v-btn
+          slot="ref"
+          text
+          rounded
+          :style="{
+            background: it.btnBg,
+          }"
+          class="ml-4"
+        >
+          <div class="u-avatar" v-if="it.avatar">
+            <v-avatar size="22">
+              <v-img :src="it.avatar"></v-img>
+            </v-avatar>
+          </div>
+          <span :style="{ color: it.color || '#555' }">{{ it.label }}</span>
+          <img
+            :src="`img/svg/header/ic-down-${it.color || 'def'}.svg`"
+            width="10"
+            class="ml-2"
+          />
+        </v-btn>
+
+        <v-list dense>
+          <v-list-item
+            v-for="(sub, j) in it.subs"
+            :key="j"
+            link
+            :to="sub.to"
+            :href="sub.href"
+            :target="sub.href ? '_blank' : ''"
+          >
+            <img
+              :src="`img/svg/header/${sub.icon}.svg`"
+              width="12"
+              class="mr-2"
+            />
+            <span class="gray-6">{{ sub.label }}</span>
+          </v-list-item>
+        </v-list>
+      </e-menu>
     </template>
   </v-app-bar>
 </template>
@@ -61,6 +80,18 @@ export default {
               label: "Documents",
               icon: "m-docs",
             },
+            {
+              label: "Community",
+              icon: "m-chat",
+            },
+            {
+              label: "Bug Bounty",
+              icon: "m-bug",
+            },
+            {
+              label: "Changelog",
+              icon: "m-log",
+            },
           ],
         },
       ];
@@ -70,6 +101,28 @@ export default {
         avatar: info.avatar || "img/svg/header/u-wallet.svg",
         color: "white",
         btnBg: "#CAC3E0",
+        subs: [
+          {
+            label: "Settings",
+            icon: "m-settings",
+          },
+          {
+            label: "My Collection",
+            icon: "m-collect",
+          },
+          {
+            label: "My Referral",
+            icon: "m-refer",
+          },
+          {
+            label: "Report",
+            icon: "m-report",
+          },
+          {
+            label: "Disconnect",
+            icon: "m-logout",
+          },
+        ],
       });
       return list;
     },

@@ -110,8 +110,7 @@
     </v-list>
 
     <div class="pos-a mini-arrow" @click="mini = !mini">
-      <!-- <v-icon class="icon">mdi-chevron-left</v-icon> -->
-      <img src="img/svg/mini-arrow.svg" class="icon d-b" />
+      <img src="img/svg/drawer/mini-arrow.svg" class="icon d-b" />
     </div>
   </v-navigation-drawer>
 </template>
