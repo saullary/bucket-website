@@ -53,10 +53,8 @@ export default {
   },
   methods: {
     onMenu() {
-      this.$setState({
-        noticeMsg: {
-          name: "showDrawer",
-        },
+      this.$setMsg({
+        name: "showDrawer",
       });
     },
   },

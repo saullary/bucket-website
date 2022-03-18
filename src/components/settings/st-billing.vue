@@ -37,7 +37,7 @@
       <div class="bdt-1 pd-20 ta-c">
         <v-skeleton-loader type="article" v-if="loadingInfo" />
         <v-row v-else>
-          <v-col v-for="(it, i) in usageList" :key="i">
+          <v-col cols="12" md="6" lg="4" v-for="(it, i) in usageList" :key="i">
             <h4 class="mb-3">{{ it.title }}</h4>
             <v-progress-circular
               :class="'circular-' + i"
@@ -78,6 +78,14 @@
         </div>
         <v-btn color="primary" small to="/pricing">Change Plan</v-btn>
       </div>
+    </v-card>
+
+    <v-card outlined class="mt-5">
+      <div class="card-head-1">
+        <h4>Bucket Usage</h4>
+      </div>
+      <div class="bdt-1"></div>
+      <st-billing-bucket />
     </v-card>
 
     <v-card outlined class="mt-5">
@@ -142,7 +150,7 @@ export default {
     return {
       value: 10,
       info: {},
-      loadingInfo: false,
+      loadingInfo: true,
       loadingList: false,
       headers: [
         { text: "Payment", value: "pay" },
@@ -187,7 +195,7 @@ export default {
     },
   },
   created() {
-    this.getData();
+    if (!this.$inDev) this.getData();
   },
   methods: {
     async getList() {

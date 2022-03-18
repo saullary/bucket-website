@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-// import api from "../api";
+import http from "../api";
 
 Vue.use(Vuex);
 
@@ -34,6 +34,27 @@ const store = new Vuex.Store({
       for (const key in data) {
         state[key] = data[key];
       }
+    },
+  },
+  actions: {
+    async getUsageInfo() {
+      const { data } = await http.get("/user/resource/usage");
+      const {
+        arweaveUsedStorage = 0,
+        arweaveSyncingStorage = 0,
+        arweaveTotalStorage = 0,
+      } = data;
+      let arUsed = (arweaveUsedStorage * 1 + arweaveSyncingStorage * 1) / 1024;
+      setState({
+        usageInfo: {
+          ipfsTotal: parseInt(data.totalStorage / 1024),
+          ipfsUsed: (data.usedStorage / 1024).toFixed(2),
+          arTotal: parseInt(arweaveTotalStorage / 1024),
+          arUsed: arUsed.toFixed(2),
+          arSyncing: (arweaveSyncingStorage / 1024).toFixed(2),
+          arSynced: (arweaveUsedStorage / 1024).toFixed(2),
+        },
+      });
     },
   },
 });

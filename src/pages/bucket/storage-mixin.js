@@ -555,10 +555,8 @@ export default {
     },
     async onUpdate(delay = 1000) {
       await this.$sleep(delay);
-      this.$setState({
-        noticeMsg: {
-          name: "updateUsage",
-        },
+      this.$setMsg({
+        name: "updateUsage",
       });
     },
     getPath(item) {

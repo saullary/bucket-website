@@ -62,6 +62,8 @@ new Vue({
     noticeMsg({ name }) {
       if (name == "updateUser") {
         this.getUesrInfo();
+      } else if (name == "updateUsage") {
+        this.$store.dispatch("getUsageInfo");
       }
     },
   },
@@ -69,11 +71,6 @@ new Vue({
     async onInit() {
       if (this.token) {
         await this.getUesrInfo();
-        this.$setState({
-          noticeMsg: {
-            name: "onInit",
-          },
-        });
       } else if (["/", "/login"].indexOf(this.$route.path) == -1) {
         this.$router.replace("/");
       }

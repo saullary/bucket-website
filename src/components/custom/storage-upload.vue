@@ -236,10 +236,8 @@ export default {
     },
     async onUpdate(delay = 2000) {
       await this.$sleep(delay);
-      this.$setState({
-        noticeMsg: {
-          name: "updateUsage",
-        },
+      this.$setMsg({
+        name: "updateUsage",
       });
     },
   },

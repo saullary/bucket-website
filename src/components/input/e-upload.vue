@@ -110,10 +110,8 @@ export default {
         this.files.push(file);
       }
       if (this.files.length) {
-        this.$setState({
-          noticeMsg: {
-            name: "file-upload",
-          },
+        this.$setMsg({
+          name: "file-upload",
         });
       }
       this.emitInput();

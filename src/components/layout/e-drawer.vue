@@ -50,8 +50,6 @@
     app
     clipped
   >
-    <e-stor-usage v-show="false"></e-stor-usage>
-
     <div>
       <a href="/" class="mt-8 d-b" v-if="asMobile">
         <img :src="`img/svg/logo.svg`" height="26" class="d-b m-auto" />

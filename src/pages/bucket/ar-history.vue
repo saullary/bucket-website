@@ -137,6 +137,9 @@ export default {
   },
   mounted() {
     this.getList();
+    this.$setMsg({
+      name: "updateUsage",
+    });
   },
   methods: {
     onStop() {},
