@@ -25,7 +25,7 @@
         </v-tab>
       </v-tabs>
     </div>
-    <div class="con-wrap">
+    <div class="main-wrap pa-5 bg-white">
       <component
         :is="it.comp"
         :info="info"
@@ -92,26 +92,23 @@ export default {
     background-color: transparent;
   }
   .v-slide-group__content {
-    padding-top: 2px;
+    padding-top: 4px;
     padding-left: 2px;
   }
   .v-tab--active {
     background: #fff;
+    box-shadow: 0 0 4px rgb(205 205 205 / 50%);
+    font-weight: bold;
     &,
     &:before {
       border-radius: 12px;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
     }
-    box-shadow: 0 0 2px #999999b3;
-    font-weight: bold;
   }
-  .con-wrap {
+  .main-wrap {
     margin-left: 2px;
     min-height: 70vh;
-    padding: 15px;
-    background: #fff;
-    box-shadow: 0 0 2px #999999b3;
   }
 }
 </style>

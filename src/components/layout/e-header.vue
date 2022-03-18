@@ -114,7 +114,7 @@ export default {
       ];
 
       list.push({
-        label: (info.username || "unkown").cutStr(6, 6),
+        label: (info.username || "unkown").cutStr(6, 4),
         avatar: info.avatar || "img/bg/user/def-avatar.png",
         color: "white",
         btnBg: "#CAC3E0",

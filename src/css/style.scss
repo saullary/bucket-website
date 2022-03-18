@@ -79,6 +79,9 @@ body {
     overflow-x: visible;
     overflow-y: visible;
   }
+  .v-sheet.v-card {
+    border-radius: 6px;
+  }
 }
 .color-1 {
   color: $color1;
