@@ -107,6 +107,7 @@
                     <span class="ml-2 fz-15">{{ it.name }}</span>
                     <v-btn
                       small
+                      rounded
                       color="primary"
                       class="ml-auto"
                       @click="onSelect(it)"
@@ -144,15 +145,19 @@
         </v-window>
 
         <div class="ta-c mt-8">
-          <v-btn @click="showPop = false">Cancel</v-btn>
+          <v-btn outlined rounded width="90" @click="showPop = false"
+            >Cancel</v-btn
+          >
           <v-btn
             color="primary"
+            rounded
+            width="90"
             class="ml-6"
             v-if="curStep > 0"
             :loading="adding"
             @click="onAdd"
           >
-            Add
+            Confirm
           </v-btn>
         </div>
       </div>

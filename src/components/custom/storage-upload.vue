@@ -73,7 +73,7 @@
             v-if="!uploading"
             outlined
             rounded
-            width="100"
+            width="90"
             @click="onClear"
             >{{ files.length ? "Clear" : "Cancel" }}</v-btn
           >

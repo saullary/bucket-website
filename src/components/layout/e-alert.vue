@@ -87,10 +87,9 @@
         <v-card-actions class="pb-3 ta-c">
           <v-spacer></v-spacer>
           <v-btn
-            text
             outlined
             rounded
-            width="100"
+            width="90"
             v-if="alertInfo.showCancel"
             @click="hideAlert(0)"
           >
@@ -99,7 +98,7 @@
           <v-btn
             class="ml-6"
             rounded
-            width="100"
+            width="90"
             v-bind="{
               color: 'primary',
               ...alertInfo.confirmTextAttrs,
