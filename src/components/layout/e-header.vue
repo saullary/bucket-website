@@ -59,6 +59,7 @@
             :to="sub.to"
             :href="sub.href"
             :target="sub.href ? '_blank' : ''"
+            @click="onMenu(sub)"
           >
             <img
               :src="`img/svg/header/${sub.icon}.svg`"
@@ -104,6 +105,7 @@ export default {
             {
               label: "Bug Bounty",
               icon: "m-bug",
+              to: "/bug-bounty",
             },
             {
               label: "Changelog",
@@ -137,14 +139,33 @@ export default {
           {
             label: "Report",
             icon: "m-report",
+            notice: true,
+            name: "feedback",
           },
           {
             label: "Disconnect",
             icon: "m-logout",
+            name: "logout",
           },
         ],
       });
       return list;
+    },
+  },
+  methods: {
+    onMenu(it) {
+      const { name } = it;
+      if (it.notice) {
+        console.log(it);
+        this.$setMsg({
+          ...it,
+        });
+      }
+      if (name == "logout") {
+        localStorage.token = "";
+        delete localStorage.userInfo;
+        location.href = "index.html";
+      }
     },
   },
 };
