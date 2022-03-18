@@ -28,6 +28,10 @@ const store = new Vuex.Store({
     searchKey: "",
     usageInfo: {},
     navItems: [],
+    // hosting
+    connectAddr: "",
+    netType: "",
+    walletTip: "",
   },
   mutations: {
     [SET_DATA](state, data) {

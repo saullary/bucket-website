@@ -16,12 +16,6 @@
     }
   }
 }
-.card-head-1 {
-  padding: 16px;
-  line-height: 1;
-  background: #f9fbfc;
-  color: #0b0817;
-}
 </style>
 
 <template>

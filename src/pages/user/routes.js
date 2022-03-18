@@ -1,4 +1,5 @@
 import Settings from "./settings";
+import Collections from "./collections";
 import Referral from "./referral";
 
 export default [
@@ -14,7 +15,14 @@ export default [
     path: "/referral",
     component: Referral,
     meta: {
-      title: "Referral",
+      title: "My Referral",
+    },
+  },
+  {
+    path: "/collections",
+    component: Collections,
+    meta: {
+      title: "My Collection",
     },
   },
 ];

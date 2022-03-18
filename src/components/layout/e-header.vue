@@ -127,6 +127,7 @@ export default {
           {
             label: "My Collection",
             icon: "m-collect",
+            to: "/collections",
           },
           {
             label: "My Referral",

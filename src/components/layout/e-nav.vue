@@ -26,8 +26,16 @@ export default {
     path() {
       return this.$route.path;
     },
+    meta() {
+      return this.$route.meta || {};
+    },
     title() {
-      return this.path.split("/")[1].capitalize();
+      const arr = this.path.split("/");
+      let { title = "" } = this.meta;
+      if (arr.length > 2 && ["hosting", "bucket"].includes(arr[1])) {
+        title = arr[1];
+      }
+      return title.capitalize();
     },
     navItems() {
       const { params } = this.$route;
