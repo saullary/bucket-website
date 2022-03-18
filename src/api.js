@@ -94,7 +94,7 @@ const lock = new AsyncLock({ timeout: 5000 });
       if (typeof data == "object" && data && "code" in data) {
         if (data.code != 200 && data.code != "SUCCESS") {
           let msg = data.message || `${data.code} error`;
-          handleMsg(data.code, msg);
+          handleMsg(200, data.code, msg);
           Vue.prototype.$loading.close();
           // console.log(data, res.config);
           const error = new Error(msg);
@@ -111,7 +111,7 @@ const lock = new AsyncLock({ timeout: 5000 });
       const { data = {}, status, statusText } = error.response || {};
       console.log(error, status, statusText);
       let msg = data.message || error.message;
-      handleMsg(data.code, msg);
+      handleMsg(status, data.code, msg);
       error.code = data.code;
       return Promise.reject(error);
     }
@@ -128,7 +128,7 @@ function goLogin() {
   }
 }
 
-function handleMsg(code, msg) {
+function handleMsg(status, code, msg) {
   console.log(code, msg);
   if (msg == "Network Error")
     msg =
@@ -138,7 +138,7 @@ function handleMsg(code, msg) {
   }
   msg = msg || "Unknown Error";
 
-  if (code == 401 || code == "ACCESS_TOKEN_HAS_EXPIRED") {
+  if (status == 401) {
     goLogin();
   } else if (msg) {
     setTimeout(() => {
