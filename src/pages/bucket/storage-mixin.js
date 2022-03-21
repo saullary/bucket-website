@@ -68,7 +68,7 @@ export default {
     list() {
       let list = [];
       if (this.inBucket) {
-        list = this.bucketList;
+        // list = this.bucketList;
       } else if (this.inFolder) {
         list = this.folderList;
       }

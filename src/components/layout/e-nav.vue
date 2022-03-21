@@ -98,6 +98,7 @@ export default {
       } else if (this.isGroup && this.meta.title) {
         items.push({
           text: this.meta.title,
+          to: this.path,
         });
       }
       return items;
