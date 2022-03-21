@@ -10,11 +10,11 @@ export default {
     return {
       list: [
         {
-          text: "You Projects",
+          text: "Hosting",
           comp: "s-hosting",
         },
         {
-          text: "Your Bucket",
+          text: "Bucket",
           comp: "s-bucket",
         },
       ],

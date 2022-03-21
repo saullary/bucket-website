@@ -516,13 +516,6 @@ export default {
       this.getList();
       this.checkNew();
     },
-    s3() {
-      this.getList();
-    },
-  },
-  mounted() {
-    this.getList();
-    this.checkNew();
   },
   methods: {
     onStop() {},

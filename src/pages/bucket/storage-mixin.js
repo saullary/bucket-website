@@ -7,7 +7,7 @@ export default {
   data() {
     return {
       BasePath,
-      tableLoading: false,
+      tableLoading: true,
       bucketList: [],
       folderList: [],
       selected: [],
@@ -31,7 +31,7 @@ export default {
       return /^\/bucket\/(storage|arweave)\//.test(this.path);
     },
     inBucket() {
-      return this.path == BasePath;
+      return this.path == BasePath || this.path == "/overview";
     },
     inFile() {
       return this.inStorage && !/\/$/.test(this.path);
@@ -111,6 +111,13 @@ export default {
         debounce(this.getList);
       }
     },
+    s3() {
+      this.getList();
+    },
+  },
+  mounted() {
+    this.getList();
+    this.checkNew();
   },
   methods: {
     checkNew() {
