@@ -48,7 +48,7 @@
       </v-alert>
 
       <div class="ta-c pa-10" v-if="!list.length">
-        <img src="img/empty1.svg" height="120" />
+        <img src="img/svg/common/empty2.svg" height="120" />
         <h4 class="mt-6">No NFTs to display</h4>
         <p class="mt-3 gray-a fz-14">Please follow us for future limited NFT</p>
       </div>

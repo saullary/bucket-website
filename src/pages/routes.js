@@ -25,6 +25,7 @@ export default [
     component: Overview,
     meta: {
       title: "Overview",
+      isTab: true,
     },
   },
   ...HostingRoutes,

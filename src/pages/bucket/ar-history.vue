@@ -67,9 +67,12 @@
     </v-data-table>
 
     <div class="ta-c mt-8" v-if="!list.length">
-      <img src="img/empty1.svg" width="80" />
-      <div class="mt-3 gray fz-14">
-        {{ tableLoading ? `Loading files...` : `No files found` }}
+      <img
+        :src="`img/svg/common/empty${tableLoading ? 1 : 2}.svg`"
+        height="100"
+      />
+      <div class="mt-3 gray fz-15">
+        {{ tableLoading ? `Loading files...` : `No files` }}
       </div>
     </div>
 
