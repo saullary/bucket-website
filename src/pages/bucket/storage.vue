@@ -148,14 +148,6 @@
         </v-list>
       </e-menu>
     </div>
-
-    <!-- <div class="d-flex al-c mt-3">
-      <div class="ml-auto shrink-0" v-if="inBucket && !tableLoading">
-        <nav-item :unit="inBucket ? 'Buckets' : 'Objects'">{{
-          list.length
-        }}</nav-item>
-      </div>
-    </div> -->
     <div class="pa-2"></div>
 
     <div v-if="inFile" class="mt-4">
@@ -285,6 +277,7 @@
     </div>
     <div v-else>
       <v-data-table
+        v-if="tableLoading || list.length"
         class="hide-bdb"
         :headers="headers"
         :items="list"
@@ -378,12 +371,16 @@
         </template>
       </v-data-table>
 
-      <div class="ta-c mt-8" v-if="!list.length">
+      <div
+        class="ta-c"
+        :class="tableLoading ? 'mt-10' : 'mt-15'"
+        v-if="!list.length"
+      >
         <img
           :src="`img/svg/common/empty${tableLoading ? 1 : 2}.svg`"
-          height="100"
+          :height="tableLoading ? 100 : 130"
         />
-        <div class="mt-3 gray fz-15">
+        <div class="mt-5 gray fz-15">
           {{
             tableLoading
               ? `${inBucket ? "Loading buckets" : "Loading files"}...`
