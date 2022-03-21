@@ -3,7 +3,7 @@
     <v-data-table
       class="hide-bdb"
       :headers="headers"
-      :items="list"
+      :items="list.slice(0, 5)"
       :loading="tableLoading"
       item-key="name"
       no-data-text=""
