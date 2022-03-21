@@ -1,19 +1,24 @@
 <template>
-  <div class="d-flex al-c ml-5 mt-5">
-    <div class="d-flex al-c" @click="onMenu">
-      <v-btn icon v-if="asMobile">
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
-      <b class="mr-3" :class="asMobile ? 'fz-18' : 'fz-25'">{{ title }}</b>
+  <div class="ml-5 mt-5">
+    <div class="d-flex al-c">
+      <div class="d-flex al-c" @click="onMenu">
+        <v-btn icon v-if="asMobile">
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
+        <b class="mr-3" :class="asMobile ? 'fz-18' : 'fz-25'">{{ title }}</b>
+      </div>
+      <template v-if="navItems.length">
+        <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
+        <v-breadcrumbs :items="navItems" class="pa-0 ml-3">
+          <template v-slot:divider>
+            <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
+          </template>
+        </v-breadcrumbs>
+      </template>
     </div>
-    <template v-if="navItems.length">
-      <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
-      <v-breadcrumbs :items="navItems" class="pa-0 ml-3">
-        <template v-slot:divider>
-          <v-icon size="20" color="#aaa">mdi-chevron-right</v-icon>
-        </template>
-      </v-breadcrumbs>
-    </template>
+    <div class="gray-8 fz-14 mt-1" v-if="meta.subTitle">
+      {{ meta.subTitle }}
+    </div>
   </div>
 </template>
 
@@ -26,16 +31,21 @@ export default {
     path() {
       return this.$route.path;
     },
+    pathArr() {
+      return this.path.split("/");
+    },
+    isGroup() {
+      return ["hosting", "bucket"].includes(this.pathArr[1]);
+    },
     meta() {
       return this.$route.meta || {};
     },
     title() {
-      const arr = this.path.split("/");
       let { title = "" } = this.meta;
-      if (arr.length > 2 && ["hosting", "bucket"].includes(arr[1])) {
-        title = arr[1];
+      if (this.pathArr.length > 2 && this.isGroup) {
+        title = this.pathArr[1].capitalize();
       }
-      return title.capitalize();
+      return title;
     },
     navItems() {
       const { params } = this.$route;
@@ -85,6 +95,10 @@ export default {
           });
         }
         return items;
+      } else if (this.isGroup && this.meta.title) {
+        items.push({
+          text: this.meta.title,
+        });
       }
       return items;
     },
