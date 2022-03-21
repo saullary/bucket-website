@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-data-table
+      v-if="list.length || tableLoading"
       class="hide-bdb"
       :headers="headers"
       :items="list.slice(0, 5)"
@@ -18,18 +19,25 @@
         </v-btn>
       </template>
     </v-data-table>
-    <div class="ta-c mt-8">
+    <div class="ta-c" :class="tableLoading ? 'mt-8' : 'mt-15'">
       <template v-if="!list.length">
         <img
           :src="`img/svg/common/empty${tableLoading ? 1 : 2}.svg`"
-          height="100"
+          :height="tableLoading ? 100 : 130"
         />
-        <div class="mt-3 gray fz-15">
-          {{ tableLoading ? `Loading buckets...` : `No buckets` }}
+        <div class="mt-5">
+          <p class="fw-b mb-3 fz-18" v-if="!tableLoading">No buckets, Yet!</p>
+          <p class="fz-15 gray">
+            {{
+              tableLoading
+                ? `Loading buckets...`
+                : `Create a bucket and store your files in IPFS.`
+            }}
+          </p>
         </div>
-        <div class="mt-8" v-if="!tableLoading">
+        <div class="mt-10" v-if="!tableLoading">
           <v-btn color="primary" rounded :to="bucketPath + '?new=bucket'"
-            >Create Now</v-btn
+            >Create a New Bucket</v-btn
           >
         </div>
       </template>
