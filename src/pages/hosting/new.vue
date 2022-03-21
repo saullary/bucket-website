@@ -1,7 +1,10 @@
 <template>
   <div>
     <e-steps :options="stepList" :value="curStep"></e-steps>
-    <div>new</div>
+    <!-- <div class="main-wrap">new</div> -->
+    <div class="mt-2">
+      <new-step-0 />
+    </div>
   </div>
 </template>
 
@@ -10,7 +13,7 @@ export default {
   data() {
     return {
       stepList: ["Import Repository", "Edit Configuration", "Start Deployment"],
-      curStep: 1,
+      curStep: 0,
     };
   },
 };

@@ -8,7 +8,7 @@ export default [
     meta: {
       title: "New Project",
       subTitle: "3 easy steps to get your projects live",
-      wrapCls: "pa-3",
+      isTab: 1,
     },
   },
   {
