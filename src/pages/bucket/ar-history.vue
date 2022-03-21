@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="d-flex al-c mt-3">
+    <div class="d-flex al-c mb-2">
       <div class="d-flex ml-auto shrink-0">
         <nav-item icon="ic-sync" unit="MB">{{ usageInfo.arSyncing }}</nav-item>
         <nav-item icon="ic-synced" unit="MB" class="ml-7">{{
@@ -140,9 +140,6 @@ export default {
   },
   mounted() {
     this.getList();
-    this.$setMsg({
-      name: "updateUsage",
-    });
   },
   methods: {
     onStop() {},
@@ -186,6 +183,9 @@ export default {
         console.log(error);
       }
       this.tableLoading = false;
+      this.$setMsg({
+        name: "updateUsage",
+      });
     },
     onRow(it) {
       // console.log(it);
