@@ -8,6 +8,7 @@
         <v-expansion-panel-content>
           <component
             :is="it.comp"
+            v-bind="it.props"
             :info="info"
             :active="i == curIdx"
             v-if="it.comp && activeIdxList.includes(i)"
@@ -28,6 +29,7 @@
     <div class="main-wrap pa-5 bg-white">
       <component
         :is="it.comp"
+        v-bind="it.props"
         :info="info"
         :active="curItem.comp == it.comp"
         v-show="curItem.comp == it.comp"

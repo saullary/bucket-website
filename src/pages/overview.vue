@@ -11,7 +11,10 @@ export default {
       list: [
         {
           text: "Hosting",
-          comp: "s-hosting",
+          comp: "h-projects",
+          props: {
+            limit: 5,
+          },
         },
         {
           text: "Bucket",
