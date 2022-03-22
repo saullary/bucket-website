@@ -1,10 +1,16 @@
+<style lang="scss">
+.mobile .projects .v-expansion-panel-header .mdi-chevron-down {
+  position: relative;
+  right: -16px;
+}
+</style>
 <template>
-  <div>
+  <div class="projects">
     <v-expansion-panels v-model="curIdx" multiple>
       <v-expansion-panel class="mb-3" v-for="(it, i) in list" :key="i">
         <v-expansion-panel-header>
           <v-row>
-            <v-col cols="4">
+            <v-col cols="8" md="4">
               <div class="d-flex al-c grow-0">
                 <img :src="it.img" height="60" width="60" class="bdrs-8 bd-1" />
                 <div class="ml-3">
@@ -12,8 +18,13 @@
                 </div>
               </div>
             </v-col>
-            <v-col cols="4" class="d-flex al-c f-center"> state </v-col>
-            <v-col class="d-flex al-c">
+            <v-col cols="4" v-if="!asMobile" class="d-flex al-c f-center">
+              state
+            </v-col>
+            <v-col cols="4" :class="asMobile ? 'ta-c' : 'd-flex al-c'">
+              <div v-if="asMobile" class="mb-2">
+                <span>state</span>
+              </div>
               <v-btn
                 :to="`/hosting/project/${it.name}/${it.id}`"
                 @click.stop="onStop"
@@ -29,7 +40,13 @@
         <v-expansion-panel-content>
           <div class="mt-2">
             <v-row class="statis-row">
-              <v-col cols="4" v-for="(row, j) in it.statisList" :key="j">
+              <v-col
+                cols="12"
+                md="6"
+                lg="4"
+                v-for="(row, j) in it.statisList"
+                :key="j"
+              >
                 <div class="pa-3">
                   <component :is="row.comp" :list="row.data" />
                 </div>
@@ -91,6 +108,11 @@ const statisList = [
   },
 ];
 export default {
+  computed: {
+    asMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
+  },
   data() {
     return {
       curIdx: [],

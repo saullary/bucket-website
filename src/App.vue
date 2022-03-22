@@ -1,5 +1,9 @@
 <template>
-  <v-app>
+  <v-app
+    :class="{
+      mobile: asMobile,
+    }"
+  >
     <v-main v-if="meta.noLogin">
       <router-view></router-view>
     </v-main>
@@ -31,6 +35,9 @@ export default {
   computed: {
     meta() {
       return this.$route.meta || {};
+    },
+    asMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
     },
   },
 };
