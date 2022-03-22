@@ -152,7 +152,7 @@
 
     <div v-if="inFile" class="mt-4">
       <v-card outlined>
-        <div class="pd-15-20">
+        <div class="card-head-1">
           <span>File Info</span>
         </div>
         <div class="pd-15-20 bdt-1">
