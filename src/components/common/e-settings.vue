@@ -46,15 +46,7 @@ export default {
     defTab: Number,
   },
   data() {
-    const { tab = this.defTab } = this.$route.query;
-    let curIdx = 0;
-    if (tab > -1) curIdx = tab * 1;
-    else if (tab) {
-      this.list.forEach((it, i) => {
-        if (it.text.toLowerCase() == tab.replace("_", " ").toLowerCase())
-          curIdx = i;
-      });
-    }
+    const curIdx = this.getIdx();
     return {
       curIdx,
       activeIdxList: [curIdx],
@@ -72,10 +64,8 @@ export default {
         },
       });
     },
-    "$route.query.tab"(tab) {
-      if (tab != this.curIdx && tab > -1) {
-        this.curIdx = tab * 1;
-      }
+    "$route.query.tab"() {
+      this.curIdx = this.getIdx();
     },
   },
   computed: {
@@ -89,6 +79,20 @@ export default {
       return this.list.filter((_, i) => {
         return this.activeIdxList.includes(i);
       });
+    },
+  },
+  methods: {
+    getIdx() {
+      const { tab = this.defTab } = this.$route.query;
+      let curIdx = 0;
+      if (tab > -1) curIdx = tab * 1;
+      else if (tab) {
+        this.list.forEach((it, i) => {
+          if (it.text.toLowerCase() == tab.replace("_", " ").toLowerCase())
+            curIdx = i;
+        });
+      }
+      return curIdx;
     },
   },
 };
