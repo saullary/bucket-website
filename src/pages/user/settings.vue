@@ -15,7 +15,7 @@ export default {
         },
         {
           text: "Account Binding",
-          comp: "st-binding",
+          comp: "st-account",
         },
         {
           text: "Auth Tokens",

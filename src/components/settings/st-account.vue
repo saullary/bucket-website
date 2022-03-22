@@ -11,7 +11,14 @@
             {{ it.desc }}
           </div>
           <div class="mt-3 d-flex al-c">
-            <v-btn color="primary" rounded small min-width="75">Verify</v-btn>
+            <v-btn
+              color="primary"
+              rounded
+              small
+              min-width="75"
+              @click="onBind(it)"
+              >Verify</v-btn
+            >
           </div>
         </div>
       </v-col>
@@ -28,19 +35,44 @@ export default {
           title: "Github",
           desc: "Get verified by connecting your github account.",
           icon: "m-github",
+          type: 1,
         },
         {
           title: "MetaMask",
           desc: "Get verified by connecting your metamask account.",
           icon: "m-metamask",
+          type: 2,
         },
         {
           title: "Email",
           desc: "Verify your email address to receive updates and notices for your account.",
           icon: "m-email",
+          type: 3,
         },
       ],
     };
+  },
+  methods: {
+    async onBind(it) {
+      try {
+        this.$loading();
+        const { data } = await this.$http.post(
+          "/bind",
+          {
+            type: it.type,
+          },
+          {
+            params: {
+              _auth: 1,
+            },
+          }
+        );
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+      this.$loading.close();
+    },
   },
 };
 </script>
