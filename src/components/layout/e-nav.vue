@@ -34,21 +34,16 @@ export default {
     pathArr() {
       return this.path.split("/");
     },
-    isGroup() {
-      return ["hosting", "bucket"].includes(this.pathArr[1]);
-    },
     meta() {
       return this.$route.meta || {};
     },
     title() {
-      let { title = "" } = this.meta;
-      if (this.pathArr.length > 2 && this.isGroup) {
-        title = this.pathArr[1].capitalize();
-      }
-      return title;
+      let { title = "", group } = this.meta;
+      return group || title;
     },
     navItems() {
       const { params } = this.$route;
+      const { title, group } = this.meta;
       let items = [];
       if (this.meta.inProject) {
         items = [
@@ -107,9 +102,9 @@ export default {
           });
         }
         return items;
-      } else if (this.isGroup && this.meta.title) {
+      } else if (group && title) {
         items.push({
-          text: this.meta.title,
+          text: title,
           to: this.path,
         });
       }

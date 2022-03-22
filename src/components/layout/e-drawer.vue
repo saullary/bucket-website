@@ -164,6 +164,14 @@ export default {
               label: "Projects",
               to: "/hosting/projects",
             },
+            {
+              label: "Domains",
+              to: "/hosting/domains",
+            },
+            {
+              label: "Statistics",
+              to: "/hosting/statistics",
+            },
           ],
         },
         {

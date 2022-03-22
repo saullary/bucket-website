@@ -1,10 +1,12 @@
 import New from "./new";
 import Projects from "./projects";
 import Project from "./project";
+import Domains from "./domains";
+import Statistics from "./statistics";
 
 export default [
   {
-    path: "/hosting/new",
+    path: "/new",
     component: New,
     meta: {
       title: "New Project",
@@ -13,7 +15,7 @@ export default [
     },
   },
   {
-    path: "/hosting/projects",
+    path: "/projects",
     component: Projects,
     meta: {
       title: "Projects",
@@ -21,12 +23,30 @@ export default [
     },
   },
   {
-    path: "/hosting/project/:projName/:id",
+    path: "/project/:projName/:id",
     component: Project,
     meta: {
       inProject: 1,
       isTab: 1,
+      title: `{projName}`,
     },
-    // children: ProjectChildren,
   },
-];
+  {
+    path: "/domains",
+    component: Domains,
+    meta: {
+      title: "Domains",
+    },
+  },
+  {
+    path: "/statistics",
+    component: Statistics,
+    meta: {
+      title: "Statistics",
+    },
+  },
+].map((it) => {
+  it.path = "/hosting" + it.path;
+  it.meta.group = "Hosting";
+  return it;
+});

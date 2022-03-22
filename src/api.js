@@ -77,6 +77,7 @@ const lock = new AsyncLock({ timeout: 5000 });
       if (params._auth && !/^http/.test(config.url)) {
         config.url = authApi + config.url;
         delete params._auth;
+        token = "Bearer " + token;
       }
       if (token && config.url != RefreshPath) {
         config.headers.common["Authorization"] = token;

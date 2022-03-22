@@ -5,32 +5,42 @@ import Domain from "./domain";
 
 export default [
   {
-    path: "/bucket/storage/*",
+    path: "/storage/*",
     component: Storage,
     meta: {
       title: "Storage",
     },
   },
   {
-    path: "/bucket/arweave",
+    path: "/arweave",
     component: ARHistory,
     meta: {
       title: "AR History",
     },
   },
   {
-    path: "/bucket/arweave/*",
+    path: "/arweave/*",
     component: Storage,
+    meta: {
+      title: "File - AR History",
+    },
   },
   {
-    path: "/bucket/domain",
+    path: "/domain",
     component: Domains,
     meta: {
       title: "Domains",
     },
   },
   {
-    path: "/bucket/domain/:name",
+    path: "/domain/:name",
     component: Domain,
+    meta: {
+      title: "{name}",
+    },
   },
-];
+].map((it) => {
+  it.path = "/bucket" + it.path;
+  it.meta.group = "Bucket";
+  return it;
+});

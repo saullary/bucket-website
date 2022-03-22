@@ -12,9 +12,12 @@ Vue.config.productionTip = false;
 const Minio = require("minio-s");
 
 router.beforeEach((to, _, next) => {
-  let { title } = to.meta || {};
+  let { title, group } = to.meta || {};
   const name = "4EVERLAND";
   if (title) {
+    if (group) {
+      title += " - " + group;
+    }
     title += " - " + name;
     for (const key in to.params) {
       title = title.replace(`{${key}}`, to.params[key]);
