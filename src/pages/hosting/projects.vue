@@ -39,6 +39,14 @@
               </v-col> -->
             </v-row>
           </div>
+          <div class="mt-3 ta-r">
+            <v-btn color="primary" small rounded outlined
+              >View Build Logs</v-btn
+            >
+            <v-btn color="error" small outlined rounded class="ml-3"
+              >Delete</v-btn
+            >
+          </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -46,6 +54,42 @@
 </template>
 
 <script>
+const statisList = [
+  {
+    comp: "rect-data",
+    data: [
+      {
+        title: "New Users",
+      },
+      {
+        title: "Total Users",
+      },
+      {
+        title: "Total UV",
+      },
+      {
+        title: "Total PV",
+      },
+    ],
+  },
+  {
+    comp: "rect-data",
+    data: [
+      {
+        title: "Bandwidth used",
+        unit: "KB",
+      },
+      {
+        title: "Build Minutes used",
+        unit: "Minutes",
+      },
+      {
+        title: "Storage used",
+        unit: "MB",
+      },
+    ],
+  },
+];
 export default {
   data() {
     return {
@@ -55,47 +99,13 @@ export default {
           name: "doge-1",
           id: 1,
           img: "http://tt0.bucket.foreverland.xyz/screenshot.png",
-          statisList: [
-            {
-              comp: "rect-data",
-              data: [
-                {
-                  title: "New Users",
-                },
-                {
-                  title: "Total Users",
-                },
-                {
-                  title: "Total UV",
-                },
-                {
-                  title: "Total PV",
-                },
-              ],
-            },
-            {
-              comp: "rect-data",
-              data: [
-                {
-                  title: "Bandwidth used",
-                  unit: "KB",
-                },
-                {
-                  title: "Build Minutes used",
-                  unit: "Minutes",
-                },
-                {
-                  title: "Storage used",
-                  unit: "MB",
-                },
-              ],
-            },
-          ],
+          statisList,
         },
         {
           name: "doge-2",
           id: 2,
           img: "https://api.4everland.org/project/task/screenshot/6151897aba71230001413515.png",
+          statisList,
         },
       ],
     };
