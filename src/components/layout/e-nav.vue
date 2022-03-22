@@ -50,8 +50,20 @@ export default {
     navItems() {
       const { params } = this.$route;
       let items = [];
+      if (this.meta.inProject) {
+        items = [
+          {
+            text: "Projects",
+            to: "/hosting/projects",
+          },
+          {
+            text: params.projName,
+            to: this.path,
+          },
+        ];
+      }
       // bucket domain
-      if (this.path.indexOf("/bucket/domain") == 0) {
+      else if (this.path.indexOf("/bucket/domain") == 0) {
         items = [
           {
             text: "Domains",

@@ -23,6 +23,10 @@ export default [
   {
     path: "/hosting/project/:projName/:id",
     component: Project,
+    meta: {
+      inProject: 1,
+      isTab: 1,
+    },
     // children: ProjectChildren,
   },
 ];

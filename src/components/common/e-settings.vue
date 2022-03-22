@@ -46,8 +46,15 @@ export default {
     defTab: Number,
   },
   data() {
-    const { tab = this.defTab || 0 } = this.$route.query;
-    let curIdx = tab * 1;
+    const { tab = this.defTab } = this.$route.query;
+    let curIdx = 0;
+    if (tab > -1) curIdx = tab * 1;
+    else if (tab) {
+      this.list.forEach((it, i) => {
+        if (it.text.toLowerCase() == tab.replace("_", " ").toLowerCase())
+          curIdx = i;
+      });
+    }
     return {
       curIdx,
       activeIdxList: [curIdx],
@@ -58,9 +65,10 @@ export default {
       if (!this.activeIdxList.includes(tab)) {
         this.activeIdxList.push(tab);
       }
+      const it = this.list[tab];
       this.$router.replace({
         query: {
-          tab,
+          tab: it.text.replace(" ", "_").toLowerCase(),
         },
       });
     },
