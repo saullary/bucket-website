@@ -27,7 +27,18 @@
           </v-row>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <div>0</div>
+          <div class="mt-2">
+            <v-row class="statis-row">
+              <v-col cols="4" v-for="(row, j) in it.statisList" :key="j">
+                <div class="pa-3">
+                  <component :is="row.comp" :list="row.data" />
+                </div>
+              </v-col>
+              <!-- <v-col cols="4">
+                <rect-data :list="it.statis2" />
+              </v-col> -->
+            </v-row>
+          </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -44,6 +55,42 @@ export default {
           name: "doge-1",
           id: 1,
           img: "http://tt0.bucket.foreverland.xyz/screenshot.png",
+          statisList: [
+            {
+              comp: "rect-data",
+              data: [
+                {
+                  title: "New Users",
+                },
+                {
+                  title: "Total Users",
+                },
+                {
+                  title: "Total UV",
+                },
+                {
+                  title: "Total PV",
+                },
+              ],
+            },
+            {
+              comp: "rect-data",
+              data: [
+                {
+                  title: "Bandwidth used",
+                  unit: "KB",
+                },
+                {
+                  title: "Build Minutes used",
+                  unit: "Minutes",
+                },
+                {
+                  title: "Storage used",
+                  unit: "MB",
+                },
+              ],
+            },
+          ],
         },
         {
           name: "doge-2",

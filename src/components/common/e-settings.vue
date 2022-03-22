@@ -111,6 +111,7 @@ export default {
     background: #fff;
     box-shadow: 0 0 4px rgb(205 205 205 / 50%);
     font-weight: bold;
+    pointer-events: none;
     &,
     &:before {
       border-radius: 12px;
