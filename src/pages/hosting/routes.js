@@ -1,5 +1,6 @@
 import New from "./new";
 import Projects from "./projects";
+import Project from "./project";
 
 export default [
   {
@@ -16,6 +17,12 @@ export default [
     component: Projects,
     meta: {
       title: "Projects",
+      isTab: 1,
     },
+  },
+  {
+    path: "/hosting/project/:projName/:id",
+    component: Project,
+    // children: ProjectChildren,
   },
 ];
