@@ -123,7 +123,6 @@
 import { mapState } from "vuex";
 
 const initFilePath = "/bucket/storage/";
-const initDomainPath = "/bucket/domain";
 
 export default {
   data() {
@@ -132,7 +131,6 @@ export default {
       mini: false,
       activeArr: [],
       filesPath: initFilePath,
-      domainPath: initDomainPath,
     };
   },
   computed: {
@@ -192,9 +190,7 @@ export default {
             },
             {
               label: "Domains",
-              to: this.path.includes(initDomainPath)
-                ? initDomainPath
-                : this.domainPath,
+              to: "/bucket/domains",
             },
           ],
         },
@@ -221,8 +217,6 @@ export default {
             name: "updateUsage",
           });
         }
-      } else if (val.includes(initDomainPath)) {
-        this.domainPath = val;
       }
     },
   },

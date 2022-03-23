@@ -56,24 +56,6 @@ export default {
           return it;
         });
       }
-      // bucket domain
-      else if (this.path.indexOf("/bucket/domain") == 0) {
-        items = [
-          {
-            text: "Domains",
-            to: "/bucket/domain",
-            exact: true,
-          },
-        ];
-        const { name } = params;
-        if (name)
-          items.push({
-            text: name,
-            to: "/bucket/domain/" + name,
-            exact: true,
-          });
-        return items;
-      }
       // bucket storage ar
       else if (/^\/bucket\/(arweave|storage)/.test(this.path)) {
         const isAr = /^\/bucket\/arweave/.test(this.path);

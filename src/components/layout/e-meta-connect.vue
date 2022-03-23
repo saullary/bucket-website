@@ -95,7 +95,7 @@ export default {
     },
   },
   created() {
-    this.getAddr();
+    // this.getAddr();
     // if (localStorage.isConnectMeta) {
     //   this.onConnect();
     // }

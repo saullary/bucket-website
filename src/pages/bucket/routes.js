@@ -26,7 +26,7 @@ export default [
     },
   },
   {
-    path: "/domain",
+    path: "/domains",
     component: Domains,
     meta: {
       title: "Domains",
@@ -37,6 +37,15 @@ export default [
     component: Domain,
     meta: {
       title: "{name}",
+      links: [
+        {
+          text: "Domains",
+          to: "/bucket/domains",
+        },
+        {
+          text: "{name}",
+        },
+      ],
     },
   },
 ].map((it) => {
