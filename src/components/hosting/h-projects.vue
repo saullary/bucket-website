@@ -98,11 +98,12 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <div class="ta-c">
-      <div
-        :class="!limit ? 'main-wrap' : ''"
-        class="pt-15 pb-15"
-        v-if="!list.length"
-      >
+      <div :class="!limit ? 'main-wrap' : ''" class="pb-15" v-if="!list.length">
+        <div
+          :style="{
+            height: loading ? '80px' : '60px',
+          }"
+        ></div>
         <e-empty :loading="loading" :title="loading ? '' : 'No Projects, Yet!'">
           {{
             loading
