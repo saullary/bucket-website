@@ -277,7 +277,6 @@
     </div>
     <div v-else>
       <v-data-table
-        v-if="tableLoading || list.length"
         class="hide-bdb"
         :headers="headers"
         :items="list"
