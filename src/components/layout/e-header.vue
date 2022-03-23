@@ -139,8 +139,9 @@ export default {
           {
             label: "Report",
             icon: "m-report",
-            notice: true,
-            name: "feedback",
+            noticeMsg: {
+              name: "feedback",
+            },
           },
           {
             label: "Disconnect",
@@ -155,10 +156,10 @@ export default {
   methods: {
     onMenu(it) {
       const { name } = it;
-      if (it.notice) {
+      if (it.noticeMsg) {
         console.log(it);
         this.$setMsg({
-          ...it,
+          ...it.noticeMsg,
         });
       }
       if (name == "logout") {

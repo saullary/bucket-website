@@ -24,6 +24,7 @@
     </template>
 
     <e-alert />
+    <e-feedback />
     <e-meta-connect />
   </v-app>
 </template>
