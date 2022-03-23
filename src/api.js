@@ -5,14 +5,8 @@ import AsyncLock from "async-lock";
 const inDev = /xyz/.test(process.env.VUE_APP_BASE_URL);
 Vue.prototype.$inDev = inDev;
 
-Vue.prototype.$arHashPre = inDev
-  ? "https://arweave.net/" // https://ar.foreverland.xyz/
-  : "https://arweave.net/";
-Vue.prototype.$arVerifyPre = inDev
-  ? "https://viewblock.io/arweave/tx/" // https://ar.foreverland.xyz/tx/
-  : "https://viewblock.io/arweave/tx/";
-
-const baseURL = process.env.VUE_APP_BASE_URL;
+Vue.prototype.$arHashPre = "https://arweave.net/"; // https://ar.foreverland.xyz/
+Vue.prototype.$arVerifyPre = "https://viewblock.io/arweave/tx/"; // https://ar.foreverland.xyz/tx/
 
 export const endpoint = inDev
   ? "https://s3gw.foreverland.xyz"
@@ -24,7 +18,7 @@ const authApi = inDev
 Vue.prototype.$endpoint = endpoint;
 
 let loginUrl = inDev
-  ? "https://official-website-test.4everland.app/bucketlogin"
+  ? "https://4ever-login-test.4everland.app"
   : "https://www.4everland.org/bucketlogin";
 if (/localhost/.test(location.host)) {
   loginUrl = "#/login?test=1";
@@ -32,62 +26,98 @@ if (/localhost/.test(location.host)) {
 Vue.prototype.$loginUrl = loginUrl;
 
 const http = Axios.create({
-  baseURL,
+  baseURL: process.env.VUE_APP_BASE_URL,
+});
+const http2 = Axios.create({
+  baseURL: process.env.VUE_APP_HOST_URL,
 });
 
 const RefreshPath = "/refresh";
 const RefreshLockKey = "refresh";
 const lock = new AsyncLock({ timeout: 5000 });
-http.interceptors.request.use(
-  async (config) => {
-    let token = "";
-    if (config.url != RefreshPath) {
-      await lock
-        .acquire(RefreshLockKey, async () => {
-          token = localStorage.token;
-          let { accessTokenExpireAt, refreshToken } = JSON.parse(
-            localStorage.authData || "{}"
-          );
-          if (token && Date.now() + 3600 * 1e3 >= accessTokenExpireAt) {
-            const { data } = await http.post(
-              RefreshPath,
-              {
-                refreshToken,
-              },
-              {
-                params: {
-                  _auth: 1,
-                },
-                headers: {
-                  Authorization: "Bearer " + token,
-                },
-              }
-            );
-            localStorage.authData = JSON.stringify(data);
-            token = data.accessToken;
-            localStorage.token = token;
-          }
-        })
-        .then(() => {});
-    } else {
-      token = localStorage.token;
-    }
 
-    const params = (config.params = config.params || {});
-    if (params._auth && !/^http/.test(config.url)) {
-      config.url = authApi + config.url;
-      delete params._auth;
+[http, http2].forEach((axios) => {
+  // const isHosting = i == 1;
+  axios.interceptors.request.use(
+    async (config) => {
+      let token = "";
+      if (config.url != RefreshPath) {
+        await lock
+          .acquire(RefreshLockKey, async () => {
+            token = localStorage.token;
+            let { accessTokenExpireAt, refreshToken } = JSON.parse(
+              localStorage.authData || "{}"
+            );
+            if (token && Date.now() + 3600 * 1e3 >= accessTokenExpireAt) {
+              const { data } = await http.post(
+                RefreshPath,
+                {
+                  refreshToken,
+                },
+                {
+                  params: {
+                    _auth: 1,
+                  },
+                  headers: {
+                    Authorization: "Bearer " + token,
+                  },
+                }
+              );
+              localStorage.authData = JSON.stringify(data);
+              token = data.accessToken;
+              localStorage.token = token;
+            }
+          })
+          .then(() => {});
+      } else {
+        token = localStorage.token;
+      }
+
+      const params = (config.params = config.params || {});
+      if (params._auth && !/^http/.test(config.url)) {
+        config.url = authApi + config.url;
+        delete params._auth;
+        token = "Bearer " + token;
+      }
+      if (token && config.url != RefreshPath) {
+        config.headers.common["Authorization"] = token;
+      }
+      return config;
+    },
+    (error) => {
+      console.log(error);
+      return Promise.reject(error);
     }
-    if (token && config.url != RefreshPath) {
-      config.headers.common["Authorization"] = token;
+  );
+  axios.interceptors.response.use(
+    (res) => {
+      const data = res.data;
+      if (typeof data == "object" && data && "code" in data) {
+        if (data.code != 200 && data.code != "SUCCESS") {
+          let msg = data.message || `${data.code} error`;
+          handleMsg(200, data.code, msg);
+          Vue.prototype.$loading.close();
+          // console.log(data, res.config);
+          const error = new Error(msg);
+          error.code = data.code;
+          throw error;
+        }
+        if ("data" in data) {
+          return data;
+        }
+      }
+      return res;
+    },
+    (error) => {
+      const { data = {}, status, statusText } = error.response || {};
+      console.log(error, status, statusText);
+      let msg = data.message || error.message;
+      handleMsg(status, data.code, msg);
+      error.code = data.code;
+      return Promise.reject(error);
     }
-    return config;
-  },
-  (error) => {
-    console.log(error);
-    return Promise.reject(error);
-  }
-);
+  );
+});
 
 function goLogin() {
   localStorage.token = "";
@@ -152,5 +182,6 @@ function handleMsg(status, code, msg) {
 }
 
 Vue.prototype.$http = http;
+Vue.prototype.$http2 = http2;
 
 export default http;

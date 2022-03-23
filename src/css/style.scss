@@ -5,11 +5,11 @@
 @import 'color';
 @import 'anim';
 
-$color1: #0F8DFF;
-@font-face {
-  font-family: Poppins;
-  src: url('/font/Poppins-Medium.ttf');
-}
+$color1: #34A9FF;
+// @font-face {
+//   font-family: Poppins;
+//   src: url('/font/Poppins-Medium.ttf');
+// }
 body {
   box-sizing: border-box;
   text-rendering: optimizeLegibility;
@@ -58,7 +58,7 @@ body {
     text-transform: none;
   }
   .theme--light.v-btn {
-    color: #7E8EA8;
+    color: #646f82;
   }
   .menu-btn.v-btn--active {
     background: #fff;
@@ -66,7 +66,7 @@ body {
     font-weight: bold;
   }
   thead.v-data-table-header tr span {
-    color: #7E8EA8;
+    color: #646f82;
   }
   .theme--light.v-data-table tbody tr.v-data-table__selected,
   .theme--light.v-data-table > .v-data-table__wrapper > table > tbody > tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
@@ -75,13 +75,23 @@ body {
   .v-input--switch.v-input--is-disabled {
     pointer-events: none;
   }
+  .v-navigation-drawer, .v-navigation-drawer__content {
+    overflow-x: visible;
+    overflow-y: visible;
+  }
+  .v-sheet.v-card {
+    border-radius: 6px;
+  }
 }
 .color-1 {
   color: $color1;
 }
+.bg-1 {
+  background: $color1;
+}
 
 .v-main {
-  background: #F4F9FF;
+  background: #F9FBFC;
 }
 
 .v-dialog .v-label {
@@ -215,7 +225,7 @@ ul.ls-none {
   overflow-y: visible;
   overflow-x: auto;
   .v-btn {
-    border-radius: 10px;
+    border-radius: 100px;
     box-shadow: none;
   }
 }
@@ -225,4 +235,11 @@ ul.ls-none {
   background: #FFEFCE;
   color: #d1a347;
   font-size: 13px;
+}
+
+.card-head-1 {
+  padding: 16px;
+  line-height: 1;
+  background: #f9fbfc;
+  color: #0b0817;
 }

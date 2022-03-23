@@ -12,9 +12,12 @@ Vue.config.productionTip = false;
 const Minio = require("minio-s");
 
 router.beforeEach((to, _, next) => {
-  let { title } = to.meta || {};
-  const name = "4EVERLAND BUCKET";
+  let { title, group } = to.meta || {};
+  const name = "4EVERLAND";
   if (title) {
+    if (group) {
+      title += " - " + group;
+    }
     title += " - " + name;
     for (const key in to.params) {
       title = title.replace(`{${key}}`, to.params[key]);
@@ -62,6 +65,8 @@ new Vue({
     noticeMsg({ name }) {
       if (name == "updateUser") {
         this.getUesrInfo();
+      } else if (name == "updateUsage") {
+        this.$store.dispatch("getUsageInfo");
       }
     },
   },
@@ -69,17 +74,16 @@ new Vue({
     async onInit() {
       if (this.token) {
         await this.getUesrInfo();
-        this.$setState({
-          noticeMsg: {
-            name: "onInit",
-          },
-        });
       } else if (["/", "/login"].indexOf(this.$route.path) == -1) {
         this.$router.replace("/");
       }
     },
     async getUesrInfo() {
-      const { data } = await this.$http.get("/user");
+      const { data } = await this.$http.get("/user", {
+        params: {
+          _auth: 1,
+        },
+      });
       localStorage.userInfo = JSON.stringify(data);
       this.$setState({
         userInfo: data,

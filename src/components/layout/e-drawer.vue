@@ -1,74 +1,120 @@
 <style lang="scss">
 .e-drawer {
-  background: linear-gradient(160deg, #ffffff 0%, #d7e9ff 50%, #fff1fe 100%);
   box-shadow: 5px 0px 30px 0px rgba(0, 0, 0, 0.1);
   .v-navigation-drawer__border {
     display: none;
+  }
+  .group-item {
+    margin-bottom: 10px !important;
+  }
+  .mini-arrow {
+    right: -8px;
+    bottom: 25px;
+    padding: 5px;
+    background: #fff;
+    transform: rotate(45deg);
+    cursor: pointer;
+    .icon {
+      width: 14px;
+      transform: rotate(-45deg);
+    }
+  }
+  &.v-navigation-drawer--mini-variant {
+    .v-list-item {
+      padding-left: 11px;
+    }
+    .mini-arrow {
+      .icon {
+        transform: rotate(135deg);
+      }
+    }
+  }
+  .v-list-item--active {
+    color: #34a9ff;
+    background: none;
+    &.sub::before {
+      opacity: 0;
+    }
+    &.v-list-group__header::before {
+      opacity: 0.12 !important;
+    }
   }
 }
 </style>
 
 <template>
-  <v-navigation-drawer class="e-drawer" v-model="drawer" app>
-    <div class="pt-10 pb-3 ta-c">
-      <a href="/">
-        <img src="img/logo.svg" height="28" />
+  <v-navigation-drawer
+    class="e-drawer"
+    :mini-variant.sync="mini"
+    v-model="isShow"
+    app
+    clipped
+  >
+    <div>
+      <a href="/" class="mt-8 d-b" v-if="asMobile">
+        <img :src="`img/svg/logo.svg`" height="26" class="d-b m-auto" />
       </a>
     </div>
-    <div class="pa-6 pt-5">
-      <e-stor-usage></e-stor-usage>
-    </div>
 
-    <v-divider></v-divider>
+    <div class="pa-5"></div>
+    <v-list rounded dense>
+      <template v-for="(it, i) in list">
+        <v-list-group
+          class="group-item"
+          v-model="activeArr[i]"
+          @input="onToggle(i, $event)"
+          :group="it.group"
+          v-if="it.subs"
+          :key="i"
+          no-action
+        >
+          <template v-slot:activator>
+            <e-drawer-icon :it="it" :active="activeArr[i]"></e-drawer-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                <b>{{ it.label }}</b>
+              </v-list-item-title>
+            </v-list-item-content>
+          </template>
 
-    <div class="pa-8">
-      <div class="mb-4" v-for="(it, i) in list" :key="i">
-        <v-btn
-          class="menu-btn"
-          rounded
-          plain
-          block
+          <v-list-item
+            :ref="i + '-' + j"
+            class="sub"
+            :to="sub.to"
+            :href="sub.href"
+            :target="sub.href ? '_blank' : ''"
+            v-for="(sub, j) in it.subs"
+            :key="j"
+          >
+            <v-list-item-content>
+              <v-list-item-title v-text="sub.label"></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-group>
+
+        <v-list-item
+          class="group-item"
+          v-else
           :to="it.to"
           :href="it.href"
           :target="it.href ? '_blank' : ''"
+          :key="i"
         >
-          <div class="d-flex al-c" style="min-width: 110px">
-            <!-- <v-icon size="16">{{ it.icon }}</v-icon> -->
-            <img
-              :src="`img/icon/${it.img}${
-                path.indexOf(it.to) == 0 ? '' : '-0'
-              }.svg`"
-              width="18"
-            />
-            <span class="ml-4" style="min-width: 65px">{{ it.label }}</span>
-          </div>
-        </v-btn>
-      </div>
-    </div>
+          <e-drawer-icon
+            :it="it"
+            :active="path.indexOf(it.to) == 0"
+          ></e-drawer-icon>
+          <v-list-item-content>
+            <v-list-item-title>
+              <b>{{ it.label }}</b>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </v-list>
 
-    <div class="pos-btm" style="bottom: 10px" v-if="token">
-      <e-menu offset-x>
-        <v-btn slot="ref" text block x-large>
-          <v-avatar size="26" v-if="userInfo.avatar">
-            <v-img :src="userInfo.avatar" v-if="userInfo.avatar"></v-img>
-            <!-- <avatar :text="userInfo.username"></avatar> -->
-          </v-avatar>
-          <img v-else src="img/icon/u-wallet.svg" height="20" />
-
-          <span class="ml-3 gray-3 fz-14">{{
-            userInfo.username ? userInfo.username.cutStr(6, 6) : "Unknown"
-          }}</span>
-          <v-icon class="ml-auto" color="#aaa">mdi-chevron-right</v-icon>
-        </v-btn>
-        <v-list dense>
-          <v-list-item link to="/apikey">
-            <span>Settings</span>
-          </v-list-item>
-          <v-list-item link @click="onLogout">
-            <span>Disconnect</span>
-          </v-list-item>
-        </v-list>
-      </e-menu>
+    <div class="pos-a mini-arrow" @click="mini = !mini">
+      <img src="img/svg/drawer/mini-arrow.svg" class="icon d-b" />
     </div>
   </v-navigation-drawer>
 </template>
@@ -76,15 +122,15 @@
 <script>
 import { mapState } from "vuex";
 
-const initFilePath = "/storage/";
-const initDomainPath = "/domain";
+const initFilePath = "/bucket/storage/";
 
 export default {
   data() {
     return {
-      drawer: null,
+      isShow: this.asMobile,
+      mini: false,
+      activeArr: [],
       filesPath: initFilePath,
-      domainPath: initDomainPath,
     };
   },
   computed: {
@@ -93,46 +139,66 @@ export default {
       userInfo: (s) => s.userInfo,
       token: (s) => s.token(),
     }),
+    asMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
     path() {
       return this.$route.path;
     },
     list() {
       return [
         {
-          label: "Files",
-          to: this.path.includes(initFilePath) ? initFilePath : this.filesPath,
-          icon: "mdi-file-multiple",
-          img: "m-files",
+          label: "Overview",
+          img: "m-overview",
+          to: "/overview",
+          active: false,
         },
         {
-          label: "AR History",
-          to: "/arweave",
-          img: "m-ar",
+          label: "Hosting",
+          img: "m-hosting",
+          group: /^\/hosting/i,
+          subs: [
+            {
+              label: "Projects",
+              to: "/hosting/projects",
+            },
+            {
+              label: "Domains",
+              to: "/hosting/domains",
+            },
+            {
+              label: "Statistics",
+              to: "/hosting/statistics",
+            },
+          ],
         },
         {
-          label: "Domains",
-          to: this.path.includes(initDomainPath)
-            ? initDomainPath
-            : this.domainPath,
-          icon: "mdi-wan",
-          img: "m-domains",
+          label: "Bucket",
+          img: "m-bucket",
+          active: false,
+          group: /^\/bucket/i,
+          subs: [
+            {
+              label: "Files",
+              to: this.path.includes(initFilePath)
+                ? initFilePath
+                : this.filesPath,
+            },
+            {
+              label: "AR History",
+              to: "/bucket/arweave",
+            },
+            {
+              label: "Domains",
+              to: "/bucket/domains",
+            },
+          ],
         },
         {
-          label: "Billing",
-          to: "/billing",
-          icon: "mdi-credit-card-outline",
-          img: "m-billing",
-        },
-        // {
-        //   label: "Settings",
-        //   to: "/settings",
-        //   icon: "cog-outline",
-        // },
-        {
-          label: "Docs",
-          href: "https://docs.bucket.4everland.org/",
-          icon: "mdi-file-document-outline",
-          img: "m-docs",
+          label: "Plan",
+          img: "m-plan",
+          to: "/plan",
+          active: false,
         },
       ];
     },
@@ -140,7 +206,7 @@ export default {
   watch: {
     noticeMsg({ name }) {
       if (name == "showDrawer") {
-        this.drawer = true;
+        this.isShow = true;
       }
     },
     path(val, oldVal) {
@@ -151,12 +217,15 @@ export default {
             name: "updateUsage",
           });
         }
-      } else if (val.includes(initDomainPath)) {
-        this.domainPath = val;
       }
     },
   },
   methods: {
+    onToggle(i, open) {
+      if (!open) return;
+      if (this.list[i].group.test(this.path)) return;
+      this.$refs[i + "-0"][0].$el.click();
+    },
     onLogout() {
       localStorage.clear();
       location.href = "index.html";

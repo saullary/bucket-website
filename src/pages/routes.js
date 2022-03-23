@@ -1,12 +1,12 @@
 import Home from "./home";
 import Login from "./login";
-import Storage from "./storage";
-import ARHistory from "./ar-history";
-import Domains from "./domains";
-import Domain from "./domain";
-import Billing from "./billing";
-import Settings from "./settings";
-import Apikey from "./user/apikey";
+
+import Overview from "./overview";
+import Plan from "./plan";
+
+import HostingRoutes from "./hosting/routes";
+import BucketRoutes from "./bucket/routes";
+import UserRoutes from "./user/routes";
 
 export default [
   {
@@ -21,50 +21,24 @@ export default [
     },
   },
   {
-    path: "/storage/*",
-    component: Storage,
-  },
-  {
-    path: "/arweave",
-    component: ARHistory,
+    path: "/overview",
+    component: Overview,
     meta: {
-      title: "AR History",
+      title: "Overview",
+      isTab: true,
     },
   },
+  ...HostingRoutes,
+  ...BucketRoutes,
+  ...UserRoutes,
+
   {
-    path: "/arweave/*",
-    component: Storage,
-  },
-  {
-    path: "/domain",
-    component: Domains,
+    path: "/plan",
+    component: Plan,
     meta: {
-      title: "Domains",
-    },
-  },
-  {
-    path: "/domain/:name",
-    component: Domain,
-  },
-  {
-    path: "/billing",
-    component: Billing,
-    meta: {
-      title: "Billing",
-    },
-  },
-  {
-    path: "/settings",
-    component: Settings,
-    meta: {
-      title: "Settings",
-    },
-  },
-  {
-    path: "/apikey",
-    component: Apikey,
-    meta: {
-      title: "API Key",
+      title: "Plan",
+      subTitle: "Manage the domains you can use within 4everland",
+      wrapCls: "main-wrap pa-0",
     },
   },
 ];

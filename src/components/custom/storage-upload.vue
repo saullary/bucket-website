@@ -69,12 +69,18 @@
             {{ sucNum }}/ {{ files.length }} uploaded
           </div>
 
-          <v-btn v-if="!uploading" outlined @click="onClear">{{
-            files.length ? "Clear" : "Cancel"
-          }}</v-btn>
+          <v-btn
+            v-if="!uploading"
+            outlined
+            rounded
+            width="90"
+            @click="onClear"
+            >{{ files.length ? "Clear" : "Cancel" }}</v-btn
+          >
           <v-btn
             color="primary"
-            class="ml-4"
+            rounded
+            class="ml-6"
             :disabled="!files.length"
             @click="onConfirm"
             >{{ confirmTxt }}</v-btn
@@ -230,10 +236,8 @@ export default {
     },
     async onUpdate(delay = 2000) {
       await this.$sleep(delay);
-      this.$setState({
-        noticeMsg: {
-          name: "updateUsage",
-        },
+      this.$setMsg({
+        name: "updateUsage",
       });
     },
   },
