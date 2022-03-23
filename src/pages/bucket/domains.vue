@@ -11,7 +11,7 @@
       <v-btn color="primary" @click="showPop = true">
         <!-- <v-icon size="16">mdi-plus-circle-outline</v-icon> -->
         <img src="img/svg/add1.svg" width="12" />
-        <span class="ml-2">Add Domain</span>
+        <span class="ml-2">Add</span>
       </v-btn>
       <v-btn
         @click="onDelete"
@@ -63,11 +63,10 @@
         </template> -->
       </v-data-table>
 
-      <div class="ta-c mt-8" v-if="!list.length">
-        <img :src="`img/svg/common/empty${loading ? 1 : 2}.svg`" height="100" />
-        <div class="mt-3 gray fz-15">
+      <div class="mt-8" v-if="!list.length">
+        <e-empty :loading="loading">
           {{ loading ? "Loading domains..." : "No domains" }}
-        </div>
+        </e-empty>
       </div>
     </div>
 
