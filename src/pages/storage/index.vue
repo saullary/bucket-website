@@ -245,10 +245,7 @@
                       fileInfo.arFailReason
                     }}</span>
                     <template v-if="!bucketInfo.isAr">
-                      <v-btn
-                        small
-                        text
-                        @click="onSyncAR(fileName, 'put')"
+                      <v-btn small text @click="onSyncAR(fileName, 'put')"
                         >Cancel</v-btn
                       >
                       <span>or</span>
@@ -642,7 +639,11 @@ export default {
             Bucket,
           },
           async (err) => {
-            if (err) return this.onErr(err);
+            if (err) {
+              await this.onErr(err);
+              this.addBucket();
+              return;
+            }
             if (form1.isAr) {
               await this.syncBucket(Bucket, true);
             }
