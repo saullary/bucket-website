@@ -88,7 +88,7 @@ export default {
     },
     menus() {
       const info = this.userInfo;
-      if (!info.registeredAt) return [];
+      if (!info.uid) return [];
       let list = [
         {
           label: "Support",

@@ -163,7 +163,7 @@ export default {
   data() {
     const { c } = this.$route.query;
     return {
-      minHeight: 480,
+      minHeight: "64vh",
       cloneDir: c,
       isClone: false,
       list: null,

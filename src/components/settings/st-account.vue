@@ -13,12 +13,16 @@
           <div class="mt-3 d-flex al-c">
             <v-btn
               color="primary"
+              :disabled="!!it.account"
               rounded
               small
               min-width="75"
               @click="onBind(it)"
-              >Verify</v-btn
+              >{{ it.account ? "Verified" : "Verify" }}</v-btn
             >
+            <span v-if="it.account" class="ml-auto gray fz-13">
+              {{ it.account.cutStr(6, 6) }}
+            </span>
           </div>
         </div>
       </v-col>
@@ -27,32 +31,66 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
-    return {
-      list: [
+    return {};
+  },
+  computed: {
+    ...mapState({
+      userInfo: (s) => s.userInfo,
+    }),
+    list() {
+      const info = this.userInfo;
+      return [
         {
           title: "Github",
           desc: "Get verified by connecting your github account.",
           icon: "m-github",
           type: 1,
+          account: (info.github || {}).name,
         },
         {
           title: "MetaMask",
           desc: "Get verified by connecting your metamask account.",
           icon: "m-metamask",
           type: 2,
+          account: (info.wallet || {}).address,
         },
         {
           title: "Email",
           desc: "Verify your email address to receive updates and notices for your account.",
           icon: "m-email",
           type: 3,
+          account: info.email,
         },
-      ],
-    };
+      ];
+    },
+  },
+  mounted() {
+    const { code } = this.$route.query;
+    if (code) this.onGithub(code);
   },
   methods: {
+    async onGithub(code) {
+      try {
+        this.$loading("Binding Github");
+        const { data } = await this.$http.get(`/auth/vcode/${code}`, {
+          params: {
+            _auth: 1,
+            type: 1,
+          },
+        });
+        console.log(data);
+        this.$setMsg({
+          name: "updateUser",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      this.$loading.close();
+    },
     async onBind(it) {
       try {
         this.$loading();
@@ -68,6 +106,10 @@ export default {
           }
         );
         console.log(data);
+        const url = data.applyR;
+        if (it.type == 1) {
+          location.href = url;
+        }
       } catch (error) {
         console.log(error);
       }

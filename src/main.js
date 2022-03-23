@@ -81,7 +81,7 @@ new Vue({
     async getUesrInfo() {
       const { data } = await this.$http.get("/user", {
         params: {
-          // _auth: 1,
+          _auth: 1,
         },
       });
       localStorage.userInfo = JSON.stringify(data);
