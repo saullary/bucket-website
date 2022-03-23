@@ -146,6 +146,10 @@ export default {
       if (!err) return;
       let msg = err.message;
       if (!msg) return;
+      if (msg.indexOf("Please select a different name") > -1) {
+        msg =
+          "The bucket already exists or is in use by another user.Bucket name will generate unique url to ensure global service uniqueness. No duplicate names will be allowed.";
+      }
       if (["Failed to fetch"].includes(msg)) {
         this.$confirm(msg, "Network Error", {
           confirmText: "Retry",
@@ -154,7 +158,7 @@ export default {
         });
         return;
       }
-      this.$alert(err.message);
+      this.$alert(msg);
     },
     getList() {
       if (!this.s3) return;
