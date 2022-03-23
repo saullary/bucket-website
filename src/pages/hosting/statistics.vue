@@ -13,7 +13,7 @@
         <v-btn
           text
           color="primary"
-          :to="`/statistics/${item.projectName}/${item.projectId}`"
+          :to="`/hosting/statistics/${item.projectName}/${item.projectId}`"
         >
           {{ item.projectName }}
         </v-btn>

@@ -3,6 +3,7 @@ import Projects from "./projects";
 import Project from "./project";
 import Domains from "./domains";
 import Statistics from "./statistics";
+import StatisDetail from "./statistics-detail";
 
 export default [
   {
@@ -43,6 +44,13 @@ export default [
     component: Statistics,
     meta: {
       title: "Statistics",
+    },
+  },
+  {
+    path: "/statistics/:projName/:id",
+    component: StatisDetail,
+    meta: {
+      title: "{projName} - Statistic",
     },
   },
 ].map((it) => {
