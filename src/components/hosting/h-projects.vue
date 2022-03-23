@@ -97,6 +97,31 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
+    <div class="ta-c">
+      <div
+        :class="!limit ? 'main-wrap' : ''"
+        class="pt-15 pb-15"
+        v-if="!list.length"
+      >
+        <e-empty :loading="loading" :title="loading ? '' : 'No Projects, Yet!'">
+          {{
+            loading
+              ? "Loading projects..."
+              : "Create a project from a template, or import a Git repository."
+          }}
+        </e-empty>
+        <div class="mt-10" v-if="!loading">
+          <v-btn color="primary" rounded to="/hosting/new"
+            >Create a New Project</v-btn
+          >
+        </div>
+      </div>
+      <div class="mt-8" v-else-if="limit">
+        <v-btn color="primary" rounded outlined to="/hosting/projects"
+          >View More</v-btn
+        >
+      </div>
+    </div>
   </div>
 </template>
 
@@ -163,6 +188,7 @@ export default {
           statisList,
         },
       ],
+      loading: false,
     };
   },
   methods: {
@@ -175,6 +201,13 @@ export default {
       const path = this.getDetailPath(it);
       this.$router.push(path);
     },
+  },
+  mounted() {
+    this.loading = true;
+    this.list = [];
+    setTimeout(() => {
+      this.loading = false;
+    }, 1e3);
   },
 };
 </script>

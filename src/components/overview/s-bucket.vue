@@ -21,20 +21,16 @@
     </v-data-table>
     <div class="ta-c" :class="tableLoading ? 'mt-8' : 'mt-15'">
       <template v-if="!list.length">
-        <img
-          :src="`img/svg/common/empty${tableLoading ? 1 : 2}.svg`"
-          :height="tableLoading ? 100 : 130"
-        />
-        <div class="mt-5">
-          <p class="fw-b mb-3 fz-18" v-if="!tableLoading">No buckets, Yet!</p>
-          <p class="fz-15 gray">
-            {{
-              tableLoading
-                ? `Loading buckets...`
-                : `Create a bucket and store your files in IPFS.`
-            }}
-          </p>
-        </div>
+        <e-empty
+          :loading="tableLoading"
+          :title="tableLoading ? '' : 'No buckets, Yet!'"
+        >
+          {{
+            tableLoading
+              ? `Loading buckets...`
+              : `Create a bucket and store your files in IPFS.`
+          }}
+        </e-empty>
         <div class="mt-10" v-if="!tableLoading">
           <v-btn color="primary" rounded :to="bucketPath + '?new=bucket'"
             >Create a New Bucket</v-btn

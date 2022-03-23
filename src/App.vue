@@ -14,10 +14,7 @@
       <v-main>
         <e-nav></e-nav>
         <div class="pa-5">
-          <e-wrap
-            :class="meta.wrapCls || (meta.isTab ? 'pa-0' : 'main-wrap')"
-            style="min-height: 80vh"
-          >
+          <e-wrap :class="meta.wrapCls || (meta.isTab ? 'pa-0' : 'main-wrap')">
             <keep-alive>
               <router-view></router-view>
             </keep-alive>
@@ -45,6 +42,7 @@ export default {
 
 <style lang="scss">
 .main-wrap {
+  min-height: 77vh;
   background: #fff;
   box-shadow: 0 0 6px rgb(205 205 205 / 50%);
 }
