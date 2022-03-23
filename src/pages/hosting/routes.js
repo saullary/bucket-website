@@ -27,9 +27,17 @@ export default [
     path: "/project/:projName/:id",
     component: Project,
     meta: {
-      inProject: 1,
       isTab: 1,
       title: `{projName}`,
+      links: [
+        {
+          text: "Projects",
+          to: "/hosting/projects",
+        },
+        {
+          text: `{projName}`,
+        },
+      ],
     },
   },
   {
@@ -51,6 +59,15 @@ export default [
     component: StatisDetail,
     meta: {
       title: "{projName} - Statistic",
+      links: [
+        {
+          text: "Statistics",
+          to: "/hosting/statistics",
+        },
+        {
+          text: "{projName}",
+        },
+      ],
     },
   },
 ].map((it) => {

@@ -43,19 +43,18 @@ export default {
     },
     navItems() {
       const { params } = this.$route;
-      const { title, group } = this.meta;
+      const { title, group, links } = this.meta;
       let items = [];
-      if (this.meta.inProject) {
-        items = [
-          {
-            text: "Projects",
-            to: "/hosting/projects",
-          },
-          {
-            text: params.projName,
-            to: this.path,
-          },
-        ];
+      if (links) {
+        items = links.map((_it) => {
+          const it = { ..._it };
+          for (const key in params) {
+            it.text = it.text.replace(`{${key}}`, params[key]);
+          }
+          if (!it.path) it.path = this.path;
+          it.exact = true;
+          return it;
+        });
       }
       // bucket domain
       else if (this.path.indexOf("/bucket/domain") == 0) {
