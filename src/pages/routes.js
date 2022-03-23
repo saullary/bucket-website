@@ -37,6 +37,8 @@ export default [
     component: Plan,
     meta: {
       title: "Plan",
+      subTitle: "Manage the domains you can use within 4everland",
+      wrapCls: "main-wrap pa-0",
     },
   },
 ];

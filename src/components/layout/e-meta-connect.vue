@@ -12,7 +12,7 @@
             custom settings. Please select the Ethereum Mainnet network.
           </div>
           <div class="mt-5 d-flex al-c">
-            <img src="img/icon/metamask.png" style="height: 25px" />
+            <img src="img/svg/settings/m-metamask.svg" style="height: 25px" />
             <b class="ml-4">MetaMask</b>
             <span class="gray fz-13 ml-5">{{ connectAddr.cutStr(4, 4) }}</span>
             <v-btn
@@ -25,21 +25,21 @@
         </div>
       </div>
     </v-dialog>
-    <div
+    <!-- <div
       @click="showPop = true"
       v-ripple
       :class="{ 'filter-gray': !isConnect }"
       class="bdrs-3 ml-5 hover-1"
     >
       <v-img src="img/icon/u-wallet.svg" width="22"></v-img>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import Web3 from "web3";
-const actAbi = {};
+// import actAbi from "../../plugins/pay/abi";
 
 export default {
   data() {
@@ -57,27 +57,24 @@ export default {
   },
   watch: {
     noticeMsg({ name }) {
-      if (name == "walletConnect") {
-        this.isConnect = true;
-      } else if (name == "showWalletConnect") {
+      if (name == "showMetaConnect") {
         this.showPop = true;
       }
     },
     async isConnect(val) {
-      localStorage.isConnectMetaMask = val ? "1" : "";
+      localStorage.isConnectMeta = val ? "1" : "";
       // this.onConnect();
       let connectAddr = "";
       if (val) {
         this.showPop = false;
-        window.ethContract = new window.web3.eth.Contract(
-          actAbi.abi,
-          actAbi.address
-        );
+        // window.ethContract = new window.web3.eth.Contract(
+        //   actAbi.abi,
+        //   actAbi.address
+        // );
         const accounts = await window.web3.eth.getAccounts();
         connectAddr = accounts[0];
         window.ethereum.on("chainChanged", (networkId) => {
           console.log("chainChanged", networkId);
-          // this.checkNet();
           location.reload();
         });
         window.ethereum.on("accountsChanged", (accounts) => {
@@ -88,7 +85,7 @@ export default {
       }
       this.$setState({
         noticeMsg: {
-          name: "walletConntect",
+          name: "walletConnect",
           data: {
             isConnect: val,
           },
@@ -99,9 +96,8 @@ export default {
   },
   created() {
     this.getAddr();
-    if (localStorage.isConnectMetaMask) {
+    if (localStorage.isConnectMeta) {
       this.onConnect();
-      // this.isConnect = true;
     }
   },
   methods: {
@@ -127,12 +123,11 @@ export default {
         if (netType != "main")
           msg = "Wrong network, please connect to Ethereum mainnet";
       }
-      console.log("netType", netType);
+      console.log("netType", netType, msg);
       this.$setState({
         netType,
         walletTip: msg,
       });
-      // if (msg) this.$alert(msg);
     },
     async connectMetaMask() {
       if (window.ethereum) {

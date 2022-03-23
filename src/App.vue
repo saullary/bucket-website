@@ -23,7 +23,8 @@
       </v-main>
     </template>
 
-    <e-alert></e-alert>
+    <e-alert />
+    <e-meta-connect />
   </v-app>
 </template>
 
