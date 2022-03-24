@@ -4,6 +4,7 @@ import "./components";
 import VueClipboards from "vue-clipboards";
 import router from "./router";
 import { CID } from "multiformats/cid";
+import frameworks from "./plugins/config/frameworks";
 
 Vue.use(VueClipboards);
 
@@ -41,6 +42,14 @@ Vue.prototype.$navTo = (url) => {
   } else {
     router.push(url);
   }
+};
+
+Vue.prototype.$getFramework = (name) => {
+  let obj = frameworks.filter((it) => it.slug == name)[0];
+  if (!obj) {
+    obj = frameworks[frameworks.length - 1];
+  }
+  return obj;
 };
 
 Vue.prototype.$openWindow = (url) => {

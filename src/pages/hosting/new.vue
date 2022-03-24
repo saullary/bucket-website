@@ -6,6 +6,11 @@
   .main-wrap {
     min-height: auto;
     padding: 20px;
+    h3 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      line-height: 1;
+    }
   }
 }
 </style>
@@ -14,15 +19,18 @@
   <div class="new-project">
     <e-steps :options="stepList" :value="curStep"></e-steps>
     <!-- <div class="main-wrap">new</div> -->
-    <v-window v-model="curStep" class="mt-4">
+    <v-window v-model="curStep" class="mt-5">
       <v-window-item v-for="i in [0, 1, 2]" :key="i" :value="i">
-        <component :is="'new-step-' + i" />
+        <component
+          :is="'new-step-' + i"
+          :active="i == curStep"
+          :info="info"
+          @set-info="info = $event"
+          @next="curStep += 1"
+          @back="curStep -= 1"
+        />
       </v-window-item>
     </v-window>
-    <div class="ta-r mt-3">
-      <v-btn @click="curStep += 1">next</v-btn>
-      <v-btn @click="curStep -= 1">Back</v-btn>
-    </div>
   </div>
 </template>
 
@@ -31,7 +39,8 @@ export default {
   data() {
     return {
       stepList: ["Import Repository", "Edit Configuration", "Start Deployment"],
-      curStep: 1,
+      curStep: 0,
+      info: null,
     };
   },
 };

@@ -9,9 +9,15 @@
             'min-height': minHeight,
           }"
         >
-          <div class="fz-20 fw-b mr-10">Import Git Repository</div>
-          <div class="d-flex al-c mb-3 mt-1">
-            <v-btn icon small :loading="loading" @click="getList" class="mr-3">
+          <h3>Import Git Repository</h3>
+          <div class="d-flex al-c mb-3">
+            <v-btn
+              icon
+              small
+              :loading="loading"
+              @click="onRefresh"
+              class="mr-3"
+            >
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
             <v-menu offset-y :open-on-hover="!isTouch" v-model="popAccounts">
@@ -148,6 +154,9 @@ import { mapState } from "vuex";
 import debounce from "../../../plugins/debounce";
 
 export default {
+  props: {
+    active: Boolean,
+  },
   data() {
     const { c } = this.$route.query;
     return {
@@ -156,8 +165,6 @@ export default {
       isClone: false,
       list: null,
       loading: false,
-      showSelect: false,
-      importItem: null,
       keyword: "",
       timing: null, // after select git, auto refresh
       accountList: [],
@@ -190,22 +197,22 @@ export default {
       if (val && this.isAddClick) {
         this.isAddClick = false;
         this.getAccounts();
-        // let times = 0;
-        // this.clearTiming();
-        // this.timing = setInterval(() => {
-        //   if (!this.accountList.length) {
-        //     this.getAccounts();
-        //     times += 1;
-        //     if (times > 4) this.clearTiming();
-        //   }
-        // }, 5e3);
+        let times = 0;
+        this.clearTiming();
+        this.timing = setInterval(() => {
+          if (!this.accountList.length) {
+            this.getAccounts();
+            times += 1;
+            if (times > 2) this.clearTiming();
+          }
+        }, 5e3);
       }
-    },
-    showSelect(val) {
-      if (!val) this.getList();
     },
     keyword(val) {
       if (!val) this.getList();
+    },
+    active(val) {
+      if (val) this.getList();
     },
   },
   mounted() {
@@ -219,8 +226,8 @@ export default {
       }
     },
     onImport(it) {
-      this.importItem = it;
-      this.showSelect = true;
+      this.$emit("set-info", it);
+      this.$emit("next");
     },
     async addNew() {
       if (this.isTouch && !this.popAccounts && this.accountList.length) {
@@ -260,6 +267,14 @@ export default {
       this.page = 1;
       this.getList();
     },
+    onRefresh() {
+      if (!this.chooseAccount) {
+        this.list = [];
+        this.getAccounts();
+        return;
+      }
+      this.getList();
+    },
     async getAccounts() {
       try {
         this.loading = true;
@@ -295,11 +310,7 @@ export default {
       this.loading = false;
     },
     async getList() {
-      if (!this.chooseAccount) {
-        this.list = [];
-        this.getAccounts();
-        return;
-      }
+      if (!this.accountList.length) return;
       try {
         this.loading = true;
         const params = {
@@ -321,29 +332,28 @@ export default {
           const item = this.list.filter((it) => it.name == this.cloneDir)[0];
           if (item) {
             this.isClone = true;
-            this.onImport(item);
+            let { e } = this.$route.query;
+            if (e) {
+              envList = decodeURIComponent(e)
+                .split(";")
+                .map((txt) => {
+                  return txt.split(":");
+                })
+                .filter((it) => it.length == 2)
+                .map((arr) => {
+                  return {
+                    key: arr[0],
+                    value: arr[1],
+                  };
+                });
+            }
+            this.onImport({
+              ...item,
+              envList,
+            });
           }
           this.cloneDir = "";
-          let { e } = this.$route.query;
-          if (e) {
-            envList = decodeURIComponent(e)
-              .split(";")
-              .map((txt) => {
-                return txt.split(":");
-              })
-              .filter((it) => it.length == 2)
-              .map((arr) => {
-                return {
-                  key: arr[0],
-                  value: arr[1],
-                };
-              });
-          }
         }
-        this.$nextTick(() => {
-          this.$refs.newDeploy.envList = envList;
-          console.log(envList);
-        });
       } catch (error) {
         console.log(error);
       }

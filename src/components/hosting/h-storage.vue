@@ -48,6 +48,9 @@
 </template>
 
 <script>
+import TermTxt from "../../plugins/config/term";
+import PrivacyTxt from "../../plugins/config/privacy";
+
 export default {
   data() {
     return {
@@ -56,12 +59,12 @@ export default {
       curStep: 0,
       steps: [
         {
-          title: this.$t("common.TermOfService"),
-          con: this.$t("common.TermTxt"),
+          title: "Term Of Service",
+          con: TermTxt,
         },
         {
-          title: this.$t("common.PrivacyPolicy"),
-          con: this.$t("common.PrivacyTxt"),
+          title: "Privacy Policy",
+          con: PrivacyTxt,
         },
       ],
       loading: false,
