@@ -53,7 +53,7 @@
         :class="{ active: i == value, prev: i < value }"
       >
         <span class="num d-ib mr-8">Step {{ 1 + i }}</span>
-        <span>{{ it.label }}</span>
+        <span class="d-ib">{{ it.label }}</span>
       </div>
     </v-col>
   </v-row>

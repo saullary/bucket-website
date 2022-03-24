@@ -45,9 +45,14 @@ export default {
   data() {
     return {
       stepList: ["Import Repository", "Edit Configuration", "Start Deployment"],
-      curStep: 1,
+      curStep: 0,
       info: null,
     };
+  },
+  watch: {
+    "$route.path"() {
+      this.curStep = 0;
+    },
   },
 };
 </script>
