@@ -17,6 +17,7 @@
             <span class="gray fz-13 ml-5">{{ connectAddr.cutStr(4, 4) }}</span>
             <v-btn
               :color="isConnect ? '' : 'primary'"
+              rounded
               class="ml-auto"
               @click="onConnect"
               >{{ isConnect ? "Disconnect" : "Connect" }}</v-btn

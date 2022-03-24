@@ -48,9 +48,14 @@
       </v-alert>
 
       <div class="ta-c pa-10" v-if="!list.length">
-        <img src="img/svg/common/empty2.svg" height="120" />
-        <h4 class="mt-6">No NFTs to display</h4>
-        <p class="mt-3 gray-a fz-14">Please follow us for future limited NFT</p>
+        <e-empty title="No NFTs to display">
+          <div>Please follow us for future limited NFT</div>
+          <div class="mt-6" v-if="!connectAddr">
+            <v-btn color="primary" small rounded @click="showConnect()"
+              >Connect Wallet</v-btn
+            >
+          </div>
+        </e-empty>
       </div>
       <div v-else class="pb-3">
         <p class="fz-14 fw-b mb-4">Total: {{ total }}</p>
@@ -136,17 +141,17 @@ export default {
     this.onInit();
   },
   methods: {
+    showConnect() {
+      this.$setMsg({
+        name: "showMetaConnect",
+      });
+    },
     async onInit() {
       if (!this.connectAddr) {
-        this.$setState({
-          noticeMsg: {
-            name: "show-wallet-connect",
-          },
-        });
+        this.showConnect();
         this.list = [];
         return;
       }
-
       try {
         this.$loading();
         const { data } = await this.$http.get(
