@@ -7,9 +7,15 @@
     min-height: auto;
     padding: 20px;
     h3 {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       font-size: 18px;
       line-height: 1;
+    }
+    h4 {
+      margin-bottom: 10px;
+      line-height: 1;
+      font-size: 14px;
+      font-weight: normal;
     }
   }
 }
@@ -39,7 +45,7 @@ export default {
   data() {
     return {
       stepList: ["Import Repository", "Edit Configuration", "Start Deployment"],
-      curStep: 0,
+      curStep: 1,
       info: null,
     };
   },

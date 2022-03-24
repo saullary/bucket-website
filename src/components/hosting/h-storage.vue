@@ -26,7 +26,7 @@
                 v-bind="attrs"
                 v-on="on"
                 v-model="isAgree"
-                :label="$t('common.ReadAndAgree')"
+                label="I have read carefully and agree to the above terms and conditions"
               ></v-checkbox>
             </template>
             <span>Please check the box and click confirm</span>
