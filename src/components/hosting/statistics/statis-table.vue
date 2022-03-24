@@ -38,11 +38,9 @@
       <table class="w100p ta-c fz-14" style="min-width: 600px">
         <thead>
           <tr>
-            <td>{{ $t(`dashboard.statistics.Time`) }}</td>
-            <td>{{ $t(`dashboard.statistics.NewUsers`) }}</td>
-            <td v-for="i in 7" :key="i">
-              {{ $t(`dashboard.statistics.Day`, { num: i }) }}
-            </td>
+            <td>Time</td>
+            <td>New Users</td>
+            <td v-for="i in 7" :key="i">{{ i }}day</td>
           </tr>
         </thead>
         <tbody class="op-9">
@@ -65,11 +63,6 @@
 export default {
   props: {
     list: Array,
-  },
-  data() {
-    return {
-      locales: "dashboard.statistics.",
-    };
   },
   methods: {
     getCls(val) {

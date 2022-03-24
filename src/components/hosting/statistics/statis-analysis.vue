@@ -31,15 +31,15 @@ export default {
       dates: null,
       chartList: [
         {
-          title: this.$tc(`dashboard.statistics.TotalUser`),
+          title: "Total Users",
           type: "TOTAL_USERS",
         },
-        { title: this.$t(`dashboard.statistics.NewUsers`), type: "NEW_USERS" },
+        { title: "New Users", type: "NEW_USERS" },
         {
-          title: this.$t(`dashboard.statistics.UniqueVisitor`),
+          title: "Unique Visitor",
           type: "UNIQUE_VISITOR",
         },
-        // { title: this.$t(`dashboard.statistics.PageView`), type: "PAGE_VIEW" },
+        // { title: 'PageView', type: "PAGE_VIEW" },
       ],
       tableList: [],
       tableLoading: false,
