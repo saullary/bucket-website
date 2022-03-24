@@ -69,11 +69,13 @@ export default {
     },
   },
   mounted() {
-    const { code } = this.$route.query;
-    if (code) this.onGithub(code);
+    this.onGithubCode();
   },
   methods: {
-    async onGithub(code) {
+    async onGithubCode() {
+      const { code } = this.$route.query;
+      if (!code || code == localStorage.last_github_code) return;
+      localStorage.last_github_code = code;
       try {
         this.$loading("Binding Github");
         const { data } = await this.$http.get(`/auth/vcode/${code}`, {
@@ -113,7 +115,6 @@ export default {
       } catch (error) {
         console.log(error);
       }
-      this.$loading.close();
     },
   },
 };

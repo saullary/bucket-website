@@ -168,7 +168,7 @@ function handleMsg(status, code, msg) {
   }
   msg = msg || "Unknown Error";
 
-  if (status == 401) {
+  if (status == 401 || code == 401) {
     goLogin();
   } else if (msg) {
     setTimeout(() => {
