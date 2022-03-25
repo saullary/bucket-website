@@ -9,7 +9,7 @@ export default [
     component: Settings,
     meta: {
       title: "Settings",
-      isTab: true,
+      isTab: 1,
     },
   },
   {
@@ -17,6 +17,8 @@ export default [
     component: Referral,
     meta: {
       title: "My Referral",
+      hideNav: 1,
+      isTab: 1,
     },
   },
   {

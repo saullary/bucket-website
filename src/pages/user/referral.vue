@@ -1,11 +1,12 @@
 <style lang="scss">
 .refer-header {
-  background: #2b0c74 url(/img/bg/user/refer-1.jpeg) no-repeat;
+  background: #2b0c74 url(https://4ever-web.4everland.store/bg/referral-bg1.png)
+    no-repeat;
   background-size: 100%;
-  .wrap-1 {
-    background: url(/img/bg/user/refer-2.png) no-repeat 90% center;
-    background-size: contain;
-  }
+  // .wrap-1 {
+  //   background: url(/img/bg/user/refer-2.png) no-repeat 90% center;
+  //   background-size: contain;
+  // }
 }
 .refer-qr-img {
   right: 15px;
@@ -15,16 +16,11 @@
   height: $size;
 }
 .page-refer {
-  .link-wrap {
-    max-width: 600px;
-    margin: 50px auto 10px;
-  }
   table {
     border-spacing: 0;
     font-size: 15px;
     thead {
-      background: #aebed5;
-      color: #fff;
+      background: #fafbfc;
     }
     tbody {
       font-size: 14px;
@@ -41,97 +37,88 @@
 
 <template>
   <div class="page-refer">
-    <div class="refer-header">
-      <div class="wrap-1">
-        <div class="con-1">
-          <div class="white-0 fw-b" :class="asMobile ? 'fz-30' : 'fz-35'">
-            <p>Refer Friends.</p>
-            <p>Enter Web3.0 Together.</p>
-          </div>
-          <div class="link-wrap d-flex al-c bg-white bdrs-5">
-            <span class="pd-10 gray fz-16 mr-auto line-1 shrink-1">
-              {{ shareUrl }}
-            </span>
-            <v-btn small rounded class="mr-2" color="primary" @click="onCopy">
-              <b class="white-0">Copy</b>
-            </v-btn>
-            <v-btn plain rounded color="primary" @click="onInvite">
-              <b>Share</b>
-            </v-btn>
-          </div>
+    <div class="pos-r">
+      <img
+        src="https://4ever-web.4everland.store/bg/referral-bg1.png"
+        class="d-b w100p"
+      />
+      <div class="x-center" style="bottom: 20px">
+        <div class="d-flex al-c bg-white bdrs-5" style="max-width: 600px">
+          <span class="pd-10 gray fz-16 mr-auto line-1 shrink-1">
+            {{ shareUrl }}
+          </span>
+          <v-btn small rounded class="mr-2" color="primary" @click="onCopy">
+            <b class="white-0">Copy</b>
+          </v-btn>
+          <v-btn plain rounded color="primary" @click="onInvite">
+            <b>Share</b>
+          </v-btn>
         </div>
       </div>
     </div>
 
-    <div class="wrap-1">
-      <div class="con-2">
-        <v-card outlined>
-          <div class="pd-20 bdb-1 d-flex al-c">
-            <span>My Referrals</span>
-            <v-btn icon small class="ml-2" @click="getList" :loading="loading">
-              <v-icon>mdi-refresh</v-icon>
-            </v-btn>
+    <div class="main-wrap mt-5">
+      <div class="pd-20 bdb-1 d-flex al-c">
+        <span>My Referrals</span>
+        <v-btn icon small class="ml-2" @click="getList" :loading="loading">
+          <v-icon>mdi-refresh</v-icon>
+        </v-btn>
+      </div>
+      <div class="pd-20">
+        <div class="pd-20 bg-1 white-0 d-flex space-btw">
+          <div class="ta-c" v-for="(it, i) in statisList" :key="i">
+            <p class="op-7 mb-5" :class="asMobile ? 'fz-12' : 'fz-13'">
+              {{ it.label }}
+            </p>
+            <!-- it.badge > 0 -->
+            <v-badge :content="'+' + it.badge" :value="false" color="error">
+              <p class="fz-25 fw-b">{{ it.value || 0 }}</p>
+            </v-badge>
           </div>
-          <div class="pd-20">
-            <div
-              style="background: #4f80ac"
-              class="pd-20 white-0 d-flex space-btw"
-            >
-              <div class="ta-c" v-for="(it, i) in statisList" :key="i">
-                <p class="op-7 mb-5" :class="asMobile ? 'fz-12' : 'fz-13'">
-                  {{ it.label }}
-                </p>
-                <!-- it.badge > 0 -->
-                <v-badge :content="'+' + it.badge" :value="false" color="error">
-                  <p class="fz-25 fw-b">{{ it.value || 0 }}</p>
-                </v-badge>
-              </div>
-            </div>
+        </div>
 
-            <div class="ov-a mt-5 bd-1b ov-h">
-              <table class="w100p ta-c" style="min-width: 260px">
-                <thead>
-                  <tr>
-                    <td>#</td>
-                    <td>E-mail</td>
-                    <td>CreatedAt</td>
-                    <td>Deployed</td>
-                    <td>Status</td>
-                  </tr>
-                </thead>
-                <tbody class="op-9">
-                  <tr v-for="(it, i) in list" :key="i">
-                    <td>{{ 1 + i }}</td>
-                    <td>{{ it.email }}</td>
-                    <td>{{ new Date(it.inviteAt).format() }}</td>
-                    <td>
-                      <act-e-link no-copy color="#4A96FA" :domain="it.domain" />
-                    </td>
-                    <td>
-                      {{ it.valid ? "valid" : "invalid" }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="pa-3 ta-c" v-if="!list.length">
-                <div class="op-5 fz-14 mt-8">
-                  {{ loading ? "Loading..." : "No Referrals Now" }}
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-6" v-if="pageLen > 1">
-              <v-pagination
-                @input="onPage"
-                v-model="page"
-                :length="pageLen"
-                prev-icon="mdi-menu-left"
-                next-icon="mdi-menu-right"
-                :total-visible="7"
-              ></v-pagination>
-            </div>
+        <div class="ov-a mt-5 bd-1b ov-h">
+          <table class="w100p ta-c" style="min-width: 260px">
+            <thead>
+              <tr>
+                <td>#</td>
+                <td>E-mail</td>
+                <td>CreatedAt</td>
+                <td>Deployed</td>
+                <td>Status</td>
+              </tr>
+            </thead>
+            <tbody class="op-9">
+              <tr v-for="(it, i) in list" :key="i">
+                <td>{{ 1 + i }}</td>
+                <td>{{ it.email }}</td>
+                <td>{{ new Date(it.inviteAt).format() }}</td>
+                <td>
+                  <act-e-link no-copy color="#4A96FA" :domain="it.domain" />
+                </td>
+                <td>
+                  {{ it.valid ? "valid" : "invalid" }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="mt-15" v-if="!list.length">
+            <e-empty :loading="loading">
+              {{ loading ? "Loading..." : "No Referrals Now" }}
+            </e-empty>
           </div>
-        </v-card>
+        </div>
+
+        <div class="mt-6" v-if="pageLen > 1">
+          <v-pagination
+            @input="onPage"
+            v-model="page"
+            :length="pageLen"
+            prev-icon="mdi-menu-left"
+            next-icon="mdi-menu-right"
+            :total-visible="7"
+          ></v-pagination>
+        </div>
       </div>
     </div>
 

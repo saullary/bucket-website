@@ -1,5 +1,5 @@
 <template>
-  <div class="ml-5 mt-5">
+  <div class="ml-5 mt-5" v-if="!meta.hideNav">
     <div class="d-flex al-c">
       <div class="d-flex al-c" @click="onMenu">
         <v-btn icon v-if="asMobile">
