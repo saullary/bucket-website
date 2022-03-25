@@ -180,12 +180,14 @@ export default {
   methods: {
     async onInit() {
       const {
+        id,
         name,
         defaultBranch = "",
         frameWorkAdvice = "",
         envList = [],
       } = this.info;
       Object.assign(this.form, {
+        repoId: id,
         name,
         currentBranch: defaultBranch,
         rootDirectory: srcDir,
