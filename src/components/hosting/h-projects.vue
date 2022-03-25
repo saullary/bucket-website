@@ -42,7 +42,12 @@
           <v-row>
             <v-col cols="8" md="4">
               <div class="d-flex al-c grow-0">
-                <img :src="it.img" height="60" width="60" class="bdrs-8 bd-1" />
+                <img
+                  :src="it.previewImage"
+                  height="60"
+                  width="60"
+                  class="bdrs-8 bd-1"
+                />
                 <div class="ml-3">
                   <h3>{{ it.name }}</h3>
                 </div>
@@ -127,70 +132,54 @@
 </template>
 
 <script>
-const statisList = [
-  {
-    comp: "rect-data",
-    data: [
-      {
-        title: "New Users",
-      },
-      {
-        title: "Total Users",
-      },
-      {
-        title: "Total UV",
-      },
-      {
-        title: "Total PV",
-      },
-    ],
-  },
-  {
-    comp: "rect-data",
-    data: [
-      {
-        title: "Bandwidth used",
-        unit: "KB",
-      },
-      {
-        title: "Build Minutes used",
-        unit: "Minutes",
-      },
-      {
-        title: "Storage used",
-        unit: "MB",
-      },
-    ],
-  },
-];
+import { mapState } from "vuex";
+
 export default {
   props: {
     limit: Number,
   },
   computed: {
+    ...mapState({
+      buildInfo: (s) => s.buildInfo,
+    }),
     asMobile() {
       return this.$vuetify.breakpoint.smAndDown;
+    },
+    path() {
+      return this.$route.path;
+    },
+    inPage() {
+      return !this.pagePath || this.pagePath == this.path;
     },
   },
   data() {
     return {
       curIdx: [],
-      list: [
-        {
-          name: "doge-1",
-          id: 1,
-          img: "http://tt0.bucket.foreverland.xyz/screenshot.png",
-          statisList,
-        },
-        {
-          name: "doge-2",
-          id: 2,
-          img: "https://api.4everland.org/project/task/screenshot/6151897aba71230001413515.png",
-          statisList,
-        },
-      ],
+      list: [],
       loading: false,
+      pagePath: "",
     };
+  },
+  watch: {
+    buildInfo({ data }) {
+      if (data.state != this.lastState) {
+        console.log(data.taskId, data.state);
+        this.lastState = data.state;
+        if (this.inPage) this.getList();
+        else this.needRefresh = true;
+      }
+    },
+    inPage(val) {
+      // console.log(this.pagePath, val);
+      if (val && this.needRefresh) {
+        this.needRefresh = false;
+        this.getList();
+      }
+    },
+  },
+  mounted() {
+    this.getList();
+    this.pagePath = this.path;
   },
   methods: {
     onStop() {},
@@ -202,13 +191,55 @@ export default {
       const path = this.getDetailPath(it);
       this.$router.push(path);
     },
-  },
-  mounted() {
-    this.loading = true;
-    this.list = [];
-    setTimeout(() => {
+    async getList() {
+      try {
+        this.loading = true;
+        const { data } = await this.$http2.get("/project/v3/list");
+        this.list = data.list.map((it) => {
+          it.statisList = [
+            {
+              comp: "rect-data",
+              data: [
+                {
+                  title: "New Users",
+                },
+                {
+                  title: "Total Users",
+                },
+                {
+                  title: "Total UV",
+                },
+                {
+                  title: "Total PV",
+                },
+              ],
+            },
+            {
+              comp: "rect-data",
+              data: [
+                {
+                  title: "Bandwidth used",
+                  unit: "KB",
+                },
+                {
+                  title: "Build Minutes used",
+                  unit: "Minutes",
+                },
+                {
+                  title: "Storage used",
+                  unit: "MB",
+                },
+              ],
+            },
+          ];
+          return it;
+        });
+        this.total = data.total;
+      } catch (error) {
+        console.log(error);
+      }
       this.loading = false;
-    }, 1e3);
+    },
   },
 };
 </script>

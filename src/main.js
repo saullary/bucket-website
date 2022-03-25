@@ -74,9 +74,42 @@ new Vue({
     async onInit() {
       if (this.token) {
         await this.getUesrInfo();
+        this.initSocket();
       } else if (["/", "/login"].indexOf(this.$route.path) == -1) {
         this.$router.replace("/");
       }
+    },
+    initSocket() {
+      const url = /xyz$/.test(process.env.VUE_APP_BASE_URL)
+        ? "ws.foreverland.xyz"
+        : "ws.4everland.org";
+      this.socket = window.io(url, {
+        path: "/socket.io",
+        query: "token=" + this.token,
+        withCredentials: false,
+        transports: ["websocket", "polling"],
+      });
+      this.socket.on("error", (err) => {
+        console.log("socket error", err, this.socket); // socket.io auto reconnect
+      });
+      this.socket.on("connect", () => {
+        console.log("socket connect");
+      });
+      this.socket.on("PROJECT_BUILD", ({ name, data }) => {
+        if (!name) return;
+        if (name == "log") {
+          data.state = "RUNNING";
+        } else {
+          data.state = name.replace("build_", "").toUpperCase();
+        }
+        this.$setState({
+          buildInfo: {
+            name,
+            data,
+          },
+        });
+        console.log(name, data);
+      });
     },
     async getUesrInfo() {
       const { data } = await this.$http.get("/user", {

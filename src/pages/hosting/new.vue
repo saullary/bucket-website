@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       stepList: ["Import Repository", "Edit Configuration", "Start Deployment"],
-      curStep: 0,
+      curStep: 2,
       info: null,
     };
   },

@@ -23,15 +23,17 @@ const store = new Vuex.Store({
     userInfo: JSON.parse(localStorage.userInfo || "{}"),
     noticeMsg: {},
     alertInfo: {},
+    navItems: [],
+    // bucket
     s3: null,
     s3m: null,
     searchKey: "",
     usageInfo: {},
-    navItems: [],
     // hosting
     connectAddr: "",
     netType: "",
     walletTip: "",
+    buildInfo: {},
   },
   mutations: {
     [SET_DATA](state, data) {

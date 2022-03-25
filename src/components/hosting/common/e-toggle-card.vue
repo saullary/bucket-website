@@ -2,7 +2,7 @@
   <div class="pa-5 bd-1 bdrs-3">
     <div class="d-flex al-c hover-1" @click="isShow = !isShow">
       <v-icon
-        color="#34A9FF"
+        :color="color"
         :class="{
           'rotate-90': isShow,
         }"
@@ -21,6 +21,10 @@ export default {
   props: {
     value: Boolean,
     title: String,
+    color: {
+      type: String,
+      default: "#34A9FF",
+    },
   },
   data() {
     return {
