@@ -1,9 +1,25 @@
 <template>
   <div v-if="info" class="hide-msg">
     <div class="main-wrap">
-      <h3>Basic Configuration for {{ info.name }}</h3>
+      <h3>Github Repository</h3>
+      <!-- <div class="gray fz-14">Import project from github repository.</div> -->
+      <div class="d-flex al-c">
+        <e-icon-link img="img/svg/hosting/m-github.svg" :link="info.cloneUrl">
+          4everland/hosting-website
+        </e-icon-link>
+        <e-icon-link
+          class="ml-6"
+          img="img/svg/hosting/m-branch.svg"
+          :link="info.cloneUrl.replace('.git', '/tree/' + form.currentBranch)"
+        >
+          {{ form.currentBranch }}
+        </e-icon-link>
+      </div>
+    </div>
+    <div class="main-wrap mt-5">
+      <h3>Basic Configuration</h3>
       <v-row>
-        <v-col>
+        <v-col cols="6" md="4">
           <h4>Project Name</h4>
           <v-text-field
             v-model="form.name"
@@ -12,7 +28,7 @@
             dense
           />
         </v-col>
-        <v-col>
+        <v-col cols="6" md="4">
           <h4>Branch</h4>
           <v-select
             v-model="form.currentBranch"
@@ -23,7 +39,7 @@
           >
           </v-select>
         </v-col>
-        <v-col>
+        <v-col cols="6" md="4">
           <h4>Root Directory</h4>
           <e-menu offset-y>
             <v-text-field
@@ -56,6 +72,9 @@
           </e-menu>
         </v-col>
       </v-row>
+    </div>
+    <div class="main-wrap mt-5">
+      <h3>Build Configuration</h3>
     </div>
     <div class="ta-r mt-4">
       <v-btn color="primary" rounded @click="onDeploy">Deploy</v-btn>
