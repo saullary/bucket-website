@@ -15,7 +15,7 @@
       </div>
 
       <e-toggle-card class="mt-5" title="Building" :value="cardOpen(0)">
-        <div @click="curIdx += 1">hhh</div>
+        <build-log :logs="logs" />
       </e-toggle-card>
       <e-toggle-card class="mt-5" title="Syncing to IPFS" :value="cardOpen(1)">
         <e-label-val label="IPFS Hash">Pending</e-label-val>
@@ -29,7 +29,7 @@
       </e-toggle-card>
     </div>
     <div class="ta-r mt-4">
-      <v-btn rounded outlined @click="$emit('back')">Cancel</v-btn>
+      <v-btn rounded outlined @click="onCancel">Cancel</v-btn>
     </div>
   </div>
 </template>
@@ -39,11 +39,42 @@ export default {
   data() {
     return {
       curIdx: 0,
+      logs: [
+        {
+          timestamp: Date.now(),
+          content: "test1",
+        },
+        {
+          timestamp: Date.now(),
+          content: "test1",
+        },
+        {
+          timestamp: Date.now(),
+          content: "test1",
+        },
+        {
+          timestamp: Date.now(),
+          content: "test1",
+        },
+        {
+          timestamp: Date.now(),
+          content: "test1",
+        },
+        {
+          timestamp: Date.now(),
+          content: "test1 9923 ddd ddd sss dddd sss ddd",
+        },
+      ],
     };
   },
   methods: {
     cardOpen(i) {
       return i > -1 && i <= this.curIdx;
+    },
+    onCancel() {
+      this.$confirm("", "Are you sure to quit this deployment ?").then(() => {
+        this.$router.replace("/hosting/projects");
+      });
     },
   },
 };

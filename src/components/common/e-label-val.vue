@@ -1,7 +1,7 @@
 <template>
-  <div class="d-flex al-c fz-14">
+  <div class="d-flex fz-14">
     <label
-      class="gray"
+      class="gray shrink-0"
       :style="{
         'min-width': minWidth,
       }"
