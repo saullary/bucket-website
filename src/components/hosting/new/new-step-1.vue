@@ -75,6 +75,28 @@
     </div>
     <div class="main-wrap mt-5">
       <h3>Build Configuration</h3>
+      <v-row>
+        <v-col cols="6" md="4">
+          <h4>Framework Preset</h4>
+          <v-select
+            v-model="form.framework"
+            outlined
+            dense
+            :items="frameworks"
+            item-text="name"
+            item-value="slug"
+          >
+          </v-select>
+        </v-col>
+        <v-col cols="6" md="4">
+          <h4>Build Command</h4>
+          <build-cmd
+            v-model="form.buildCommand"
+            :placeholder="buildCommandHint"
+            :scripts="scripts"
+          ></build-cmd>
+        </v-col>
+      </v-row>
     </div>
     <div class="ta-r mt-4">
       <v-btn color="primary" rounded @click="onDeploy">Deploy</v-btn>
@@ -84,6 +106,8 @@
 </template>
 
 <script>
+import frameworks from "../../../plugins/config/frameworks";
+
 const srcDir = "./";
 
 export default {
@@ -92,13 +116,19 @@ export default {
   },
   data() {
     return {
+      frameworks,
       dirList: [],
       srcDir,
       form: {
         name: "",
         currentBranch: "",
         rootDirectory: srcDir,
+        framework: "",
+        buildCommand: "",
+        outputDirectory: "",
       },
+      buildCommandHint: "",
+      scripts: null,
       rootDirList: [],
       branchList: [],
     };
@@ -112,24 +142,73 @@ export default {
         this.getRepoDir();
       }
     },
+    "form.framework"(val) {
+      this.onFramework(val);
+    },
   },
   created() {
     this.onInit();
   },
   methods: {
-    onInit() {
-      const { name, defaultBranch = "" } = this.info;
+    async onInit() {
+      const { name, defaultBranch = "", frameWorkAdvice = "" } = this.info;
       Object.assign(this.form, {
         name,
         currentBranch: defaultBranch,
         rootDirectory: srcDir,
+        framework: frameWorkAdvice,
       });
       this.branchList = defaultBranch ? [defaultBranch] : [];
-      this.getBranchList();
       this.dirList = [];
+      this.$loading();
+      try {
+        await this.getBranchList();
+        await this.detectFramework();
+      } catch (error) {
+        //
+      }
+      this.$loading.close();
     },
     onDeploy() {
       this.$emit("next");
+    },
+    onFramework(val) {
+      const item = this.$getFramework(val);
+      const { buildCommand = {}, outputDirectory = {} } = item.settings || {};
+      Object.assign(this.form, {
+        buildCommand: buildCommand.value || "",
+        outputDirectory: outputDirectory.value || "./",
+      });
+      this.buildCommandHint = buildCommand.placeholder || "";
+    },
+    async detectFramework() {
+      try {
+        this.scripts = null;
+        let params = {};
+        const form = this.form;
+        if (form.rootDirectory != srcDir) {
+          params.path = form.rootDirectory.replace(/^\//, "");
+        }
+        const { data } = await this.$http2.get(
+          "/project/detect-framework/" + this.info.id,
+          { params }
+        );
+        let { scripts, framework = null } = data;
+        Object.assign(form, {
+          framework,
+        });
+        if (scripts) {
+          this.scripts = JSON.parse(scripts);
+          const { build } = this.scripts;
+          if (build && framework != "nextjs") {
+            Object.assign(form, {
+              buildCommand: "npm run build",
+            });
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
     async getBranchList() {
       try {
