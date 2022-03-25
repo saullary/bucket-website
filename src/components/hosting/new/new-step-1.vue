@@ -96,11 +96,37 @@
             :scripts="scripts"
           ></build-cmd>
         </v-col>
+        <v-col cols="6" md="4">
+          <h4>Output Directory</h4>
+          <v-text-field
+            v-model="form.outputDirectory"
+            outlined
+            dense
+          ></v-text-field>
+        </v-col>
+        <v-col cols="6" md="4">
+          <h4>Deploy Hooks</h4>
+          <v-switch v-model="form.hookSwitch" dense></v-switch>
+        </v-col>
       </v-row>
+      <env-form v-model="form.env" />
+      <div class="gray mt-5 fz-14">
+        Tips: 4EVERLAND HOSTING only serves static pages (Server-Side-Rendering
+        is not supported now)
+      </div>
     </div>
     <div class="ta-r mt-4">
-      <v-btn color="primary" rounded @click="onDeploy">Deploy</v-btn>
-      <v-btn rounded outlined class="ml-6" @click="$emit('back')">Back</v-btn>
+      <v-btn color="primary" rounded @click="onDeploy" min-width="100"
+        >Deploy</v-btn
+      >
+      <v-btn
+        rounded
+        outlined
+        class="ml-6"
+        min-width="100"
+        @click="$emit('back')"
+        >Back</v-btn
+      >
     </div>
   </div>
 </template>
@@ -126,6 +152,8 @@ export default {
         framework: "",
         buildCommand: "",
         outputDirectory: "",
+        hookSwitch: true,
+        env: [],
       },
       buildCommandHint: "",
       scripts: null,
@@ -151,12 +179,18 @@ export default {
   },
   methods: {
     async onInit() {
-      const { name, defaultBranch = "", frameWorkAdvice = "" } = this.info;
+      const {
+        name,
+        defaultBranch = "",
+        frameWorkAdvice = "",
+        envList = [],
+      } = this.info;
       Object.assign(this.form, {
         name,
         currentBranch: defaultBranch,
         rootDirectory: srcDir,
         framework: frameWorkAdvice,
+        env: envList,
       });
       this.branchList = defaultBranch ? [defaultBranch] : [];
       this.dirList = [];
@@ -169,8 +203,14 @@ export default {
       }
       this.$loading.close();
     },
-    onDeploy() {
-      this.$emit("next");
+    async onDeploy() {
+      const body = {
+        ...this.form,
+      };
+      if (!body.outputDirectory && body.framework == "vue") {
+        body.outputDirectory = "dist";
+      }
+      console.log(body);
     },
     onFramework(val) {
       const item = this.$getFramework(val);
