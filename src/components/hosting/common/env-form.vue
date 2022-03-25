@@ -1,57 +1,45 @@
 <template>
-  <div class="mt-5 pa-5 bd-1 bdrs-3">
-    <div class="d-flex al-c hover-1" @click="isShow = !isShow">
-      <v-icon
-        color="#34A9FF"
-        :class="{
-          'rotate-90': isShow,
-        }"
-        >mdi-menu-right</v-icon
-      >
-      <span class="fz-14">Environment Variables</span>
-    </div>
-    <div class="mt-5" v-if="isShow">
-      <v-row>
-        <v-col cols="6" md="4">
-          <h4>Name</h4>
-          <v-text-field
-            v-model="form.key"
-            placeholder="Variable_Name"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
-        <v-col cols="6" md="4">
-          <h4>Value</h4>
-          <v-text-field
-            @keyup.enter="onAdd"
-            v-model="form.value"
-            placeholder="Example Value"
-            outlined
-            dense
-          ></v-text-field>
-        </v-col>
-        <v-col cols="6" md="4">
-          <h4 class="op-0">Hide</h4>
-          <v-btn color="primary" rounded @click="onAdd">Add</v-btn>
-        </v-col>
-      </v-row>
+  <e-toggle-card title="Environment Variables" v-model="isShow">
+    <v-row>
+      <v-col cols="6" md="4">
+        <h4>Name</h4>
+        <v-text-field
+          v-model="form.key"
+          placeholder="Variable_Name"
+          outlined
+          dense
+        ></v-text-field>
+      </v-col>
+      <v-col cols="6" md="4">
+        <h4>Value</h4>
+        <v-text-field
+          @keyup.enter="onAdd"
+          v-model="form.value"
+          placeholder="Example Value"
+          outlined
+          dense
+        ></v-text-field>
+      </v-col>
+      <v-col cols="6" md="4">
+        <h4 class="op-0">Hide</h4>
+        <v-btn color="primary" rounded @click="onAdd">Add</v-btn>
+      </v-col>
+    </v-row>
 
-      <v-data-table
-        class="mt-5"
-        :headers="headers"
-        :items="list"
-        hide-default-footer
-        v-show="list.length"
-      >
-        <template v-slot:item.act="{ index }">
-          <v-btn color="error" icon @click="onDel(index)">
-            <v-icon size="16">mdi-delete</v-icon>
-          </v-btn>
-        </template>
-      </v-data-table>
-    </div>
-  </div>
+    <v-data-table
+      class="mt-5"
+      :headers="headers"
+      :items="list"
+      hide-default-footer
+      v-show="list.length"
+    >
+      <template v-slot:item.act="{ index }">
+        <v-btn color="error" icon @click="onDel(index)">
+          <v-icon size="16">mdi-delete</v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
+  </e-toggle-card>
 </template>
 
 <script>

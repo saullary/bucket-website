@@ -109,7 +109,7 @@
           <v-switch v-model="form.hookSwitch" dense></v-switch>
         </v-col>
       </v-row>
-      <env-form v-model="form.env" />
+      <env-form class="mt-5" v-model="form.env" />
       <div class="gray mt-5 fz-14">
         Tips: 4EVERLAND HOSTING only serves static pages (Server-Side-Rendering
         is not supported now)
@@ -211,6 +211,7 @@ export default {
         body.outputDirectory = "dist";
       }
       console.log(body);
+      this.$emit("next");
     },
     onFramework(val) {
       const item = this.$getFramework(val);
