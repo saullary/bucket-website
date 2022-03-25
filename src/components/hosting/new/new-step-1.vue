@@ -211,7 +211,18 @@ export default {
         body.outputDirectory = "dist";
       }
       console.log(body);
-      this.$emit("next");
+      try {
+        this.$loading();
+        const { data } = await this.$http2.post("/project", body);
+        const {
+          data: { taskId },
+        } = await this.$http2.post(`/project/${data.projectId}/build`);
+        this.$router.replace("/hosting/new?taskId=" + taskId);
+        this.$emit("next");
+      } catch (error) {
+        console.log(error);
+      }
+      this.$loading.close();
     },
     onFramework(val) {
       const item = this.$getFramework(val);

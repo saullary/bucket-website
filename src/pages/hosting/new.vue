@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       stepList: ["Import Repository", "Edit Configuration", "Start Deployment"],
-      curStep: 2,
+      curStep: 0,
       info: null,
     };
   },
@@ -53,6 +53,10 @@ export default {
     "$route.path"() {
       this.curStep = 0;
     },
+  },
+  mounted() {
+    const { taskId } = this.$route.query;
+    if (taskId) this.curStep = 2;
   },
 };
 </script>
