@@ -25,7 +25,7 @@
         >
           <div class="flex-1">
             <a
-              :href="`#/build/${it.buildConfig.name}/${it.taskId}`"
+              :href="`#/hosting/build/${it.buildConfig.name}/${id}/${it.taskId}`"
               class="b"
               >{{ it.buildConfig.name }}</a
             >
@@ -132,12 +132,12 @@ export default {
         },
         {
           text: "Inspect Deployment",
-          link: "/build/{projName}/{taskId}",
+          link: "/hosting/build/{projName}/{id}/{taskId}",
           icon: "card-search-outline",
         },
         {
           text: "View Source",
-          link: "/build/{projName}/{taskId}?tab=source",
+          link: "/hosting/build/{projName}/{id}/{taskId}?tab=source",
           icon: "xml",
         },
         {
@@ -164,6 +164,7 @@ export default {
       let { name, link } = opt;
       if (link) {
         link = link
+          .replace("{id}", this.id)
           .replace("{taskId}", it.taskId)
           .replace("{projName}", it.buildConfig.name);
         this.$router.push(link);
@@ -184,12 +185,14 @@ export default {
         const { data } = await this.$http2.post(
           `/project/${it.taskId}/redeploy`
         );
-        this.$router.replace(`/build/${it.buildConfig.name}/${data.taskId}`);
+        this.$router.replace(
+          `/hosting/build/${it.buildConfig.name}/${this.id}/${data.taskId}`
+        );
       } catch (error) {
         console.log(error, "deploy");
         if (error.code == 10014)
           this.$router.push(
-            `/project/${this.info.name}/${this.info.id}/settings?tab=2`
+            `/hosint/project/${this.info.name}/${this.info.id}?tab=settings&sub=git`
           );
       }
       this.$loading.close();

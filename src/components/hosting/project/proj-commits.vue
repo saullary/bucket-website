@@ -94,7 +94,7 @@ export default {
         });
         this.$loading.close();
         this.$router.push(
-          `/build/${this.info.name}/${taskId}/overview?ftab=commits`
+          `/hosting/build/${this.info.name}/${this.id}/${taskId}?ftab=commits`
         );
       } catch (error) {
         //

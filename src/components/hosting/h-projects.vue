@@ -80,9 +80,9 @@
           </v-row>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <div class="mt-2">
-            <v-skeleton-loader type="article" v-if="!it.statisList" />
-            <v-row v-else class="statis-row">
+          <v-skeleton-loader type="article" v-if="!it.statisList" />
+          <div class="mt-2" v-else>
+            <v-row class="statis-row">
               <v-col
                 cols="12"
                 md="6"
@@ -98,14 +98,20 @@
                 <rect-data :list="it.statis2" />
               </v-col> -->
             </v-row>
-          </div>
-          <div class="mt-3 ta-r">
-            <v-btn color="primary" small rounded outlined
-              >View Build Logs</v-btn
-            >
-            <v-btn color="error" small outlined rounded class="ml-3"
-              >Delete</v-btn
-            >
+            <div class="mt-3 ta-r">
+              <v-btn
+                v-if="it.taskId"
+                color="primary"
+                small
+                rounded
+                outlined
+                :to="`/hosting/build/${it.name}/${it.id}/${it.taskId}`"
+                >View Build Logs</v-btn
+              >
+              <v-btn v-else color="error" small outlined rounded class="ml-3"
+                >Delete</v-btn
+              >
+            </div>
           </div>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -246,9 +252,10 @@ export default {
             ],
           },
         ];
-        Object.assign(it, {
-          statisList,
-        });
+        this.$set(it, "statisList", statisList);
+        if (data.latest) {
+          this.$set(it, "taskId", data.latest.taskId);
+        }
       } catch (error) {
         console.log(error);
       }

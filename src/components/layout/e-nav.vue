@@ -49,7 +49,8 @@ export default {
         items = links.map((_it) => {
           const it = { ..._it };
           for (const key in params) {
-            it.text = it.text.replace(`{${key}}`, params[key]);
+            if (it.text) it.text = it.text.replace(`{${key}}`, params[key]);
+            if (it.to) it.to = it.to.replace(`{${key}}`, params[key]);
           }
           if (!it.path) it.path = this.path;
           it.exact = true;

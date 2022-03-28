@@ -1,6 +1,7 @@
 import New from "./new";
 import Projects from "./projects";
 import Project from "./project";
+import Build from "./build";
 import Domains from "./domains";
 import Statistics from "./statistics";
 import StatisDetail from "./statistics-detail";
@@ -45,6 +46,27 @@ export default [
         },
         {
           text: `{projName}`,
+        },
+      ],
+    },
+  },
+  {
+    path: "/build/:projName/:id/:taskId",
+    component: Build,
+    meta: {
+      isTab: 1,
+      title: `{projName} - Build`,
+      links: [
+        {
+          text: "Projects",
+          to: "/hosting/projects",
+        },
+        {
+          text: `{projName}`,
+          to: "/hosting/project/{projName}/{id}",
+        },
+        {
+          text: "Build",
         },
       ],
     },
