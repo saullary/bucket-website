@@ -11,12 +11,12 @@
     }
     box-shadow: 0 0 1px #999;
     &:hover {
-      box-shadow: 0 1px 4px rgb(153 153 153 / 50%);
+      box-shadow: 0 1px 4px rgb(153 153 153 / 40%);
     }
     &.v-expansion-panel--active {
-      box-shadow: 0 1px 4px rgb(153 153 153 / 60%);
+      box-shadow: 0 1px 4px rgb(153 153 153 / 45%);
       &:hover {
-        box-shadow: 0 1px 4px rgb(153 153 153 / 90%);
+        box-shadow: 0 1px 4px rgb(153 153 153 / 60%);
       }
     }
   }
@@ -43,6 +43,7 @@
         class="mb-3"
         v-for="(it, i) in list.slice(0, limit)"
         :key="i"
+        @change="onOpen(it)"
       >
         <v-expansion-panel-header @click="onItem(it)">
           <v-row>
@@ -80,7 +81,8 @@
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div class="mt-2">
-            <v-row class="statis-row">
+            <v-skeleton-loader type="article" v-if="!it.statisList" />
+            <v-row v-else class="statis-row">
               <v-col
                 cols="12"
                 md="6"
@@ -197,49 +199,69 @@ export default {
       const path = this.getDetailPath(it);
       this.$router.push(path);
     },
+    async onOpen(it) {
+      if (it.loading || it.statisList) return;
+      try {
+        it.loading = true;
+        const { data } = await this.$http2.get("/project/v3/detail/" + it.id);
+        console.log(data);
+        const statisList = [
+          {
+            comp: "rect-data",
+            data: [
+              {
+                title: "New Users",
+                num: data.newUsers,
+              },
+              {
+                title: "Total Users",
+                num: data.totalUsers,
+              },
+              {
+                title: "Total UV",
+                num: data.totalUV,
+              },
+              {
+                title: "Total PV",
+                num: data.totalPV,
+              },
+            ],
+          },
+          {
+            comp: "rect-data",
+            data: [
+              {
+                title: "Bandwidth used",
+                ...this.$utils.getFileSize(data.usedBandwidth, 1),
+              },
+              {
+                title: "Build Minutes used",
+                unit: "Minutes",
+                num: data.usedBuildMinutes,
+              },
+              {
+                title: "Storage used",
+                ...this.$utils.getFileSize(data.usedStorage, 1),
+              },
+            ],
+          },
+        ];
+        Object.assign(it, {
+          statisList,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      it.loading = false;
+    },
     async getList() {
       try {
         this.loading = true;
         const { data } = await this.$http2.get("/project/v3/list");
-        this.list = data.list.map((it) => {
-          it.statisList = [
-            {
-              comp: "rect-data",
-              data: [
-                {
-                  title: "New Users",
-                },
-                {
-                  title: "Total Users",
-                },
-                {
-                  title: "Total UV",
-                },
-                {
-                  title: "Total PV",
-                },
-              ],
-            },
-            {
-              comp: "rect-data",
-              data: [
-                {
-                  title: "Bandwidth used",
-                  unit: "KB",
-                },
-                {
-                  title: "Build Minutes used",
-                  unit: "Minutes",
-                },
-                {
-                  title: "Storage used",
-                  unit: "MB",
-                },
-              ],
-            },
-          ];
-          return it;
-        });
+        this.list = data.list;
+        // .map((it) => {
+        //   return it;
+        // });
         this.total = data.total;
       } catch (error) {
         console.log(error);

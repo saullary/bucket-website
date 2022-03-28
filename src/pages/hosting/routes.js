@@ -13,6 +13,15 @@ export default [
       title: "New Project",
       subTitle: "3 easy steps to get your projects live",
       isTab: 1,
+      links: [
+        {
+          text: "Projects",
+          to: "/hosting/projects",
+        },
+        {
+          text: "New Project",
+        },
+      ],
     },
   },
   {

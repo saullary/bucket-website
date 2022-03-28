@@ -82,13 +82,25 @@ Vue.prototype.$utils = {
     }
     return str.substring(0, len);
   },
-  getFileSize(byte) {
+  getFileSize(byte, isObj = false) {
     const mb = Math.pow(1024, 2);
-    let size;
-    if (byte > mb) size = (byte / mb).toFixed(2) + " MB";
-    else if (byte < 1024) return byte + " B";
-    else size = (byte / 1024).toFixed(2) + " KB";
-    return size;
+    let num = byte;
+    let unit = "B";
+    if (byte > mb) {
+      num = (byte / mb).toFixed(2);
+      unit = "MB";
+    } else if (byte > 1024 || byte < 0.01) {
+      num = (byte / 1024).toFixed(2);
+      unit = "KB";
+    } else {
+      num = byte.toFixed(2);
+    }
+    if (isObj)
+      return {
+        num,
+        unit,
+      };
+    return num + " " + unit;
   },
   getCidV1(cid) {
     if (!cid) return "";
