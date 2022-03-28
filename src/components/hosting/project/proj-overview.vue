@@ -8,14 +8,14 @@
           :src="$getImgSrc(info.screenshot)"
           lazy-src="img/bg/empty/project.png"
           aspect-ratio="1"
-          max-height="300"
+          max-height="320"
         ></v-img>
       </e-link>
       <v-img></v-img>
     </v-col>
-    <v-col cols="12" md="7">
+    <v-col cols="12" md="6">
       <e-kv2 label="Deployment" class="mt-2">
-        <h-domain :val="info.latest.domain" />
+        <h-domain :val="info.domain" />
       </e-kv2>
 
       <e-kv2 label="Domains" class="mt-8" v-if="info.domains">
@@ -38,9 +38,23 @@
         </div>
       </e-kv2>
 
-      <div class="mt-7">
+      <div class="mt-7 d-flex">
         <e-kv2 label="State">
           <h-status :val="info.state"></h-status>
+        </e-kv2>
+        <e-kv2 class="ml-auto" label="Created" style="min-width: 120px">
+          <e-time>{{ info.repo.updateAt }}</e-time>
+        </e-kv2>
+      </div>
+
+      <div class="mt-7 d-flex">
+        <e-kv2 label="Branch">
+          <h-branch :info="info" class="fz-15" />
+        </e-kv2>
+        <e-kv2 class="ml-auto" label="IPFS" style="min-width: 120px">
+          <e-link class="fz-15" :href="$utils.getCidLink(info.cid)">
+            {{ info.cid ? "Verify on IPFS" : "Pending" }}
+          </e-link>
         </e-kv2>
       </div>
     </v-col>

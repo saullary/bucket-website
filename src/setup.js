@@ -8,7 +8,7 @@ import frameworks from "./plugins/config/frameworks";
 
 Vue.use(VueClipboards);
 
-Vue.prototype.$color1 = "#0F8DFF";
+Vue.prototype.$color1 = "#34A9FF";
 
 Vue.prototype.$onLoginData = (data) => {
   console.log(data);
@@ -99,6 +99,7 @@ Vue.prototype.$utils = {
     return cid;
   },
   getCidLink(cid) {
+    if (!cid) return "";
     return `https://${this.getCidV1(cid)}.ipfs.dweb.link`;
   },
 };

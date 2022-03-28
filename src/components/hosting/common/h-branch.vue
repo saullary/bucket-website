@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex al-c">
-    <v-icon size="18" :color="color">{{ icon }}</v-icon>
+    <v-icon size="18" :color="$color1">{{ icon }}</v-icon>
     <a
       v-if="href"
       :href="href"
@@ -26,19 +26,14 @@ export default {
     },
   },
   computed: {
-    projInfo() {
-      return this.$store.state.projectInfo;
-    },
     branch() {
-      const config = this.info ? this.info.buildConfig : this.projInfo.config;
+      const config = this.info.buildConfig || this.info.config || {};
       return config.currentBranch;
     },
     href() {
-      if (this.info) {
-        const { prefix } = this.info.commits;
-        if (prefix) return prefix + "tree/" + this.branch;
-      }
-      const { namespace, name } = this.projInfo.repo || {};
+      const { prefix } = this.info.commits || {};
+      if (prefix) return prefix + "tree/" + this.branch;
+      const { namespace, name } = this.info.repo || {};
       if (!name) return null;
       return `https://github.com/${namespace}/${name}/tree/${this.branch}`;
     },

@@ -51,8 +51,10 @@ const store = new Vuex.Store({
       delete data.buildConfig;
       data.name = name;
       data.id = projectId;
-      const { state = "unknown" } = data.latest || {};
-      if (!data.state) data.state = state.toLowerCase();
+      Object.assign(data, {
+        state: "unknown",
+        ...data.latest,
+      });
       const [row] = data.domains || [];
       if (row) {
         data.mainLink = "//" + row.domain;

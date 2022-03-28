@@ -58,7 +58,7 @@
               <e-commit :info="it.commits"></e-commit>
             </div>
             <div class="fz-14 mt-1">
-              <e-branch :info="it"></e-branch>
+              <h-branch :info="it" />
             </div>
           </div>
           <span class="ml-auto"></span>
