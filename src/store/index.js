@@ -51,6 +51,12 @@ const store = new Vuex.Store({
       delete data.buildConfig;
       data.name = name;
       data.id = projectId;
+      const { state = "unknown" } = data.latest || {};
+      if (!data.state) data.state = state.toLowerCase();
+      const [row] = data.domains || [];
+      if (row) {
+        data.mainLink = "//" + row.domain;
+      }
       setState({
         projectInfo: data,
       });

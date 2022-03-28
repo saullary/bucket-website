@@ -8,9 +8,9 @@
       }"
     >
       <div class="mb-2" v-for="(it, i) in list" :key="i">
-        <e-label-val :label="new Date(it.timestamp).format('HH:mm:ss.S')">
+        <e-kv :label="new Date(it.timestamp).format('HH:mm:ss.S')">
           <span class="wb-all">{{ it.content }}</span>
-        </e-label-val>
+        </e-kv>
       </div>
     </div>
     <div class="pos-a btm-0 right-0 z-10 pa-2" v-if="!isBtm">

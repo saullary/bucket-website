@@ -14,8 +14,9 @@ export default {
       return this.val.toLowerCase();
     },
     staCls() {
-      let cls = "color-1";
+      let cls = "gray";
       if (this.state == "success") cls = "suc-1";
+      else if (this.state == "running") cls = "warn-1";
       else if (/fail|error|cancel|timeout/i.test(this.state)) cls = "fail-1";
       return cls;
     },

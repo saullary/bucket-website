@@ -21,7 +21,7 @@
         <build-log :logs="logs" @done="isDone = true" />
       </e-toggle-card>
       <e-toggle-card class="mt-5" title="Syncing to IPFS" :value="cardOpen(1)">
-        <e-label-val label="IPFS Hash">Pending</e-label-val>
+        <e-kv label="IPFS Hash">Pending</e-kv>
       </e-toggle-card>
       <e-toggle-card
         class="mt-5"

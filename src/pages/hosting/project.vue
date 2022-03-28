@@ -64,7 +64,6 @@ export default {
           this.$setState({
             projectInfo: {},
           });
-          this.$loading();
         }
         await this.$store.dispatch("getProjectInfo", this.id);
         // console.log(this.info);
@@ -75,7 +74,6 @@ export default {
           this.getInfo();
         });
       }
-      this.$loading.close();
     },
   },
 };
