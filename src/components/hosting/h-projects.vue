@@ -32,6 +32,12 @@
 
 <template>
   <div class="projects">
+    <div class="mb-5" v-if="!limit && list.length">
+      <v-btn color="primary" rounded to="/hosting/new">
+        <img src="img/svg/add1.svg" width="12" />
+        <span class="ml-2">New Project</span>
+      </v-btn>
+    </div>
     <v-expansion-panels v-model="curIdx" multiple :disabled="limit > 0">
       <v-expansion-panel
         class="mb-3"
@@ -43,7 +49,7 @@
             <v-col cols="8" md="4">
               <div class="d-flex al-c grow-0">
                 <img
-                  :src="it.previewImage"
+                  :src="it.previewImage || 'img/bg/empty/project.png'"
                   height="60"
                   width="60"
                   class="bdrs-8 bd-1"
@@ -54,11 +60,11 @@
               </div>
             </v-col>
             <v-col cols="4" v-if="!asMobile" class="d-flex al-c f-center">
-              state
+              <h-status :val="it.state"></h-status>
             </v-col>
             <v-col cols="4" :class="asMobile ? 'ta-c' : 'd-flex al-c'">
               <div v-if="asMobile" class="mb-2">
-                <span>state</span>
+                <h-status :val="it.state"></h-status>
               </div>
               <v-btn
                 :to="getDetailPath(it)"

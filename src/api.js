@@ -25,10 +25,10 @@ if (/localhost/.test(location.host)) {
 }
 Vue.prototype.$loginUrl = loginUrl;
 
-const http = Axios.create({
+export const http = Axios.create({
   baseURL: process.env.VUE_APP_BASE_URL,
 });
-const http2 = Axios.create({
+export const http2 = Axios.create({
   baseURL: process.env.VUE_APP_HOST_URL,
 });
 

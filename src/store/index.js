@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import http from "../api";
+import { http, http2 } from "../api";
 
 Vue.use(Vuex);
 
@@ -34,6 +34,7 @@ const store = new Vuex.Store({
     netType: "",
     walletTip: "",
     buildInfo: {},
+    projectInfo: {},
   },
   mutations: {
     [SET_DATA](state, data) {
@@ -41,8 +42,26 @@ const store = new Vuex.Store({
         state[key] = data[key];
       }
     },
+    setProject(_, info) {
+      const data = { ...info };
+      const { repo = {} } = data;
+      repo.pathPre = `${repo.namespace}/${repo.name}`;
+      data.repo = repo;
+      const { name, projectId } = (data.config = data.buildConfig);
+      delete data.buildConfig;
+      data.name = name;
+      data.id = projectId;
+      setState({
+        projectInfo: data,
+      });
+    },
   },
   actions: {
+    async getProjectInfo({ commit }, id) {
+      const { data } = await http2.get("/project/" + id);
+      commit("setProject", data);
+      return data;
+    },
     async getUsageInfo() {
       const { data } = await http.get("/user/resource/usage");
       const {
